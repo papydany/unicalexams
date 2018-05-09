@@ -21,6 +21,8 @@
                    
 
           <div class="table-responsive col-sm-12 col-md-10 col-md-offset-1">
+           
+            <p class=" text-center" style="background-color: #0ff; padding: 10px"><b> Direct Entry students,  100 level, is your first year of three years programme</b></p>
             {{! $next_ss = $ss+1}}
                 <p><b>Session :</b>{{$ss." / ".$next_ss }} </p>
                  <p><b>Level :</b>{{$l}}00 </p>

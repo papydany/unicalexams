@@ -17,7 +17,7 @@
         .w11{width: 30%;float:left;}
         .w111{width: 35%;float:left; }
         .ww11{width: 35%;float:right;}
-        .ff{width: 50%;float:left}
+        .ff{width: 33%;float:left}
 
         .clear{clear: both}
         p{font-size: 12px;}
@@ -45,21 +45,8 @@
         <div class="col-sm-3  w11"> {{! $next_ss = $ss+1}}
             <p class="text-justify b"><b>Session :</b>{{$ss." / ".$next_ss }} </p>
             <p class="text-justify b"><b>Level :</b>{{$l}}00 </p>
-            <p class="text-justify b"><b>Semester :</b>
-                @if(Auth::user()->programme_id == 4)
-                    @if($s == 1)
-                        Contact 1
-                    @elseif($s == 2)
-                        Contact 2
-                    @endif
-                @else
-                    @if($s == 1)
-                        First
-                    @elseif($s == 2)
-                        Second
-                    @endif
-                @endif
-            </p></div>
+            <p class="text-justify b"><b>Semester : </b>{{$s->semester_name}}</p>
+        </div>
         <div class="col-sm-5 w111 ">
             <h4 class="text-center b">{{ strtoupper(Auth::user()->surname).
                     "&nbsp;". strtoupper(Auth::user()->firstname)."&nbsp;".strtoupper(Auth::user()->othername) }}</h4>
@@ -113,22 +100,23 @@
                         </tbody>
                     </table><!--//table-->
                 <div class="col-sm-12">
-                 <div class="col-sm-6 ff">
-                   <p> H O D</p>
-                   <p>Signature<br/>
-                         _______________________________________</p>
-                     <p>Date<br/>
-                         _______________________________________</p>
+                 <div class="col-sm-4 ff">
+                   <p> H O D Signature _____________________<p>
+                    <p> Date ______________________________ </p>
                      </div>
-                    <div class="col-sm-6 ff">
-                        <p> Exammination Officer</p>
-                        <p>Signature<br/>
-                            ________________________________________</p>
-                        <p>Date <br/>
-                            ________________________________________</p>
+                    <div class="col-sm-5 ff">
+                        <p> Exam Officer Signature______________</p>
+                        <p>Date ___________________________</p>
 
                     </div>
-                    <div class="clear"></div>
+                       <div class="col-sm-3">
+              <p><b class="text-danger">Course Status</b><br/>
+            <b>C : </b>Compulsary<br/>
+                 <b>E : </b>Elective</br/>
+                  <b>R : </b>Failed course In Last Session<br/>
+                    <b>D : </b>Drop course In Last Session</p>
+          </div>
+                    <div class="clearfix"></div>
                 </div>
 
 

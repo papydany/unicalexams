@@ -113,7 +113,7 @@
                                 @endif
                                 @else
                          <div class=" col-sm-10 col-sm-offset-1 alert alert-warning" role="alert">
-     No course is avalable for registeration in these session. please contact your examination Officer or send a message to us throuh mail.<br/>
+     No course is avalable for registration in these session. please contact your examination Officer or send a message to us through mail.<br/>
      <strong>Thank you.... Unical exam portal Admin</strong>
     </div>       
                                 @endif

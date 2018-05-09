@@ -12,6 +12,7 @@
         {{ session('status') }}
     </div>
 @endif
+<p class="text-danger text-center"><b>NB ::</b> PDS  and First Year students are categorise as <b>new students</b></p>
                     <form class="form-horizontal" role="form" method="POST" action="{{ route('login') }}">
                         {{ csrf_field() }}
 
@@ -33,7 +34,7 @@
                             <label for="password" class="col-md-4 control-label">Pin</label>
 
                             <div class="col-md-6">
-                                <input id="pin" type="password" class="form-control" name="pin" required>
+                                <input id="pin" type="text" class="form-control" name="pin" required>
 
                                 @if ($errors->has('pin'))
                                     <span class="help-block">
@@ -55,18 +56,26 @@
                                 @endif
                             </div>
                         </div>
-                        <div class="form-group{{ $errors->has('serial_number') ? ' has-error' : '' }}">
+                        <div class="form-group{{ $errors->has('type') ? ' has-error' : '' }}">
                             <label  class="col-md-4 control-label">Student Type</label>
 
                             <div class="col-md-6">
-                          <select name="type" class="form-control">
+                          <select name="type" class="form-control" required>
                           <option value="">  -- select -- </option>
-                              <option value="1">PDS</option>
-                              <option value="2">Undergraduate</option>
+                              <option value="1~0">PDS</option>
+                              <option value="2~1">Undergraduate (Direct Entry)</option>
+                              <option value="2~2">Undergraduate (Other)</option>
                           </select>
 
                                
                             </div>
+                        </div>
+                        <div class="form-group{{ $errors->has('type') ? ' has-error' : '' }}">
+                            <label  class="col-md-4 control-label">Student Status</label>
+                             <div class="col-md-6">
+                            <label class="radio-inline"><input type="radio" name="status" value="1">New Students</label>
+                            <label class="radio-inline"><input type="radio" name="status" value="2">Returning Students</label>
+                        </div>
                         </div>
 
                   

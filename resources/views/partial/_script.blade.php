@@ -24,6 +24,7 @@ var id =$(this).val();
     $department.empty();
     $department.append('<option value="">Select Department</option>');
    $.each(data, function(index, value) {
+
    $department.append('<option value="' +value.id +'">' + value.department_name + '</option>');
   });
   $("#myModal").modal("hide");
@@ -31,6 +32,8 @@ var id =$(this).val();
 
 
 });
+
+
 
 $("#state").change( function() {
  
@@ -128,6 +131,50 @@ else{
 
 
         });
+
+
+$("#fac").change( function() {
+ 
+  $("#myModal").modal();  
+var id =$(this).val();
+
+   $.getJSON("/getdept/"+id, function(data, status){
+
+    var $department = $("#dept");
+    $department.empty();
+    $department.append('<option value="">Select Department</option>');
+   $.each(data, function(index, value) {
+ 
+   $department.append('<option value="' +value.id +'">' + value.department_name + '</option>');
+  });
+  $("#myModal").modal("hide");
+    });
+
+
+}); 
+
+
+
+$("#dept").change( function() {
+ 
+
+var id =$(this).val();
+var p_id = document.getElementById("programme").value;
+
+  $("#myModal").modal();  
+   $.getJSON("/gfos/"+id+"/"+p_id, function(data, status){
+    var $fos = $("#fos");
+    $fos.empty();
+    $fos.append('<option value="">Select FOS</option>');
+   $.each(data, function(index, value) {
+
+   $fos.append('<option value="' +value.id +'">' + value.fos_name + '</option>');
+  });
+  $("#myModal").modal("hide");
+    });
+
+
+});       
 
 });
     </script>

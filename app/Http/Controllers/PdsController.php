@@ -15,7 +15,7 @@ class PdsController extends Controller
 
      public function index()
     {
-    	return view('Pds.index');
+    	return view('pds.index');
     }
 
     public function pds_view_result()

@@ -1,7 +1,7 @@
 @extends('layouts.displayresult')
 @section('title','Home')
 @section('content')
-
+@inject('R','App\RRR')
     <div class="col-xs-12">
     <div class="col-xs-12">
     <p class="text-center">{{ strtoupper(Auth::user()->surname).
@@ -9,30 +9,34 @@
                     "&nbsp;". strtoupper(Auth::user()->firstname)."&nbsp;".strtoupper(Auth::user()->othername) . " - ".Auth::user()->matric_number.'&nbsp;('.$l.'00 level)'}}</p>
     </div>
 
- <div class="col-sm-6 table-responsive w2">
+ <div class="col-sm-6 table-responsive w22">
  @if(count($first_result) > 0)
  <table class="table table-bordered table-striped">
  <tr>
- <th colspan="5" class="text-danger text-center">First Semester
+ <th colspan="8" class="text-danger text-center">First Semester
  </th>
  </tr>
  <tr>
 <th>Course Code</th>
 <th>Status</th>
 <th>Unit</th>
-
+<th>CA</th>
+<th>EXM</th>
+<th>T</th>
 <th>Grade</th>
 <th>Grade Point</th>
 </tr>
     @foreach($first_result as $v)
-
+<?php $cp =$R->get_cp($v->total,$v->cu); ?>
     <tr>
     <td>{{$v->course_code}}</td>
-      <td>{{$v->course_status}}</td>
+    <td>{{$v->course_status}}</td>
  <td>{{$v->cu}}</td>
+  <th>{{$v->ca}}</th>
+  <th>{{$v->exam}}</th>
+   <th>{{$v->total}}</th>
   <td>{{$v->grade}}</td>
-
- <td>{{$v->cp}}</td>
+ <td>{{$cp}}</td>
   </tr>
 
    @endforeach
@@ -44,8 +48,10 @@
     <td>{{$vc->course_code}}</td>
       <td>{{$vc->course_status}}</td>
  <td>{{$vc->course_unit}}</td>
+  <td>NR</td> 
   <td>NR</td>
-
+  <td>NR</td>
+  <td>NR</td>
   <td>NR</td>
   </tr>
    @endforeach
@@ -58,25 +64,30 @@
 <div class="col-sm-6 table-responsive w2">
  @if(count($second_result) > 0)
 <table class="table table-bordered table-striped">
- <th colspan="5" class="text-danger text-center">Second Semester
+ <th colspan="8" class="text-danger text-center">Second Semester
  </th>
 <tr>
 <th>Course Code</th>
 <th>Status</th>
 <th>Unit</th>
+<th>CA</th>
+<th>EXM</th>
+<th>T</th>
 <th>Grade</th>
-
 <th>Grade Point</th>
 </tr>
 @foreach($second_result as $v)
-
+<?php $cp =$R->get_cp($v->total,$v->cu); ?>
     <tr>
     <td>{{$v->course_code}}</td>
-      <td>{{$v->course_status}}</td>
+    <td>{{$v->course_status}}</td>
  <td>{{$v->cu}}</td>
+ <th>{{$v->ca}}</th>
+  <th>{{$v->exam}}</th>
+   <th>{{$v->total}}</th>
   <td>{{$v->grade}}</td>
 
-  <td>{{$v->cp}}</td>
+  <td>{{$cp}}</td>
   </tr>
 
    @endforeach
@@ -87,14 +98,17 @@
       <td>{{$vc->course_status}}</td>
  <td>{{$vc->course_unit}}</td>
   <td>NR</td>
-
+ <td>NR</td>
+ <td>NR</td>
   <td>NR</td>
+   <td>NR</td>
   </tr>
    @endforeach
    @endif
    </table>
    @endif
        </div>
+       <div class="clear-fix"></div>
      <div class="col-xs-12 table-responsive w4">
      
        <table class="table table-bordered">
@@ -119,26 +133,33 @@
        <tr>
        <th>Interprete Grade</th>
        <th>Interprete Remarks</th>
+       <th>Interpretation</th>
        </tr>
        <tr>
        <td>A = 5.0</td> 
-       <td><b>TAKE :</b>Mean previously dropped courses,to be taken in the current level</td>
+       <td><b>TAKE : </b>Mean previously dropped courses,to be taken in the current level</td>
+       <td><b>CA : </b>Continuous Assessment Score</td>
        </tr>
         <tr>
        <td>B = 4.0</td> 
-       <td><b>RPT :</b>Means previously failed courses to be taken in the current level</td>
+       <td><b>RPT : </b>Means previously failed courses to be taken in the current level</td>
+       <td><b>EXM : </b>Examination Scores</td>
        </tr>
         <tr>
        <td>C = 3.0</td> 
-       <td><b>NR :</b>Mean no result, the lecturer have not uploaded yet.</td>
+       <td><b>NR : </b>Mean no result, the lecturer have not uploaded yet.</td>
+       <td><b>T : </b>Total Scores</td>
+       
        </tr>
         <tr>
        <td>D = 2.0</td> 
        <td><b>Probation : </b>Mean repeat the same level and rewirte all your failed and dropped courses</td>
+       <td><b>Status :</b>E = Elective Course </td>
        </tr>
         <tr>
        <td>E = 1.0</td> 
        <td><b>Withdraw :</b>Means Stop studies</td>
+       <td><b>Status :</b>C = Compulsory Course</td>
        </tr>
         <tr>
        <td>F = 0.0</td> 

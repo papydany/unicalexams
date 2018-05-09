@@ -22,22 +22,15 @@
                 <div class="form-group">
                     <div class="col-sm-3">
                         {{!$next =$ss+1}}
-                        <select name="session"  disabled class="form-control">
-                            <option value="{{$ss}}">{{$ss." / ".$next}} session</option>
+                        <select name="session"  readonly class="form-control">
+                            <option value="{{$ss}}">{{$ss." / ".$next}} Session</option>
                         </select>
                      
                     </div>
                     <div class="col-sm-3">
-                        <select name="level" class="form-control" required>
-                            <option value="">-- Select Level --</option>
-                            @if(isset($l))
-                                @foreach($l as $v)
-                                    <option value="{{$v->level_id}}">{{$v->level_name}}</option>
-
-                                @endforeach
-
-                           @endif
-                        </select>
+                        <select name="level" class="form-control" readonly>
+                        <option value="{{$reg->level_id}}">{{$reg->level_id}}00 Level</option>
+                    </select>
                     </div>
 
                     <div class="col-sm-3">

@@ -17,7 +17,7 @@
                     <div class="row page-row" style="min-height: 520px;">  
 
                      <div class=" col-sm-10 col-sm-offset-1 alert alert-warning" role="alert" >
-      Registration Success.
+      Success.
     </div>
 
 

@@ -69,8 +69,6 @@
                                 <button type="submit" class="btn btn-primary">
                                     <i class="fa fa-btn fa-sign-in"></i> Login
                                 </button>
-
-                                <a class="btn btn-link" href="{{ url('/pin/reset') }}">Forgot Your pin?</a>
                             </div>
                         </div>
                     </form>

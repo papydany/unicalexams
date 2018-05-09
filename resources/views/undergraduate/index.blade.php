@@ -13,28 +13,68 @@
                             <li class="current">Undergraduate</li>
                         </ul>
                     </div><!--//breadcrumbs-->
+                 
                 </header> 
+                {{!$next =$ss+1}}
+           <h3><strong class="text-success">PIN VALID FOR &nbsp; {{$ss." / ".$next}} &nbsp; SESSION</strong></h3>
                 <div class="page-content">                 
                     <div class="row page-row">                     
                         <div class="team-wrapper col-xs-12">        
                             <div class="row page-row" >
                               
                              
-                                 <div class="col-sm-7">
+                              
                                
-                         <div class="col-xs-8">
-                        <p><strong class="text-danger">Matric Number : </strong>{{Auth::user()->matric_number}}</p>
-                      <p><strong class="text-danger">Programme : </strong>{{$p->programme_name}}</p>
-                      <p><strong class="text-danger">Faculty : </strong>{{$f->faculty_name}}</p>
-                      <p><strong class="text-danger">Department : </strong>{{$d->department_name}}</p>
-                      <p><strong class="text-danger">Field of Study : </strong>{{$fs->fos_name}}</p>
-                        <p><strong class="text-danger">Phone Number : </strong>{{Auth::user()->phone}}</p>
-                        <p><strong class="text-danger">Email : </strong>{{Auth::user()->email}}</p>
-                         <p><strong class="text-danger">Entry year : </strong>{{Auth::user()->entry_year}}</p>
+                         <div class="col-sm-7 table-responsive">
+                          <table class="table table-bordered table-striped">
+                            <tr>
+                              <th class="text-danger">Matric Number </th>
+                              <td>{{Auth::user()->matric_number}}</td>
+                            </tr>
+                            <tr>
+                              <th class="text-danger">Programme</th>
+                              <td>{{$p->programme_name}}</td>
+                            </tr>
+                            <tr>
+                              <th class="text-danger">Faculty</th>
+                              <td>{{$f->faculty_name}}</td>
+                            </tr>
+                            <tr>
+                              <th class="text-danger">Department</th>
+                              <td>{{$d->department_name}}</td>
+                            </tr>
+                            <tr>
+                              <th class="text-danger">Field of Study</th>
+                              <td>{{$fs->fos_name}}</td>
+                            </tr>
+                            <tr>
+                              <th class="text-danger">Phone Number</th>
+                              <td>{{Auth::user()->phone}}</td>
+                            </tr>
+                             <tr>
+                              <th class="text-danger">Email</th>
+                              <td>{{Auth::user()->email}}</td>
+                            </tr>
+                             <tr>
+                              <th class="text-danger">Entry year</th>
+                              <td>{{Auth::user()->entry_year}}</td>
+                            </tr>
+
+                          </table>
+
+                   
                         </div>
-                           <figure class="thumb col-md-3 col-sm-4 col-xs-4">
-                                    <img class="img-responsive" src="{{asset('img/student/'.Auth::user()->image_url)}}" alt="" />
-                                </figure>
+                           <div class="col-sm-5">
+                         
+                                    <img class="img-responsive" src="{{asset('img/student/'.Auth::user()->image_url)}}" alt="" style="float: right;"/>
+                                  @if(isset($sreg))
+                          @if(count($sreg) == 0)
+                         <p> <a href="{{url('edit_fos')}}" class="btn">Edit Field Of Studies</a></p>
+                         <p> <a href="{{url('edit_fac')}}" class="btn">Edit Faculty / Depart</a></p>
+                         @endif
+                         @endif    
+                                <p> <a href="{{url('edit_matric_number')}}" class="btn">Edit Matric Number&nbsp;&nbsp;&nbsp;</a></p>
+                                 <p> <a href="{{url('edit_names')}}" class="btn">Edit Your Names &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></p>
                                 </div>                               
                             </div>
                             

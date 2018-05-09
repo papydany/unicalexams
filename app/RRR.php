@@ -80,4 +80,47 @@ return $avg;
     
  }
 
+  public function get_cp($total,$cu)
+ {
+
+  switch($total) {
+      case $total =='No Score':
+               
+               $return = '';
+                 return $return;
+                 break;
+            case $total >= 70:
+              $return = 5*$cu;
+               return $return;
+                break;
+            case $total >= 60:
+               
+                 $return = 4*$cu;
+                  return $return;
+                break;
+            case $total >= 50:
+                 
+                 $return = 3*$cu;
+     return $return;
+                break;
+            case $total >= 45:
+                
+                 $return = 2*$cu;
+                  return $return;
+                break;
+            case $total >= 40:
+                 
+                 $return = 1*$cu;
+                  return $return;
+                break;
+            case $total < 40:
+                 
+                $return = 0*$cu;
+                 return $return;
+                break;
+            
+        }
+    
+ }
+
 }

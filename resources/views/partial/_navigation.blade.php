@@ -45,17 +45,32 @@
 @if($result == 2)
   <li class="active nav-item"><a href="{{url('/')}}">Home</a></li>
                            <li class="nav-item"><a href="{{url('/profile')}}">Profile</a></li>
+                       @if(session()->get('student_status') == 1)    
                         <li class="nav-item dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="0" data-close-others="false" href="#">Courses <i class="fa fa-angle-down"></i></a>
+                            <a class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="0" data-close-others="false" href="#">Register Courses (New Students) <i class="fa fa-angle-down"></i></a>
                             <ul class="dropdown-menu">
                                 <li><a href="{{url('/register_course')}}">Register Courses</a></li>
                                 <li><a href="{{url('/print_course')}}">Print Registered Courses</a></li>
-
-                                        
+                                <li><a href="{{url('/addCourses')}}">Add Courses</a></li>
+                                <li><a href="{{url('/deleteCourses')}}">Delete Courses</a></li>        
                             </ul>
                         </li>
+                        @elseif(session()->get('student_status') == 2)
 
-                           <li class="nav-item dropdown">
+                         
+
+                            <li class="nav-item dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="0" data-close-others="false" href="#">Register Courses (Returning Students) <i class="fa fa-angle-down"></i></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{{url('returning_register_course')}}">Register Courses</a></li>
+                                <li><a href="{{url('print_course')}}">Print Registered Courses</a></li>
+                                <li><a href="{{url('addCourses')}}">Add Courses</a></li>
+                                <li><a href="{{url('deleteCourses')}}">Delete Courses</a></li>        
+                            </ul>
+                        </li>
+                        @endif
+
+                          <li class="nav-item dropdown">
                             <a class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="0" data-close-others="false" href="#">Result <i class="fa fa-angle-down"></i></a>
                             <ul class="dropdown-menu">
                                 <li><a href="{{url('view_result')}}">View Result</a></li>
@@ -63,6 +78,8 @@
                                       
                             </ul>
                         </li>
+
+                    
                      
                         @elseif($result == 1)
                            <li class="active nav-item"><a href="{{url('/home')}}">Home</a></li>

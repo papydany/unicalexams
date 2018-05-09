@@ -26,6 +26,7 @@ class OldstudentController extends Controller
 
 
     $get_session = DB::connection('mysql1')->table('students_results')->select('std_mark_custom2')->distinct()->where([['std_mark_custom2','<=', $year],['std_id',$std_id],['matric_no',$matric_no]])->get();
+   
 
     return view('result.index')->withName($name)->withMatric_no($matric_no)->withYear($year)->withYearplus($yearplus)->withGetsession($get_session);
     }
@@ -45,6 +46,12 @@ class OldstudentController extends Controller
  $c_gpa =$this->get_cgpa($sessional, $std_id);
 
  $level = $this->get_level($std_id,$sessional);
+
+ if(empty($level))
+ {
+ 	Session::flash('warning',"opps error occurs");
+ 	return redirect('oldresult');
+ }
  $fac = $this->get_faculty();
  $dep = $this->get_department();
  $c_sty =$this->get_course_study();
@@ -101,6 +108,8 @@ $row = DB::connection('mysql1')->table('students_results')->distinct()
 ->where([['course_reg.cyearsession','<=',$s],['course_reg.std_id',$s_id]])
 ->select('students_results.stdcourse_id', 'students_results.std_mark_custom2','students_results.std_grade')
 ->get();
+if(count($row) > 0)
+{
 foreach ($row as $key => $value)
 {
    $cu = $this->get_crunit($value->stdcourse_id, $value->std_mark_custom2, $s_id);
@@ -115,6 +124,8 @@ foreach ($row as $key => $value)
 	$gpa = number_format ($gpa,2); 
 	return $gpa;
 }
+return 0;
+}
 
 //====================================gpa ==============================
 function get_gpa($s, $s_id)
@@ -127,6 +138,8 @@ $row = DB::connection('mysql1')->table('students_results')->distinct()
 ->where([['course_reg.cyearsession',$s],['course_reg.std_id',$s_id]])
 ->select('students_results.stdcourse_id', 'students_results.std_id','students_results.std_grade')
 ->get();
+if(count($row) > 0)
+{
 foreach ($row as $key => $value)
 {
   $cu = $this->get_crunit($value->stdcourse_id, $s, $s_id);
@@ -139,6 +152,8 @@ foreach ($row as $key => $value)
  @$gpa = $tgp / $tcu ;
  $gpa = number_format ($gpa,2);
 return $gpa;
+}
+return 0;
 	
 }
 //====================================get credit unit ==============================
@@ -173,10 +188,14 @@ function get_gradepoint ( $grade, $cu ){
 function get_level($s_id,$s)
 {
 $g_level= DB::connection('mysql1')->table('registered_semester')->where([['std_id',$s_id],['ysession',$s]])->first();
-return $g_level->rslevelid;
+
+if(count($g_level) > 0 )
+{return $g_level->rslevelid;
+}
+return '';
 }
 //====================================result_remark==============================
-function result_remark($std_id, $s)
+function result_remark($std_id,$s)
 {	
 $fail=''; $pass=''; $c=0; $carryf='';$rept='';
 $l =$this->get_level($std_id,$s);
@@ -372,7 +391,9 @@ if($prog == 7)
                
 }else{
 	$new_prob =2012;
+	// $new_prob_2 =2014;
 }
+
 $y =$entry_year->std_custome2;
 	if( $y< $new_prob)
 	{
@@ -386,7 +407,7 @@ $y =$entry_year->std_custome2;
 	}else{
 
 
-        if($fail_cu > 15|| $cgpa >=0.00 && $cgpa <=0.99 ){
+        if($fail_cu > 15 || $cgpa >=0.00 && $cgpa <=0.99 ){
 			
 		$return = 'WITHDRAW';
 		}
@@ -398,6 +419,9 @@ $y =$entry_year->std_custome2;
 		$return = 'WITHDRAW OR CHANGE PROGRAMME';
 		} 
 		}
+
 		return $return;
 }
+
+
 }

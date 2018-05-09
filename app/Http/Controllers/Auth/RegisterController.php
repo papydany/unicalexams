@@ -64,7 +64,6 @@ class RegisterController extends Controller
         return Validator::make($data, [
             'surname' => 'required|string|max:255',
             'firstname' => 'required|string|max:255',
-            'othername' => 'required|string|max:255',
              'matric_number' => 'required|unique:mysql2.users',
             'phone' => 'required|string|max:255',
             'programme_id' => 'required',
@@ -264,7 +263,7 @@ if($pdg->id > 0)
    }   
 
 }else{
-         Session::flash('danger','Pin Allready Used');  
+         Session::flash('danger','Pin Already Used');  
     }     
 return back();
     }  

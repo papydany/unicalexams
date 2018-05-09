@@ -26,11 +26,16 @@
             </div>
 
         <div class="row" style="margin-left: 0px;margin-right: 0px; margin-bottom: 50px;">
+           <div class="row">
+    <div class=" col-sm-10 col-sm-offset-1 alert alert-danger" role="alert" >
+      Returning Students, entry year from 2016 / 2017 session... Use the login in the menu to login to check your result..
+    </div>
+</div>
         <div class="col-sm-4 col-md-3 thumbnail">
         <h4>New Student</h4>
         <p class="text-danger">(100 level) UME/CES/DE/DIPLOMA</p>
         <p>
-        <a href="{{url('/enter_pin')}}" class="btn btn-info btn-block">Registeration</a>
+        <a href="{{url('/enter_pin')}}" class="btn btn-info btn-block">Registration</a>
         </p>
         </div>
 
@@ -46,7 +51,7 @@
 <h4>Pre Degree Student</h4>
 <p class="text-danger"> &nbsp; &nbsp;</p>
         <p>
-        <a href="{{url('/pdg_register')}}" class="btn btn-info btn-block">Registeration</a>
+        <a href="{{url('/pdg_register')}}" class="btn btn-info btn-block">Registration</a>
         </p>
         </div>
         </div>

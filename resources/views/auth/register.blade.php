@@ -37,7 +37,7 @@
 
                                <div class="col-sm-4">
                             <label for="othername">OtherName</label>
-                                <input id="name" type="text" class="form-control" name="othername" value="{{ old('name') }}" required>
+                                <input id="name" type="text" class="form-control" name="othername" value="{{ old('name') }}">
 
                                 @if ($errors->has('othername'))
                                     <span class="help-block">
@@ -165,7 +165,7 @@
                              </select>
                                 </div>
                                    <div class="col-sm-4">
-                              <label for="marital_status" class=" control-label"> Marita Status</label>
+                              <label for="marital_status" class=" control-label"> Marital Status</label>
                               <select class="form-control" name="marital_status" required>
                               <option value=""> - - Select - -</option>
                               <option value="Single">Single</option>
@@ -177,7 +177,7 @@
 
                                <div class="col-sm-4">
                               <label for="entry_month" class=" control-label">Passport ( <span class="text-danger">Max size 200 * 200)</label>
-                            <input type="file" name="image_url" class="form-control">
+                            <input type="file" name="image_url" class="form-control" required>
                              
                             </div>
                                 </div>      

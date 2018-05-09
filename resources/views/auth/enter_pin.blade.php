@@ -4,6 +4,8 @@
 <div class="container">
     <div class="row">
         <div class="col-sm-6 col-sm-offset-3" style="margin-top:70px;">
+          <h2 class="text-danger">NB</h2>
+          <p class="text-danger">Students will need scanned or soft copy passport for online profile registration  </p>
             <div class="panel panel-default">
                 <div class="panel-heading">Login</div>
 
@@ -13,7 +15,7 @@
                         {{ csrf_field() }}
 
                          <div class="form-group{{ $errors->has('matricno') ? ' has-error' : '' }}">
-                            <label for="matricno" class="col-sm-4 control-label">Jamb Reg Number</label>
+                            <label for="matricno" class="col-sm-4 control-label">Jamb Reg Number / Matric Number</label>
 
                             <div class="col-sm-6">
                                 <input id="matricno" type="text" class="form-control" name="matricno" data-parsley-required placeholder="Reg number used in paying  fess">

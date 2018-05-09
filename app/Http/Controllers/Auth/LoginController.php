@@ -54,12 +54,17 @@ class LoginController extends Controller
              'pin' => 'required',
             'serial_number' => 'required',
             'type' => 'required',
-          
+          'status' => 'required',
             ]);
         $matric_number =$request->input('matric_number');
         $pin =$request->input('pin');
         $serial_number =$request->input('serial_number');
-        $type =$request->input('type');
+        $status =$request->input('status');
+        $s_type = explode('~',$request->input('type'));
+      
+        $type =$s_type[0]; // for students type eg pds, undergraduate
+        $type_2 =$s_type[1]; // for student type for undergraduate details eg. direct entry and normal students.
+
 
         if($type == 1)
         {
@@ -133,7 +138,8 @@ $user_matric_number=auth()->user()->matric_number;
   {
     session()->put('login_user',$pin->id);
     session()->put('session_year',$pin->session);
-
+    session()->put('student_type',$type_2);
+   session()->put('student_status',$status);
     if($pin->status == 0)
     {
        
@@ -149,56 +155,40 @@ $user_matric_number=auth()->user()->matric_number;
     {
       if($pin->matric_number == $matric_number && $pin->student_id == $user_id)
       {
-      
-     
-       return redirect()->intended('/profile'); 
+      return redirect()->intended('/profile'); 
       }else{
-        
-   
-         Auth::logout();
-         return redirect('login')->with('status', 'pin Already used by another matric number.');
+        Auth::logout();
+        return redirect('login')->with('status', 'pin Already used by another matric number.');
       } 
     }
   }else{
- 
-
-Auth::logout();
-      return redirect('login')->with('status', 'Incorrect Pin or Serial Number.');
+ Auth::logout();
+  return redirect('login')->with('status', 'Incorrect Pin or Serial Number.');
   }
 }
-
-        }
-
-  
- Session::flash('warning',"please check your Matric Number.");
-            return back();
-   
-
-   
+}
+Session::flash('warning',"please check your Matric Number.");
+ return back();
 }
 // ==============================login form======================
     public function enter_pin()
     {
-  
-      return view('auth.enter_pin');
+   return view('auth.enter_pin');
     }
 // ==============================login form======================
     public function post_enter_pin(Request $request)
     {
-       $this->validate($request, [
-           'pin' => 'required',
-            'serial_no' => 'required',]);
+$this->validate($request, ['pin' => 'required','serial_no' => 'required',]);
 $pin =$request->input('pin');
 $serial_no =$request->input('serial_no');
-  $MatricNumber =$request->input('matricno');
-  $session_year =$request->input('session');
-  $sec = explode('~', $session_year);
-     
-     $entry_year =$sec[1];
-      $Session =$sec[0];
-      $student_type =$request->input('student_type');
-      $pin =$request->input('pin');
-      $serial_no =$request->input('serial_no');
+$MatricNumber =$request->input('matricno');
+$session_year =$request->input('session');
+$sec = explode('~', $session_year);
+$entry_year =$sec[1];
+$Session =$sec[0];
+$student_type =$request->input('student_type');
+$pin =$request->input('pin');
+$serial_no =$request->input('serial_no');
        if( $student_type == 1)
        {
    $Level=100;
@@ -215,7 +205,7 @@ $serial_no =$request->input('serial_no');
    $check =User::where([['jamb_reg',$MatricNumber],['entry_year',$entry_year]])->first();
    if(count($check) > 0)
    {
-    Session::flash('danger',"your jamb reg number is registered Already.");
+    Session::flash('danger',"your jamb reg number / Matric Number is registered Already.");
  
      return back();
    } 
@@ -245,7 +235,7 @@ Session::flash('danger',"Incorrect Pin or Serial Number.");
    
    }elseif($response =="Not Paid")
    {
-Session::flash('danger',"your have not pay school fess.");
+Session::flash('danger',"you have not pay school fees.");
    }
      return back();
     }
@@ -388,7 +378,7 @@ if(count($users) > 0)
        session()->put('programme_id',$users->stdprogramme_id);
        return redirect()->intended('/oldresult'); 
       }else{
-        Session::flash('warning',"pin Allready used by another matric number.");
+        Session::flash('warning',"pin Already used by another matric number.");
             return back();
       } 
     }

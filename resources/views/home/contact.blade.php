@@ -8,7 +8,7 @@
                     <div class="breadcrumbs pull-right">
                         <ul class="breadcrumbs-list">
                             <li class="breadcrumbs-label">You are here:</li>
-                            <li><a href="index-2.html">Home</a><i class="fa fa-angle-right"></i></li>
+                            <li><a href="{{url('/')}}">Home</a><i class="fa fa-angle-right"></i></li>
                             <li class="current">Contact</li>
                         </ul>
                     </div><!--//breadcrumbs-->
@@ -35,6 +35,7 @@
                     <form  action="{{url('contact')}}" method="POST">
                      {{ csrf_field() }}
                       <div class="s-12 form-group"><input name="email" class="form-control" placeholder="Your e-mail" title="Your e-mail" type="email" /></div>
+                      <div class="s-12 form-group"><input name="phone" class="form-control" placeholder="Your Phone Number" title="Your phone Number" type="number" /></div>
                       <div class="s-12 form-group"><input name="matric_number" placeholder="Your Matric Number" class="form-control" title="Your matric Number" type="text" /></div>
                       <div class="s-12 form-group"><textarea placeholder="Your massage" class="form-control" name="message" rows="5"></textarea></div>
                       <div class="s-12 m-12 l-4"><button class="btn btn-info" type="submit">Submit</button></div>
