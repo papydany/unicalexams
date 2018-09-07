@@ -5,7 +5,7 @@
             <div class="page-wrapper">
                 <header class="page-heading clearfix">
                     <h1 class="heading-title pull-left">Welcome <strong class="text-danger">{{ Auth::user()->surname.
-                    "&nbsp;". Auth::user()->firstname."&nbsp;".Auth::user()->othername }}</strong></h1>
+                    "&nbsp;". Auth::user()->firstname."&nbsp;".Auth::user()->othername }}</strong><strong class="text-success">({{Auth::user()->matric_number}})</strong></h1>
                     <div class="breadcrumbs pull-right">
                         <ul class="breadcrumbs-list">
                             <li class="breadcrumbs-label">You are here:</li>
@@ -49,9 +49,9 @@
                         {{ csrf_field() }}                     
                                     <table class="table table-boxed">
                                         <thead>
-                                            <tr>
+                                            <tr>i
                                                 <th>#</th>
-                                                <th>Select</th>
+                                                <th>All <input type="checkbox" id="all_ids" ></th>
                                                 <th>Title</th>
                                                 <th>Code</th>
                                                 <th>Unit</th>
@@ -68,7 +68,7 @@
                                             <tr class='danger'>
                                             @endif
                                             <td>{{$c}}</td>
-                                                <td><input type="checkbox" name="id[]" value="{{$v->id}}">
+                                                <td><input type="checkbox" class="ids" name="id[]" value="{{$v->id}}">
  <input type="hidden" name="level" value="{{$l}}">
  <input type="hidden" name="semester" value="{{$s}}">
 

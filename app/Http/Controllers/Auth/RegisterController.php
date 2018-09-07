@@ -128,6 +128,9 @@ public function showRegistrationForm()
 
     { 
         $login_user= session()->get('u_login_user');
+          
+    session()->put('student_type',2);
+   session()->put('student_status',1);
           $input = $request->all();
           //dd($input);
         $validator = $this->validator($input);
@@ -156,12 +159,11 @@ if($reg['id'] > 0)
  $pin->student_id = $reg['id'];
  $pin->matric_number = $reg['matric_number'];
  $pin->student_type = self::Undergraduate;
-
  $pin->save();
- session()->forget('u_login_user');
- session()->flush();
-   Session::flash('status','Registration successfull. Login and Registered  Your Courses'); 
-    return redirect('login');
+session()->put('session_year',$pin->session);
+
+if (auth()->attempt(array('matric_number' => $pin->matric_number, 'password' =>$pin->matric_number)))
+   return redirect()->intended('/profile'); 
    }   
 
         }

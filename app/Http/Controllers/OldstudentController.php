@@ -58,41 +58,20 @@ class OldstudentController extends Controller
  $r = $this->result_remark($std_id, $sessional);
 
 
- /*------------get first result -------------------------------------*/
- $result_first = DB::connection('mysql1')->table('students_results')
- ->join('course_reg', 'course_reg.thecourse_id', '=', 'students_results.stdcourse_id')
- ->where([['students_results.matric_no',$matric_no],['students_results.std_mark_custom2',$sessional],['students_results.std_id',$std_id]])
- ->where([['course_reg.cyearsession',$sessional],['course_reg.std_id',$std_id],['course_reg.csemester','First Semester']])
- ->select('course_reg.*', 'students_results.std_grade','students_results.cp')
- ->get();
-/*------------get second result -------------------------------------*/
- $result_second = DB::connection('mysql1')->table('students_results')
- ->join('course_reg', 'course_reg.thecourse_id', '=', 'students_results.stdcourse_id')
- ->where([['students_results.matric_no',$matric_no],['students_results.std_mark_custom2',$sessional],['students_results.std_id',$std_id]])
- ->where([['course_reg.cyearsession',$sessional],['course_reg.std_id',$std_id],['course_reg.csemester','Second Semester']])
- ->select('course_reg.*', 'students_results.std_grade','students_results.cp')
- ->get();
-
- /*--------------------get all result------------------------------------------*/
- $result =DB::connection('mysql1')->table('students_results')->where([['matric_no',$matric_no],['std_mark_custom2',$sessional],['std_id',$std_id]])->get();
- if(count($result) > 0)
- {
- foreach ($result as $key => $value) {
- $result_id [] = $value->stdcourse_id;
- }
 
 /* --------------get first semeter course reg --------------------------- */
  $course_first =DB::connection('mysql1')->table('course_reg')
  ->where([['cyearsession',$sessional],['std_id',$std_id],['csemester','First Semester'],['clevel_id',$level]])
- ->whereNotIn('thecourse_id',$result_id)->get();
+ ->get();
+
  
  $course_second =DB::connection('mysql1')->table('course_reg')
  ->where([['cyearsession',$sessional],['std_id',$std_id],['csemester','Second Semester'],['clevel_id',$level]])
- ->whereNotIn('thecourse_id',$result_id)->get();
+->get();
 
-}
 
- return view('result.check_result')->withResult_first($result_first)->withResult_second($result_second)->withCourse_first($course_first)->withCourse_second($course_second)->withY($sessional)->withYplus($yearplus)->withName($name)->withMatric_no($matric_no)->withGpa($gpa)->withCgpa($c_gpa)->withLevel($level)->withR($r)->withFac($fac)->withDep($dep)->withCsty($c_sty);
+
+ return view('result.check_result')->withCourse_first($course_first)->withCourse_second($course_second)->withY($sessional)->withYplus($yearplus)->withName($name)->withMatric_no($matric_no)->withGpa($gpa)->withCgpa($c_gpa)->withLevel($level)->withR($r)->withFac($fac)->withDep($dep)->withCsty($c_sty);
 
  }
    return back();
@@ -160,7 +139,7 @@ return 0;
 function get_crunit ($stdcourseid,$s,$stdid )
 {
 $cu = DB::connection('mysql1')->table('course_reg')->where([['thecourse_id',$stdcourseid],['cyearsession',$s],['std_id',$stdid]])->first();
-if(count($cu ) > 0)
+if($cu != null)
 {
 return $cu->c_unit;
 }
@@ -189,7 +168,7 @@ function get_level($s_id,$s)
 {
 $g_level= DB::connection('mysql1')->table('registered_semester')->where([['std_id',$s_id],['ysession',$s]])->first();
 
-if(count($g_level) > 0 )
+if($g_level!=null)
 {return $g_level->rslevelid;
 }
 return '';
@@ -225,7 +204,7 @@ $rowc = DB::connection('mysql1')->table('course_reg')->where([['std_id',$std_id]
 $code = substr($rowc->stdcourse_custom2,0,3).' '.substr($rowc->stdcourse_custom2,3,4);
 			
 $type = substr($rowc->stdcourse_custom2,0,3); // GSSS
-$n = count($sql_num);
+$n =$sql_num;
 			
 if ($n >= 3)
 {
@@ -285,8 +264,8 @@ function take_courses_sessional($stdid, $l, $s)
 {
 	$fos = session()->get('fos'); 
 	$take = '';
-	$course_id = '';
-	$course_array ='';
+	$course_id = array();
+	$course_array =array();
 	
 	$result = DB::connection('mysql1')->table('students_results')->where([['std_id',$stdid],['level_id',$l],['std_mark_custom2',$s]])->get();
 

@@ -128,14 +128,52 @@
 
        </div>
 <div class="col-xs-12 table-responsive w4">
-     
+     @if(Auth::user()->entry_year <= 2016)
+
        <table class="table table-bordered">
        <tr>
        <th>Interprete Grade</th>
        <th>Interprete Remarks</th>
        <th>Interpretation</th>
        </tr>
+       @if(Auth::user()->programme_id == 2)
+       <!--  diploma students -->
        <tr>
+       <td>A = 5.0</td> 
+       <td><b>TAKE : </b>Mean previously dropped courses,to be taken in the current level</td>
+       <td><b>CA : </b>Continuous Assessment Score</td>
+       </tr>
+        <tr>
+       <td>B = 4.0</td> 
+       <td>
+<b>RESIT : </b>Means previously failed courses to be taken in the current level
+      </td>
+       <td><b>EXM : </b>Examination Scores</td>
+       </tr>
+        <tr>
+       <td>C = 3.0</td> 
+       <td><b>NR : </b>Mean no result, the lecturer have not uploaded yet.</td>
+       <td><b>T : </b>Total Scores</td>
+       
+       </tr>
+        <tr>
+       <td>D = 2.0</td> 
+       <td></td>
+         <td><b>Status :</b>C = Compulsory Course</td>
+       
+       
+       </tr>
+        <tr>
+       <td>E = 1.0</td> 
+     
+     
+       </tr>
+        <tr>
+       <td>F = 0.0</td> 
+       
+       </tr>
+       @else
+        <tr>
        <td>A = 5.0</td> 
        <td><b>TAKE : </b>Mean previously dropped courses,to be taken in the current level</td>
        <td><b>CA : </b>Continuous Assessment Score</td>
@@ -164,8 +202,88 @@
         <tr>
        <td>F = 0.0</td> 
        <td></td>
-       </tr>  	
+       </tr> 
+       @endif   
        </table>
+
+       @else
+ <table class="table table-bordered">
+       <tr>
+       <th>Interprete Grade</th>
+       <th>Interprete Remarks</th>
+       <th>Interpretation</th>
+       </tr>
+       <tr>
+        @if(Auth::user()->programme_id == 2)
+       <td>A = 4.0</td> 
+       <td><b>TAKE : </b>Mean previously dropped courses,to be taken in the current level</td>
+       <td><b>CA : </b>Continuous Assessment Score</td>
+       </tr>
+        <tr>
+       <td>B = 3.0</td> 
+       <td>
+        
+<b>RESIT : </b>Means previously failed courses to be taken in the current level
+      
+
+      </td>
+       <td><b>EXM : </b>Examination Scores</td>
+       </tr>
+        <tr>
+       <td>C = 2.0</td> 
+       <td><b>NR : </b>Mean no result, the lecturer have not uploaded yet.</td>
+       <td><b>T : </b>Total Scores</td>
+       
+       </tr>
+        <tr>
+       <td>D = 1.0</td> 
+       <td><b>Probation : </b>Mean repeat the same level and rewirte all your failed and dropped courses</td>
+       <td><b>Status :</b>E = Elective Course </td>
+       </tr>
+        <tr>
+       <td>F = 0.0</td> 
+       <td><b>Withdraw :</b>Means Stop studies</td>
+       <td><b>Status :</b>C = Compulsory Course</td>
+       </tr>
+       @else
+          
+
+<tr>
+       <td>A = 4.0</td> 
+       <td><b>TAKE : </b>Mean previously dropped courses,to be taken in the current level</td>
+       <td><b>CA : </b>Continuous Assessment Score</td>
+       </tr>
+        <tr>
+       <td>B = 3.0</td> 
+       <td>
+  
+        <b>RPT : </b>Means previously failed courses to be taken in the current level
+        
+
+      </td>
+       <td><b>EXM : </b>Examination Scores</td>
+       </tr>
+        <tr>
+       <td>C = 2.0</td> 
+       <td><b>NR : </b>Mean no result, the lecturer have not uploaded yet.</td>
+       <td><b>T : </b>Total Scores</td>
+       
+       </tr>
+        <tr>
+       <td>D = 1.0</td> 
+       <td><b>Probation : </b>Mean repeat the same level and rewirte all your failed and dropped courses</td>
+       <td><b>Status :</b>E = Elective Course </td>
+       </tr>
+        <tr>
+       <td>F = 0.0</td> 
+       <td><b>Withdraw :</b>Means Stop studies</td>
+       <td><b>Status :</b>C = Compulsory Course</td>
+       </tr>
+       @endif
+
+       </table>
+
+       @endif
        </div>
        </div>
     </div>

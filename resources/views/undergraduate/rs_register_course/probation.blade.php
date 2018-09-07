@@ -5,7 +5,7 @@
   <div class="page-wrapper">
    <header class="page-heading clearfix">
      <h1 class="heading-title pull-left">Welcome <strong class="text-danger">{{ Auth::user()->surname.
-        "&nbsp;". Auth::user()->firstname."&nbsp;".Auth::user()->othername ."&nbsp;(".Auth::user()->matric_number.")"}}</strong>
+        "&nbsp;". Auth::user()->firstname."&nbsp;".Auth::user()->othername ."&nbsp;&nbsp;(".Auth::user()->matric_number.")"}}</strong>
         <?php $next =session()->get('session_year') +1;?>
      </h1>
      <div class="breadcrumbs pull-right">

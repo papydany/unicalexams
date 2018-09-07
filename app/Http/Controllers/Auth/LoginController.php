@@ -61,8 +61,9 @@ class LoginController extends Controller
         $serial_number =$request->input('serial_number');
         $status =$request->input('status');
         $s_type = explode('~',$request->input('type'));
-      
+
         $type =$s_type[0]; // for students type eg pds, undergraduate
+
         $type_2 =$s_type[1]; // for student type for undergraduate details eg. direct entry and normal students.
 
 
@@ -134,7 +135,7 @@ $user_matric_number=auth()->user()->matric_number;
 
   $pin =Pin::where([['pin',$pin],['id',$serial_number]])->first();
  
-  if(count($pin) >0)
+  if($pin != null)
   {
     session()->put('login_user',$pin->id);
     session()->put('session_year',$pin->session);
@@ -171,13 +172,26 @@ Session::flash('warning',"please check your Matric Number.");
  return back();
 }
 // ==============================login form======================
-    public function enter_pin()
+    public function enter_pin1()
+    {
+   return view('auth.enter_pin1');
+    }
+
+      public function enter_pin()
     {
    return view('auth.enter_pin');
     }
 // ==============================login form======================
+     public function post_enter_pin1(Request $request)
+    {
+      Session::flash('danger',"whoops!!! Some thing went wrong.Contant your Exams Officer");
+      return back();
+    }
+
     public function post_enter_pin(Request $request)
     {
+  
+
 $this->validate($request, ['pin' => 'required','serial_no' => 'required',]);
 $pin =$request->input('pin');
 $serial_no =$request->input('serial_no');
@@ -203,29 +217,31 @@ $serial_no =$request->input('serial_no');
         if($response =="OK Proceed")
         {
    $check =User::where([['jamb_reg',$MatricNumber],['entry_year',$entry_year]])->first();
-   if(count($check) > 0)
+   if($check != null)
    {
     Session::flash('danger',"your jamb reg number / Matric Number is registered Already.");
  
      return back();
    } 
   $pin =Pin::where([['pin',$pin],['id', $serial_no]])->first();
-  if(count($pin) >0)
+  if($pin != null)
   {
     if($pin->status == 0)
     {
-         session()->forget('u_login_user');
-       session()->forget('jreg');
+      session()->forget('u_login_user');
+      session()->forget('jreg');
+      session()->forget('session');
     session()->flush();
        session()->put('u_login_user',$pin->id);
        session()->put('jreg',$MatricNumber);
+       session()->put('session',$pin->session);
       
       return redirect()->intended('/udg_register'); 
 
     }elseif($pin->status == 1)
     {
      Session::flash('danger',"Pin Already Used.");
-    return redirect()->intended('/enter_pin'); 
+    return back(); 
     }
   }else{
 Session::flash('danger',"Incorrect Pin or Serial Number.");
@@ -334,11 +350,11 @@ Session::flash('danger',"your have not pay school fess.");
         
 
         //====================== autheticate pin ========================
-if(count($users) > 0)
+if($users != null)
 {
   $pin =Pin::where([['pin',$pin],['id', $serial_no]])->first();
 
-  if(count($pin) >0)
+  if($pin != null)
   {
     if($pin->status == 0)
     {
@@ -370,7 +386,7 @@ if(count($users) > 0)
        session()->put('student_type',$pin->student_type);
        session()->put('std_id',$users->std_id);
        session()->put('matric_no',$users->matric_no);
-       $name =$users->surname.''.$users->firstname.''.$users->othernames;
+       $name =$users->surname.' '.$users->firstname.' '.$users->othernames;
        session()->put('name', $name);
        session()->put('fos',$users->stdcourse);
         session()->put('faculty_id',$users->stdfaculty_id);

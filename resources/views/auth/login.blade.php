@@ -12,6 +12,9 @@
         {{ session('status') }}
     </div>
 @endif
+ <p class="text-center alert alert-danger" role="alert" >
+Entry Year 2015/2016 and below    <a href="{{url('std_login')}}">Check Your Result Here</a></p>
+<br/>
 <p class="text-danger text-center"><b>NB ::</b> PDS  and First Year students are categorise as <b>new students</b></p>
                     <form class="form-horizontal" role="form" method="POST" action="{{ route('login') }}">
                         {{ csrf_field() }}

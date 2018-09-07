@@ -1,5 +1,5 @@
 @extends('layouts.main')
-@section('title','Delete Course ')
+@section('title','Preview Course ')
 @section('content')
     <div class="content container">
         <div class="page-wrapper">
@@ -11,31 +11,31 @@
                     <ul class="breadcrumbs-list">
                         <li class="breadcrumbs-label">You are here:</li>
                         <li><a href="url('/')}}">Home</a><i class="fa fa-angle-right"></i></li>
-                        <li class="current">Delete Course </li>
+                        <li class="current">Preview Course </li>
                     </ul>
                 </div><!--//breadcrumbs-->
             </header>
         </div>
         <div class="row" style="margin-bottom: 20px;">
-            <form class="form-horizontal" role="form" method="POST" target="_blank" action="{{ url('/deleteCourses') }}" data-parsley-validate>
+            <form class="form-horizontal" role="form" method="POST" target="_blank" action="{{ url('/view_register_course') }}" data-parsley-validate>
             {{ csrf_field() }}
                 <div class="form-group">
                     <div class="col-sm-3">
                         {{!$next =$ss+1}}
                         <select name="session"  readonly class="form-control">
-                            <option value="{{$ss}}">{{$ss." / ".$next}} session</option>
+                            <option value="{{$ss}}">{{$ss." / ".$next}} Session</option>
                         </select>
                      
                     </div>
-                    <div class="col-sm-3">
-                        <select name="level" class="form-control" required readonly>
-                         <option value="{{$reg->level_id}}">{{$reg->level_id}}00 level</option>
-                        </select>
+                    <div class="col-sm-2">
+                        <select name="level" class="form-control" readonly>
+                        <option value="{{$reg->level_id}}">{{$reg->level_id}}00 Level</option>
+                    </select>
                     </div>
 
-                    <div class="col-sm-3">
+                    <div class="col-sm-2">
                         <select name="semester" class="form-control" required>
-                            <option value="">-- Select Semester --</option>
+                            <option value=""> Select Semester </option>
                             @if(isset($s))
                                 @foreach($s as $v)
                                     <option value="{{$v->semester_id}}">{{$v->semester_name}}</option>
@@ -45,7 +45,19 @@
                             @endif
                         </select>
                     </div>
-                   <div class="col-sm-3">
+                      <div class="col-sm-2">
+                        <select name="season" class="form-control" required>
+                            <option value="">Select Season</option>
+                            <option value="NORMAL">NORMAL</option>
+                            @if(Auth::user()->programme_id == 2)
+                            <option value="RESIT">RESIT</option>
+
+                            @else
+                           <option value="VACATION">VACATION</option>
+                            @endif
+                        </select>
+                    </div>
+                   <div class="col-sm-2">
                    <input type="submit" class="btn" value="Continue">
                    </div>
 

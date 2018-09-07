@@ -1,14 +1,14 @@
 @extends('layouts.olddisplayresult')
 @section('title','Home')
 @section('content')
-
+@inject('R','App\RRR')
     <div class="col-xs-12">
     <div class="col-xs-12">
     <p class="text-center">{{$name. " - ".$matric_no.'&nbsp;('.$level.'00 level)'}}</p>
     </div>
 
  <div class="col-sm-6 table-responsive w2">
- @if(count($result_first) > 0)
+
  <table class="table table-bordered table-striped">
  <tr>
  <th colspan="5" class="text-danger text-center">First Semester
@@ -22,39 +22,36 @@
 <th>Grade</th>
 <th>Grade Point</th>
 </tr>
-    @foreach($result_first as $v)
-
-    <tr>
-    <td>{{$v->stdcourse_custom2}}</td>
-      <td>{{$v->stdcourse_custom3}}</td>
- <td>{{$v->c_unit}}</td>
-  <td>{{$v->std_grade}}</td>
-
- <td>{{$v->cp}}</td>
-  </tr>
-
-   @endforeach
-
-
-    @if(count($course_first) > 0)
+    @if($course_first != null )
+   
    @foreach($course_first as $vc)
+    <?php $result =$R->getOldResult($vc->thecourse_id,$vc->std_id,$vc->cyearsession);
+    if($result != null){
+    
+      $grade_point =$R->get_cp_2($result->std_grade,$vc->c_unit);
+    }else
+    {
+      $grade_point = '';
+    }
+
+    ?>
 <tr>
     <td>{{$vc->stdcourse_custom2}}</td>
       <td>{{$vc->stdcourse_custom3}}</td>
  <td>{{$vc->c_unit}}</td>
-  <td>NR</td>
+  <td>{{isset($result->std_grade) ? $result->std_grade: ''}}</td>
 
-  <td>NR</td>
+  <td>{{isset($grade_point) ? $grade_point: ''}}</td>
   </tr>
    @endforeach
    @endif
    </table>
-   @endif
+  
        </div>
 
 
 <div class="col-sm-6 table-responsive w2">
- @if(count($result_second) > 0)
+
 <table class="table table-bordered table-striped">
  <th colspan="5" class="text-danger text-center">Second Semester
  </th>
@@ -66,32 +63,31 @@
 
 <th>Grade Point</th>
 </tr>
-@foreach($result_second as $v)
 
-    <tr>
-    <td>{{$v->stdcourse_custom2}}</td>
-      <td>{{$v->stdcourse_custom3}}</td>
- <td>{{$v->c_unit}}</td>
-  <td>{{$v->std_grade}}</td>
-
-  <td>{{$v->cp}}</td>
-  </tr>
-
-   @endforeach
    @if(count($course_second) > 0)
    @foreach($course_second as $vc)
+   <?php $result = $R->getOldResult($vc->thecourse_id,$vc->std_id,$vc->cyearsession);
+   if($result != null)
+   {
+    $grade_point =$R->get_cp_2($result->std_grade,$vc->c_unit);
+   }else
+   {
+    $grade_point = '';
+   }
+
+   ?>
 <tr>
     <td>{{$vc->stdcourse_custom2}}</td>
       <td>{{$vc->stdcourse_custom3}}</td>
  <td>{{$vc->c_unit}}</td>
-  <td>NR</td>
+  <td>{{isset($result->std_grade) ? $result->std_grade: ''}}</td>
 
-  <td>NR</td>
+  <td>{{isset($grade_point) ? $grade_point: ''}}</td>
   </tr>
    @endforeach
    @endif
    </table>
-   @endif
+  
        </div>
        <div class="col-xs-12 table-responsive w4">
      

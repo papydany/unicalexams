@@ -5,7 +5,7 @@
   <div class="page-wrapper">
    <header class="page-heading clearfix">
      <h1 class="heading-title pull-left">Welcome <strong class="text-danger">{{ Auth::user()->surname.
-        "&nbsp;". Auth::user()->firstname."&nbsp;".Auth::user()->othername }}</strong>
+        "&nbsp;". Auth::user()->firstname."&nbsp;".Auth::user()->othername }}</strong><strong class="text-success">&nbsp;({{Auth::user()->matric_number}})</strong>
         
      </h1>
 
@@ -22,7 +22,7 @@
            <h3><strong class="text-success">PIN VALID FOR &nbsp;
             <?php $s = session()->get('session_year');
             $next =session()->get('session_year') +1;?>
-            {{$s.'/'.$next }} &nbsp; SESSION
+           <span class="text-danger">{{$s.'/'.$next }} </span> &nbsp; SESSION
           </strong></h3>
         
    <div class="page-content">                 
@@ -58,19 +58,7 @@
                         </select>
                     </div>
 
-                    <div class="col-sm-3">
-                        <select name="semester" class="form-control" required>
-                            <option value="">-- Select Semester --</option>
-                            @if(isset($semester))
-                                @foreach($semester as $v)
-                                    <option value="{{$v->semester_id}}">{{$v->semester_name}}</option>
-
-                                @endforeach
-
-                            @endif
-                        </select>
-                    </div>
-                   <div class="col-sm-3">
+                  <div class="col-sm-3">
                    <input type="submit" class="btn" value="Continue">
                    </div>
 

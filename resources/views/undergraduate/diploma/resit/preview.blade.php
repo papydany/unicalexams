@@ -22,33 +22,31 @@
         <div class="team-wrapper col-xs-12">        
          <div class="row page-row" >
           <div class="col-sm-6">
-            <h4><strong class="text-success">PIN VALID FOR &nbsp; {{session()->get('session_year').'/'.$next }} &nbsp; SESSION</strong></h4>
-             <p class=" text-center" style="background-color: #0ff; padding: 10px"><b> Direct Entry students,  100 level, is your first year of three or four years programme</b></p>
+            <h4><strong class="text-success">PIN VALID FOR &nbsp; {{session()->get('session_year').'/'.$next }} &nbsp; SESSION  </strong></h4>
+            <p class="text-danger" style="font-size: 1.3em;text-decoration: underline"> RESIT COURSE REGISTRATION</p>
           </div>
            <div class="col-sm-3">
             <p><b>Session :</b>{{session()->get('session_year').'/'.$next }}</p>
                  <p><b>Level :</b>{{$l}}00 </p>
-                  <p><b>Semester :</b>{{$sn->semester_name}}</p>
+                  <p><b>Semester :</b>FIRST & SECOND</p>
           </div>
             <div class="col-sm-3">
               <p class="text-danger"><b>Course Status</b></p>
-            <p><b>C : </b>Compulsary</p>
-                 <p><b>E : </b>Elective</p>
-                  <p><b>R : </b>Failed course In Last Session</p>
-                    <p><b>D : </b>Drop course In Last Session</p>
+              <p><b>R : </b>Failed course In Last Session</p>
+                  
           </div>
           <div class="clearfix"></div>
             
-            @if(isset($rc))
-            @if(!empty($rc) > 0)
-              <p class="text-danger">Select the check box to choose the couress you want to register</p>     
-              <form class="form-horizontal" role="form" method="GET" action="{{ url('returning_preview_course') }}" data-parsley-validate>
+            @if(isset($rg))
+            @if(!empty($rg) > 0)
+                  
+              <form class="form-horizontal" role="form" method="POST" action="{{ url('register_resit_course1') }}" data-parsley-validate>
               {{ csrf_field() }}                     
             <table class="table table-boxed">
               <thead>
                <tr>
                  <th>#</th>
-                 <th>Select <input type="checkbox" id="all_ids" ></th></th>
+                 <th>Select</th>
                  <th>Title</th>
                  <th>Code</th>
                  <th>Unit</th>
@@ -58,11 +56,10 @@
           <tbody>
         {{!!$c = 0}}
 
-
+<input type="hidden" name="session" value="{{session()->get('session_year')}}">
 <input type="hidden" name="level" value="{{$l}}">
-<input type="hidden" name="semester" value="{{$sn->semester_id}}">
-  @if(!empty($frc) > 0)
-    @foreach($frc as $vf)
+  
+    @foreach($rg as $vf)
      {{!++$c}}
      @if(($c % 2)== 0)
      <tr>
@@ -72,7 +69,7 @@
      <td>{{$c}}</td>
      <td>
       <input type="checkbox" name="id[]" value="{{$vf->id}}" checked disabled>
-      <input type="hidden" name="idf[]" value="{{$vf->id}}">
+ <input type="hidden" name="idd[]" value="{{$vf->id}}">
      </td> 
      <td>{{strtoupper($vf->reg_course_title)}}</td>
      <td>{{strtoupper($vf->reg_course_code)}}</td>
@@ -80,46 +77,14 @@
      <td>R</td>
      </tr>
     @endforeach 
-  @endif
 
-  @if(!empty($drc) > 0)
-   @foreach($drc as $vd)
-    {{!++$c}}
-    @if(($c % 2)== 0)
-    <tr>
-    @else
-    <tr class='danger'>
-    @endif
-    <td>{{$c}}</td>                                            
-    <td><input type="checkbox"  name="id[]" value="{{$vd->id}}" checked disabled>
-   <input type="hidden" name="idd[]" value="{{$vd->id}}">
-    </td> 
-    <td>{{strtoupper($vd->reg_course_title)}}</td>
-    <td>{{strtoupper($vd->reg_course_code)}}</td>
-    <td>{{$vd->reg_course_unit}}</td>
-    <td>D</td>
-    </tr>
-  @endforeach
-@endif
-           @foreach($rc as $v)
-            {{!++$c}}
-@if(($c % 2)== 0)
-  <tr>
-  @else
-  <tr class='danger'>
-  @endif
-  <td>{{$c}}</td>
- <td><input type="checkbox" class="ids" name="id[]" value="{{$v->id}}"></td> 
- <td>{{strtoupper($v->reg_course_title)}}</td>
- <td>{{strtoupper($v->reg_course_code)}}</td>
- <td>{{$v->reg_course_unit}}</td>
- <td>{{$v->reg_course_status}}</td>
-  </tr>
-@endforeach 
+
+
+
 </tbody>
 </table><!--//table-->
           <div class="col-sm-offset-8 col-sm-4">
-             <button type="submit" class="btn btn-lg"><i class="fa fa-btn fa-user"></i> Preview</button>
+             <button type="submit" class="btn btn-lg"><i class="fa fa-btn fa-user"></i>Register</button>
           </div>
     </form>
            @else

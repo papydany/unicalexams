@@ -82,8 +82,10 @@ return $avg;
 
   public function get_cp($total,$cu)
  {
-
-  switch($total) {
+$entry_year =Auth::user()->entry_year;
+if($entry_year <= 2016)
+{
+switch($total) {
       case $total =='No Score':
                
                $return = '';
@@ -120,7 +122,92 @@ return $avg;
                 break;
             
         }
+}else
+{
+  switch($total) {
+      case $total =='No Score':
+               
+               $return = '';
+                 return $return;
+                 break;
+            case $total >= 70:
+              $return = 4*$cu;
+               return $return;
+                break;
+            case $total >= 60:
+               
+                 $return = 3*$cu;
+                  return $return;
+                break;
+            case $total >= 50:
+                 
+                 $return = 2*$cu;
+     return $return;
+                break;
+            case $total >= 45:
+                
+                 $return = 1*$cu;
+                  return $return;
+                break;
+            
+            case $total < 44:
+                 
+                $return = 0*$cu;
+                 return $return;
+                break;
+            
+        }
+}
+  
     
+ }
+ 
+    
+  public function get_cp_2($grade,$cu)
+ {
+
+  switch($grade) {
+
+  
+            case $grade == 'A':
+              $return = 5*$cu;
+               return $return;
+                break;
+            case $grade == 'B':
+               
+                 $return = 4*$cu;
+                  return $return;
+                break;
+            case $grade =='C':
+                 
+                 $return = 3*$cu;
+     return $return;
+                break;
+            case $grade == 'D':
+                
+                 $return = 2*$cu;
+                  return $return;
+                break;
+            case $grade == 'E':
+                 
+                 $return = 1*$cu;
+                  return $return;
+                break;
+            case $grade == 'F':
+                 
+                $return = 0*$cu;
+                 return $return;
+                break;
+            
+        }
+    
+ }
+
+ public function getOldResult($stdcourse_id,$std_id,$session)
+ {
+ $result =DB::connection('mysql1')->table('students_results')
+ ->where([['stdcourse_id',$stdcourse_id],['std_mark_custom2',$session],['std_id',$std_id]])->first();
+ return $result;
  }
 
 }

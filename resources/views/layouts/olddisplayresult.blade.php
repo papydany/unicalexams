@@ -8,9 +8,10 @@
 </head> 
 <style type="text/css">
 @media print {
-.w{width: 400px;
+.w{width: 200px;
 float: left;}
-.w2{width: 500px;float: left;clear:all;}
+.w2{width: 350px;float: left;}
+.w22{width: 350px;float: left;clear:all;}
 .w3{width: 800px;float: left;}
 .w4{width: 1000px;float: left;}
 }
@@ -21,8 +22,10 @@ float: left;}
     <div class="col-xs-12" style="padding-top: 10px;padding-bottom:10px;">
     <div class="col-sm-4 w"><img id="logo" src="{{asset('assets/images/logo.png')}}" alt="Logo">
     </div>
-<div class="col-sm-8 w2">
-    <h4><b>UNIVERSITY OF CALABAR CALABAR</b></h4>
+<div class="col-sm-4 w2">
+    <h4><b>UNIVERSITY OF CALABAR,CALABAR</b></h4>
+</div>
+  <div class="col-sm-4 w22">
     <p><b>FACULTY &nbsp;:  &nbsp;</b> {{$fac}}</p>
     <p><b>DEPARTMENT&nbsp; : &nbsp;</b> {{$dep}}</p>
     <p><b>COURSE OF STUDY&nbsp;: &nbsp;</b>{{$csty}}</p>

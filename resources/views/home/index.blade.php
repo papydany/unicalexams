@@ -26,34 +26,33 @@
             </div>
 
         <div class="row" style="margin-left: 0px;margin-right: 0px; margin-bottom: 50px;">
-           <div class="row">
-    <div class=" col-sm-10 col-sm-offset-1 alert alert-danger" role="alert" >
-      Returning Students, entry year from 2016 / 2017 session... Use the login in the menu to login to check your result..
-    </div>
-</div>
+  
         <div class="col-sm-4 col-md-3 thumbnail">
         <h4>New Student</h4>
-        <p class="text-danger">(100 level) UME/CES/DE/DIPLOMA</p>
+        <p class="text-danger"> UME /CES / DE / DIPLOMA</p>
         <p>
-        <a href="{{url('/enter_pin')}}" class="btn btn-info btn-block">Registration</a>
+        <a href="{{url('/enter_pin1')}}" class="btn btn-info btn-block">Registration</a>
         </p>
         </div>
 
+
+         <div class="col-sm-4 col-md-3 col-md-offset-1 thumbnail">
+<h4>Entry Year 2016/2017 and Above </h4>
+<h5 class="text-danger"> Check Your Result Here</h5>
+        <p>
+     <a href="{{url('/login')}}" class="btn btn-info btn-block">Check Result (2016/2017 & Above)</a>     
+        <!--<a href="{{url('/pdg_register')}}" class="btn btn-info btn-block">Registration</a>-->
+        </p>
+        </div>
  <div class="col-sm-4 col-md-3 col-md-offset-1 thumbnail">
-<h4>Returning Student</h4>
-<p class="text-danger">Entry Year is  2015/2016 and below </p>
+<h4>Entry Year 2015/2016 and below</h4>
+<h5 class="text-danger">Check Your Result Here </h5>
 <p>
-<a href="{{url('/oldreturnstudent')}}" class="btn btn-info btn-block">Check Result</a>
+<a href="{{url('/oldreturnstudent')}}" class="btn btn-info btn-block">Check Result (2015/2016 & Below</a>
 </p>
         </div>
 
-         <div class="col-sm-4 col-md-3 col-md-offset-1 thumbnail">
-<h4>Pre Degree Student</h4>
-<p class="text-danger"> &nbsp; &nbsp;</p>
-        <p>
-        <a href="{{url('/pdg_register')}}" class="btn btn-info btn-block">Registration</a>
-        </p>
-        </div>
+
         </div>
         
            

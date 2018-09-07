@@ -50,6 +50,10 @@
                             <a class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="0" data-close-others="false" href="#">Register Courses (New Students) <i class="fa fa-angle-down"></i></a>
                             <ul class="dropdown-menu">
                                 <li><a href="{{url('/register_course')}}">Register Courses</a></li>
+                                @if(Auth::user()->programme_id == 2)
+                                <li><a href="{{url('register_resit_course')}}">Register Resit Courses</a></li>
+
+                                @endif
                                 <li><a href="{{url('/print_course')}}">Print Registered Courses</a></li>
                                 <li><a href="{{url('/addCourses')}}">Add Courses</a></li>
                                 <li><a href="{{url('/deleteCourses')}}">Delete Courses</a></li>        
@@ -62,7 +66,8 @@
                             <li class="nav-item dropdown">
                             <a class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="0" data-close-others="false" href="#">Register Courses (Returning Students) <i class="fa fa-angle-down"></i></a>
                             <ul class="dropdown-menu">
-                                <li><a href="{{url('returning_register_course')}}">Register Courses</a></li>
+                               <li><a href="{{url('returning_register_course')}}">Register Courses</a></li>
+                                <!--<li><a href="#">Register Courses</a></li>-->
                                 <li><a href="{{url('print_course')}}">Print Registered Courses</a></li>
                                 <li><a href="{{url('addCourses')}}">Add Courses</a></li>
                                 <li><a href="{{url('deleteCourses')}}">Delete Courses</a></li>        

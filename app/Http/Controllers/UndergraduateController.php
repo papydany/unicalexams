@@ -26,7 +26,7 @@ class UndergraduateController extends Controller
     //
 Const FIRST_SEMESTER =1;
 Const SECOND_SEMESTER =2;
-
+Const Diploma = 2;
 
 
     public function __construct()
@@ -161,7 +161,7 @@ $update->save();
         $l= 1;
          $session=  session()->get('session_year');
         $check_student_reg =StudentReg::where([['user_id',$user_id],['semester',self::FIRST_SEMESTER],['session',$session]])->first();
-        if(count($check_student_reg) == 0)
+        if($check_student_reg == null)
         {
           // register for year first semester 
          /* get courses for regiteration*/
@@ -170,9 +170,9 @@ $update->save();
 
 
         }
-        elseif(count($check_student_reg) == 1){
+        elseif($check_student_reg != null){
            $check_student_reg_2 =StudentReg::where([['user_id',$user_id],['semester',self::SECOND_SEMESTER],['session',$session]])->first(); 
-if(count($check_student_reg_2) == 0)
+if($check_student_reg_2 == null)
         {
  // register for year first semester 
   $register_course=RegisterCourse::where([['programme_id',$p_id],['faculty_id',$f_id],['department_id',$d_id],['fos_id',$fos_id],['semester_id',self::SECOND_SEMESTER],['session',$session],['level_id',$l],])->whereIn('reg_course_status',["C","E"])->orderBy('reg_course_status','ASC')->get();
@@ -202,7 +202,7 @@ return view('undergraduate.register_course')->withReg($register_course)->withS($
       return back();
      }
      $course_unit =CourseUnit::where([['session',$session],['level',$l],['fos',Auth::user()->fos_id]])->first();
-     if(count($course_unit) == 0)
+     if($course_unit == null)
      {
       $course_unit =CourseUnit::where([['session',$session],['level',0],['fos',0]])->first();
      }
@@ -224,7 +224,7 @@ return view('undergraduate.register_course')->withReg($register_course)->withS($
 
     
     $check_student_reg=StudentReg::where([['user_id',Auth::user()->id],['semester',$s],['session',$session],['level_id',$l]])->first();
-    if(count($check_student_reg) == 0)
+    if($check_student_reg == null)
     {
 
     $student_reg = new StudentReg;
@@ -261,12 +261,12 @@ public function print_course()
     $s =Semester::where('programme_id',Auth::user()->programme_id)->get();
     $session=session()->get('session_year');
     $reg =StudentReg::where([['session',$session],['user_id',Auth::user()->id]])->first();
-    if(count($reg) == 0)
+    if($reg == null)
     {
       Session::flash('warning',"you have not register courses for these session");
       return back();
     }
-    return view('undergraduate.print_course')->withS($s)->withReg($reg)->withSs($session);
+    return view('undergraduate.print.index')->withS($s)->withReg($reg)->withSs($session);
 
 }
 public function view_register_course($l,$s)
@@ -284,7 +284,7 @@ public function addCourses()
    // $l = Level::where('programme_id',Auth::user()->programme_id)->get();
     $session=session()->get('session_year');
     $reg =StudentReg::where([['session',$session],['user_id',Auth::user()->id]])->first();
-      if(count($reg) == 0)
+      if($reg == null)
     {
       Session::flash('warning',"you have not register courses for these session");
       return back();
@@ -304,7 +304,7 @@ public function post_addCourses(request $request)
 
        $check = StudentReg::where([['session',$session],['level_id',$l],['semester',$s],['user_id',$id]])->first();
     
-       if(count($check) == 0)
+       if($check == null)
        {
          Session::flash('warning',"you have not register for these semester.please use the Register Courses Link.");
          return back();
@@ -345,7 +345,7 @@ will be need to check the course of unit u have before you can add more
       return back();
      }
      $course_unit =CourseUnit::where([['session',$session],['level',$l],['fos',Auth::user()->fos_id]])->first();
-     if(count($course_unit) == 0)
+     if($course_unit == null)
      {
       $course_unit =CourseUnit::where([['session',$session],['level',0],['fos',0]])->first();
      }
@@ -369,7 +369,7 @@ will be need to check the course of unit u have before you can add more
     
     $check_student_reg=StudentReg::where([['user_id',Auth::user()->id],['semester',$s],['session',$session],['level_id',$l]])->first();
 
-    if(count($check_student_reg) > 0)
+    if($check_student_reg != null)
     {
 
           $data =RegisterCourse::whereIn('id',$id)->get();
@@ -391,26 +391,21 @@ public function post_view_register_course(Request $request)
 {
     $this->validate($request,array('level'=>'required','semester'=>'required',));
     // get programme
-
 $programme =$this->getProgramme();
-
 // get faculty
-
 $faculty=$this->getfaculty();
-
 // get department
-
 $department =$this->getDepartment();
-
 // get fos
-
 $fss =$this->getFos();   
     
     $session=session()->get('session_year');
      $l =$request->level;
+     $season=$request->season;
     $s=$request->semester;
+     
     $semester =Semester::where([['programme_id',Auth::user()->programme_id],['semester_id',$s]])->first(); 
-    $course =CourseReg::where([['user_id',Auth::user()->id],['semester_id',$s],['session',$session],['level_id',$l],['period',"NORMAL"]])
+    $course =CourseReg::where([['user_id',Auth::user()->id],['semester_id',$s],['session',$session],['level_id',$l],['period',$season]])
         ->orderBy('course_status','ASC')->orderBy('course_code','ASC')->get();
     return view('undergraduate.view_register_course')->withC($course)->withS($semester)->withL($l)->withSs($session)->withP($programme)->withF($faculty)->withD($department)->withFs($fss);
 
@@ -422,8 +417,10 @@ public function deleteCourses()
       $s =Semester::where('programme_id',Auth::user()->programme_id)->get();
     $l = Level::where('programme_id',Auth::user()->programme_id)->get();
     $session=session()->get('session_year');
+
     $reg =StudentReg::where([['session',$session],['user_id',Auth::user()->id]])->first();
-      if(count($reg) == 0)
+
+      if($reg == null)
     {
       Session::flash('warning',"you have not register courses for these session");
       return back();
@@ -439,10 +436,10 @@ public function post_deleteCourses(request $request)
        $l =$request->level;
        $s=$request->semester;
        $id=Auth::user()->id;
- 
+    
    $check = StudentReg::where([['session',$session],['level_id',$l],['semester',$s],['user_id',$id]])->first();
     
-       if(count($check) == 0)
+       if($check == null)
        {
          Session::flash('warning',"you have not register for these semester.please use the Register Courses Link.");
          return back();
@@ -483,7 +480,7 @@ will be need to check the course of unit u have before you can add more
      
       foreach ($variable as $key => $value) {
         $check =StudentResult::where([['user_id',Auth::user()->id],['coursereg_id',$value]])->first();
-        if(count($check) == 0)
+        if($check == null)
         {
           CourseReg::destroy($value);
         }
@@ -593,7 +590,13 @@ $second_result = DB::connection('mysql2')->table('course_regs')
 }
 $cgp =$this->get_cgpa($session, $id);
 $gp =$this->get_gpa($session, $id);
+if(Auth::user()->programme_id == 2)
+{
+$r = $this->result_remark_diploma($id, $session,$l);
+}else
+{
 $r = $this->result_remark($id, $session,$l);
+}
      return view('undergraduate.post_view_result')->withFirst_result($first_result)->withSecond_result($second_result)->withCourse_first($course_first)->withCourse_second($course_second)->withL($l)->withFss($fss)->withF($faculty)->withD($department)->withY($session)->withCgpa($cgp)->withGpa($gp)->withR($r); 
  }
 else{
@@ -643,7 +646,8 @@ $rowc = CourseReg::where([['user_id',$id],['course_id',$value->course_id],['leve
 $code = substr($rowc->course_code,0,3).' '.substr($rowc->course_code,3,4);
             
 $type = substr($rowc->course_code,0,3); // GSSS
-$n = count($sql_num);
+$n = $sql_num->count();
+
             
 if ($n >= 3)
 {
@@ -681,13 +685,52 @@ $rept = $take != '' ? '<b>TAKE</b> '. $take .'<br/>'.$rept : $rept;
     
     return $fail;
 }
+
+// diploma remarks
+function result_remark_diploma($id, $s,$l)
+{   
+$fail=''; $pass=''; $c=0; $carryf='';$rept='';
+
+$cgpa =$this->get_cgpa($s, $id);
+
+$sql_num = StudentResult::where([['user_id',$id],['session',$s],['grade',"F"],['level_id',$l]])->groupBy('course_id','id')->select('course_id','cu')->COUNT('course_id');
+$sql =StudentResult::where([['user_id',$id],['session',$s],['grade',"F"],['level_id',$l],['flag','Sessional']])->groupBy('course_id','id')->select('course_id','cu')->get();
+        
+if (count($sql)!=0){ // found failed courses in the level
+
+foreach($sql as $key => $value)
+{
+
+$rowc = CourseReg::where([['user_id',$id],['course_id',$value->course_id],['level_id',$l],['session',$s]])->first();
+    
+$code = substr($rowc->course_code,0,3).' '.substr($rowc->course_code,3,4);
+     
+$rept .= ', '.$code;
+
+}
+}
+
+
+$take =$this->take_courses_sessional($id, $l, $s);
+
+$rept = $rept != '' ? '<b>RESIT</b> '. substr($rept,2) : '';
+$rept = $take != '' ? '<b>TAKE</b> '. $take .'<br/>'.$rept : $rept; 
+    if ($rept == '') {  
+        $fail = "<b>PASS</b>";
+    } else if($rept != '') {
+        $fail =  $rept;
+    } 
+    else { $fail = '<b>PASS</b>' ;}
+    
+    return $fail;
+}
 //============================================= course sessional ==============================
 function take_courses_sessional($user_id, $l, $s) 
 {
 
     $take = '';
-    $course_id = '';
-    $course_array ='';
+    $course_id =array();
+    $course_array =array();
     $result = StudentResult::where([['user_id',$user_id],['level_id',$l],['session',$s]])->get();
     foreach ($result  as $key => $value) {
     $course_id[] = $value->course_id;
@@ -732,7 +775,7 @@ if(count($row) > 0)
 foreach ($row as $key => $value)
 {
    $cu = $this->get_crunit($value->coursereg_id, $value->session, $user_id);
-   $gp = $this->get_gradepoint ($value->grade, $cu);
+   $gp = $this->get_gradepoint($value->grade, $cu);
    $tcu += $cu;
    $tgp += $gp;
 }
@@ -778,7 +821,11 @@ return $cu->course_unit;
 }
 //===================================get grade point ==============================
 public  function get_gradepoint($grade,$cu){
-    if ($grade == 'A' )
+
+  $entry_year =Auth::user()->entry_year;
+
+  if($entry_year <= 2016)
+  {if ($grade == 'A' )
         return 5.0 * $cu;
     else if ($grade == 'B' )
         return 4.0 * $cu;
@@ -790,6 +837,21 @@ public  function get_gradepoint($grade,$cu){
         return 1.0 * $cu;
     else if ($grade == 'F' )
         return 0.0 * $cu ;
+    }
+else{
+  if ($grade == 'A' )
+        return 4.0 * $cu;
+    else if ($grade == 'B' )
+        return 3.0 * $cu;
+    else if ($grade == 'C' )
+        return 2.0 * $cu;
+    else if ($grade == 'D' )
+        return 1.0 * $cu;
+    
+    else if ($grade == 'F' )
+        return 0.0 * $cu ;
+    }
+    
    }
    //======================================= probation =========================================
 protected function Probtion($l,$id,$s,$cgpa)
@@ -798,7 +860,8 @@ $return ='';
 $fail_cu=$this->get_fail_crunit($l,$id,$s);
 $entry_year =$this->get_entry_sesssion($id);
 
-$y =$entry_year->std_custome2;
+if($entry_year <= 2016)
+{
   
    if($fail_cu > 15 || $cgpa >=0.00 && $cgpa <=0.99){
             
@@ -811,8 +874,23 @@ $y =$entry_year->std_custome2;
         }elseif($cgpa > 1.49 && $cgpa <=1.5 && $fail_cu ==15){
         $return = 'WITHDRAW OR CHANGE PROGRAMME';
         } 
+      }else
+      {
+           if($fail_cu > 15 || $cgpa >=0.00 && $cgpa <=0.54 ){
+      
+    $return = 'WITHDRAW';
+    }
+    elseif($cgpa >=0.75 && $cgpa <=0.99){
+
+      $return = 'PROBATION';
+
+    }elseif( $cgpa > 0.54 && $cgpa <=0.74){
+    $return = 'WITHDRAW OR CHANGE PROGRAMME';
+    }
+      }
     
         return $return;
+
 }
 
 
@@ -834,7 +912,7 @@ return $tcu;
 protected function get_entry_sesssion($id)
 {
     $sql = User::find($id);  
-    return $sql;
+    return $sql->entry_year;
 }
  //================================== get programme =======================================
 
@@ -844,46 +922,52 @@ protected function get_entry_sesssion($id)
 $programme =Programme::find($p);
 return $programme;
  }
-
+//====================================== get faculty ================================
  public function getfaculty()
  {
    $f=Auth::user()->faculty_id;
 $faculty=Faculty::find($f);
 return $faculty; 
  }
-
+//===================================== get department ==================================
  public function getDepartment()
  {
     $d=Auth::user()->department_id;
 $department =Department::find($d);
 return $department;
  }
-
+//====================== get fos ======================================================
  public function getFos()
  {
     $fs=Auth::user()->fos_id;
 $fss =Fos::find($fs);  
 return $fss;
  }
-
+//======================= get department by faculty ==================================================
  public function getdept($id)
 {
 $sql =Department::where('faculty_id',$id)->get();
 return $sql;
 }
-
+// ============================== get fos by department and programme ===========================
 public function gfos($id,$p_id)
 {
 $sql =Fos::where([['department_id',$id],['programme_id',$p_id]])->get();
 return $sql;
 }
-
-public function CheckRegisterStudentPerSemester($id,$semester,$session,$level)
+//====================== get register students per semester ========================
+public function CheckRegisterStudentPerSemester($id,$semester,$session,$level,$normal)
 {
-$student_reg =StudentReg::where([['user_id',$id],['semester',$semester],['session',$session],['level_id',$level]])->first();
+$student_reg =StudentReg::where([['user_id',$id],['semester',$semester],['session',$session],['level_id',$level],['season',$normal]])->first();
 return $student_reg;
 }
-
+//============ get register students for a session=======================================
+public function CheckRegisterStudent($id,$session,$level,$season)
+{
+$student_reg=StudentReg::where([['user_id',$id],['session',$session],['level_id',$level],['season',$season]])->get()->count();
+return $student_reg;
+}
+//============================= get semester by programme ================================
 public function getSemester($semester)
 {
   $semester_name =Semester::where([['programme_id',Auth::user()->programme_id],['semester_id',$semester]])->first();
@@ -893,6 +977,13 @@ public function getSemester($semester)
 public function getPreviouFailedCourses($id,$semester,$previous_session)
 {
   $failed_courses =StudentResult::where([['user_id',$id,],['semester',$semester],['session',$previous_session],['grade','F']])->get();
+  return $failed_courses;
+}
+
+/*----------------------- current failed courses --------------------------*/
+public function getCurrentFailedCourses($id,$level,$session)
+{
+  $failed_courses =StudentResult::where([['user_id',$id,],['level_id',$level],['session',$session],['grade','F']])->get();
   return $failed_courses;
 }
 
@@ -911,6 +1002,15 @@ public function GetRegisteredCompulsaryCourses($semester,$session,$level)
   return $regcourse;
 }
 
+/*------------------ get compulsary register courses in the session --------*/
+public function GetRegisteredCompulsaryCoursesSession($session,$level)
+{
+  $regcourse=RegisterCourse::where([['session',$session],['programme_id',Auth::user()->programme_id],['faculty_id',Auth::user()->faculty_id],['department_id',Auth::user()->department_id],['fos_id',Auth::user()->fos_id],['level_id',$level],['reg_course_status','C']])->get();
+
+  return $regcourse;
+}
+
+
 /*-------------------------getsingele course reg at a time --------------------------------------*/
 public function GetCourseRegSingle($session,$level,$id,$regcourse_id,$course_id,$semester,$period)
 {
@@ -923,6 +1023,27 @@ public function GetRegisteredCoursesWithArrayCourseId($semester,$session,$level,
    $regcourse =RegisterCourse::where([['semester_id',$semester],['fos_id',Auth::user()->fos_id],['session',$session],['level_id',$level],['reg_course_status',$status]])->whereIn('course_id',$array_course_id)->get();
 
    return $regcourse;
+}
+
+//=========================
+public function course_with_no_result($session,$level,$id)
+{
+  $r =0;$course_id=array();
+ $courseReg=CourseReg::where([['session',$session],['level_id',$level],['user_id',$id]])->get();
+foreach ($courseReg as $key => $value) {
+ $studentresult=StudentResult::where([['session',$session],['level_id',$level],['user_id',$id],['coursereg_id',$value->id]])->first();
+ if($studentresult == null)
+ {
+$course_id [] =$value->id;
+}}
+ 
+
+ if(count($course_id) > 0)
+ {
+  $r =1;
+ }
+
+return $r;
 }
 
 // ==========================returning students courses registration process ==================================
@@ -943,7 +1064,7 @@ $student_reg =StudentReg::where([['user_id',$id],['session','<',$s]])->orderBy('
   //$Session ="2017/2018";
  
   $student_type=  session()->get('student_type'); // eg direct entry and normal students
-  if(count($student_reg) > 0)
+  if($student_reg != null)
   {
     if($student_type == 1)
   {
@@ -961,13 +1082,19 @@ $Level =$student_reg->level_id+1;
 $Level =$Level."00";
 
   }
-
+// for normal students... diploma own is
     $r = $this->result_remark($id,$student_reg->session,$student_reg->level_id);
   }else
   {
     Session::flash('warning','You Have not register for last session.login as new  students to continue your registration or contact system admin for further explanation'); 
     return back();
   }
+// diploma  student 
+if(Auth::user()->programme_id == self::Diploma)
+{
+
+}else
+{
 
   // check if all register courses has result
  $course_id_with_no_result =array(); 
@@ -977,7 +1104,7 @@ $Level =$Level."00";
 $courseReg=CourseReg::where([['session',$student_reg->session],['level_id',$student_reg->level_id],['user_id',$id]])->get();
 foreach ($courseReg as $key => $value) {
  $studentresult=StudentResult::where([['session',$student_reg->session],['level_id',$student_reg->level_id],['user_id',$id],['coursereg_id',$value->id]])->first();
- if(count($studentresult) == 0)
+ if($studentresult == null)
  {
 $course_id_with_no_result [] =$value->id;
  }
@@ -1066,6 +1193,8 @@ session()->put('paidschoolfess',$id);
 return view('undergraduate.rs_register_course.index')->withR($r)->withCwnr($course_id_with_no_result)->withSs($s)->withSemester($all_semester)->withL($all_level);
 }
 
+}
+
 public function returning_register_semester_courses(Request $request)
 {
   $semester =$request->semester;
@@ -1079,15 +1208,16 @@ public function returning_register_semester_courses(Request $request)
 
  $semester_name =$this->getSemester($semester);
 
+
   // check first if the student has been autheticated for school fess
   if(session()->get('paidschoolfess') == Auth::user()->id)
 {
   // check if you have register for the semester
- $check_student_reg =$this->CheckRegisterStudentPerSemester($id,$semester,$session,$level);
+ $check_student_reg =$this->CheckRegisterStudentPerSemester($id,$semester,$session,$level,'NORMAL');
 
-
-if(count($check_student_reg) == 0)
+if($check_student_reg == null)
 {
+ 
   $student_reg =StudentReg::where([['user_id',$id,],['semester',$semester],['level_id',$previous_level]])->orderBy('session','desc')->orderBy('level_id','desc')->first();
   // get failed courses
   $failed_courses_course_id =array();
@@ -1096,6 +1226,7 @@ if(count($check_student_reg) == 0)
   $previous_session = $student_reg->session;
 
 $failed_courses =$this->getPreviouFailedCourses($id,$semester,$previous_session);
+
 // check if the courses has been failed upto three times
 if(count($failed_courses) > 0)
 {
@@ -1114,9 +1245,9 @@ $failed_courses_course_id [] =$value->course_id;
 if(count($d_register_course) > 0)
 {
   foreach ($d_register_course as $key => $value) {
-   $courseReg=$this->GetCourseRegSingle($previous_session,$previous_levell,$id,$value->id,$value->course_id,$semester,'NORMAL');  
+   $courseReg=$this->GetCourseRegSingle($previous_session,$previous_level,$id,$value->id,$value->course_id,$semester,'NORMAL');  
    
-   if(count($courseReg) == 0)
+   if($courseReg== null)
    {
     $unregister_course_id [] =$value->course_id;
    }
@@ -1140,15 +1271,15 @@ $combine_course_id =$unregister_course_id;
   {
     foreach ($combine_course_id as $key => $value) {
       // get courses first
-   $r_c =RegisterCourse::where([['course_id',$value],['semester_id',$semester],['fos_id',Auth::user()->fos_id],['session',$previous_session]])->whereIn('reg_course_status',["C","E"])->first();
-   if(count($r_c) > 0){
+   $r_c =RegisterCourse::where([['course_id',$value],['semester_id',$semester],['fos_id',Auth::user()->fos_id],['session',$previous_session]])->first();
+   if($r_c != null){
 
      // check if failed or unregister courses id exist in registercourses
 
       $check_register_course =RegisterCourse::where([['course_id',$value],['semester_id',$semester],['fos_id',Auth::user()->fos_id],['session',$session],['level_id',$level],['reg_course_status',"G"]])->first();
       // failed or unregister courses id does not exist in registercourses
 
-      if(count($check_register_course) == 0)
+      if($check_register_course == null)
       {
    $insert_data[] =['course_id'=>$value,'programme_id'=>Auth::user()->programme_id,'department_id'=>Auth::user()->department_id,'faculty_id'=>Auth::user()->faculty_id,'fos_id'=>Auth::user()->fos_id,'level_id'=>$level,'semester_id'=>$semester,'reg_course_title'=>$r_c->reg_course_title,'reg_course_code'=>$r_c->reg_course_code,'reg_course_unit'=>$r_c->reg_course_unit,'reg_course_status'=>"G",'session'=>$session];
       }
@@ -1202,7 +1333,7 @@ public function returning_preview_course(Request $request)
     $failed_variable = $request->input('idf');
     $drop_variable = $request->input('idd');
     $data ='';  $failed_data =''; $drop_data=''; $course_unit ='';
-    $data_sum ='';  $failed_data_sum =''; $drop_data_sum=''; 
+    $data_sum =0;  $failed_data_sum =0; $drop_data_sum=0; 
     $semester_name =Semester::where([['programme_id',Auth::user()->programme_id],['semester_id',$semester]])->first();
      if($variable != null)
      {
@@ -1222,7 +1353,7 @@ public function returning_preview_course(Request $request)
       
      }
      $course_unit =CourseUnit::where([['session',$session],['level',$level],['fos',Auth::user()->fos_id]])->first();
-     if(count($course_unit) == 0)
+     if($course_unit == null)
      {
       $course_unit =CourseUnit::where([['session',$session],['level',0],['fos',0]])->first();
      }
@@ -1246,7 +1377,7 @@ public function returning_preview_course(Request $request)
 
     
     $check_student_reg=StudentReg::where([['user_id',Auth::user()->id],['semester',$semester],['session',$session],['level_id',$level]])->first();
-    if(count($check_student_reg) == 0)
+    if($check_student_reg == null)
     {
 $student_reg = new StudentReg;
 $student_reg->user_id =Auth::user()->id;
@@ -1303,42 +1434,39 @@ if($id != null)
   
 return redirect()->action('UndergraduateController@returning_register_course');
 }  
-
-// ================================ probation ====================================================
+/*--------------                      PROBATION  -----------------------------------*/
+// ================================ probation course registration ====================================================
 public function probation_semester_courses(Request $request)
 {
-  $semester =$request->semester;
+  
   $session =$request->session;
   $level =$request->level;
   $id = Auth::user()->id;
   $previous_level =$level;
  $drop_register_course ="";
  $failed_register_course ="";
-
- $semester_name =$this->getSemester($semester);
-
-  // check first if the student has been autheticated for school fess
+// check first if the student has been autheticated for school fess
   if(session()->get('paidschoolfess') == Auth::user()->id)
 {
-  // check if you have register for the semester
- $check_student_reg =$this->CheckRegisterStudentPerSemester($id,$semester,$session,$level);
+  // check if you have register for
+ $check_student_reg=$this->CheckRegisterStudent(Auth::user()->id,$session,$level,'NORMAL');
 
 
-if(count($check_student_reg) == 0)
+if($check_student_reg == 0)
 {
-  $student_reg =StudentReg::where([['user_id',$id,],['semester',$semester],['level_id',$previous_level]])->orderBy('session','desc')->orderBy('level_id','desc')->first();
+  $student_reg =StudentReg::where([['user_id',$id,],['level_id',$previous_level]])->orderBy('session','desc')->orderBy('level_id','desc')->first();
   // get failed courses
   $failed_courses_course_id =array();
   $unregister_course_id =array();
   $combine_course_id ='';
   $previous_session = $student_reg->session;
 
-$failed_courses =$this->getPreviouFailedCourses($id,$semester,$previous_session);
+$failed_courses =$this->getCurrentFailedCourses($id,$level,$previous_session);
 // check if the courses has been failed upto three times
 if(count($failed_courses) > 0)
 {
   foreach ($failed_courses as $key => $value) {
-  $check_failed_courses =$this->NumberPreviousFailedCoursePerCourseId($id,$semester,$previous_session,$value->course_id);
+  $check_failed_courses =$this->NumberPreviousFailedCoursePerCourseId($id,$value->semester,$previous_session,$value->course_id);
  if($check_failed_courses < 3)
    {
 $failed_courses_course_id [] =$value->course_id;
@@ -1347,19 +1475,20 @@ $failed_courses_course_id [] =$value->course_id;
   }
 
   // get carry over courses. ie compulsary course the students failed to do in the previous session
-  $d_register_course =$this->GetRegisteredCompulsaryCourses($semester,$previous_session,$previous_level);
+  $d_register_course =$this->GetRegisteredCompulsaryCoursesSession($previous_session,$previous_level);
  
 if(count($d_register_course) > 0)
 {
   foreach ($d_register_course as $key => $value) {
-   $courseReg=$this->GetCourseRegSingle($previous_session,$previous_level,$id,$value->id,$value->course_id,$semester,'NORMAL');  
+   $courseReg=$this->GetCourseRegSingle($previous_session,$previous_level,$id,$value->id,$value->course_id,$value->semester_id,'NORMAL');  
    
-   if(count($courseReg) == 0)
+   if($courseReg == null)
    {
     $unregister_course_id [] =$value->course_id;
    }
   }
 }
+
 
 // combine the failed and unregister courses_id;
   if(!empty($failed_courses_course_id) && !empty($unregister_course_id))
@@ -1373,22 +1502,22 @@ $combine_course_id =$failed_courses_course_id;
   {
 $combine_course_id =$unregister_course_id;
   }
-
+dd($combine_course_id);
   if(!empty($combine_course_id))
   {
     foreach ($combine_course_id as $key => $value) {
       // get courses first
-   $r_c =RegisterCourse::where([['course_id',$value],['semester_id',$semester],['fos_id',Auth::user()->fos_id],['session',$previous_session]])->whereIn('reg_course_status',["C","E"])->first();
-   if(count($r_c) > 0){
+   $r_c =RegisterCourse::where([['course_id',$value],['fos_id',Auth::user()->fos_id],['session',$previous_session]])->first();
+   if($r_c != null){
 
      // check if failed or unregister courses id exist in registercourses
 
-      $check_register_course =RegisterCourse::where([['course_id',$value],['semester_id',$semester],['fos_id',Auth::user()->fos_id],['session',$session],['level_id',$level],['reg_course_status',"G"]])->first();
+      $check_register_course =RegisterCourse::where([['course_id',$value],['fos_id',Auth::user()->fos_id],['session',$session],['level_id',$level],['reg_course_status',"G"]])->first();
       // failed or unregister courses id does not exist in registercourses
 
-      if(count($check_register_course) == 0)
+      if($check_register_course == null)
       {
-   $insert_data[] =['course_id'=>$value,'programme_id'=>Auth::user()->programme_id,'department_id'=>Auth::user()->department_id,'faculty_id'=>Auth::user()->faculty_id,'fos_id'=>Auth::user()->fos_id,'level_id'=>$level,'semester_id'=>$semester,'reg_course_title'=>$r_c->reg_course_title,'reg_course_code'=>$r_c->reg_course_code,'reg_course_unit'=>$r_c->reg_course_unit,'reg_course_status'=>"G",'session'=>$session];
+   $insert_data[] =['course_id'=>$value,'programme_id'=>Auth::user()->programme_id,'department_id'=>Auth::user()->department_id,'faculty_id'=>Auth::user()->faculty_id,'fos_id'=>Auth::user()->fos_id,'level_id'=>$level,'semester_id'=>$$r_c->semester,'reg_course_title'=>$r_c->reg_course_title,'reg_course_code'=>$r_c->reg_course_code,'reg_course_unit'=>$r_c->reg_course_unit,'reg_course_status'=>"G",'session'=>$session];
       }
     }
     }
@@ -1441,9 +1570,9 @@ return view('undergraduate.rs_register_course.probation')->withDrc($drop_registe
        $session=session()->get('session_year');
        $level =$request->level;
        $semester=$request->semester; 
-$check_student_reg =$this->CheckRegisterStudentPerSemester(Auth::user()->id,$semester,$session,$level);
+$check_student_reg =$this->CheckRegisterStudentPerSemester(Auth::user()->id,$semester,$session,$level,'NORMAL');
 
-    if(count($check_student_reg) == 0)
+    if($check_student_reg == null)
     {
 $student_reg = new StudentReg;
 $student_reg->user_id =Auth::user()->id;
@@ -1491,5 +1620,130 @@ if($student_reg->id){
   
 return redirect()->action('UndergraduateController@returning_register_course');
 }   
+/*------------------------------- DIPLOMA ------------------------------------------*/
+//======================= diploma students =======================================
+public function register_resit_course()
+{
+  
+ $id = Auth::user()->id;
+ $s=  session()->get('session_year');
+ $l ='';
+  $student_reg =StudentReg::where([['user_id',$id],['session','=',$s]])->orderBy('level_id','desc')->first();
+if($student_reg != null)
+{
+  $l =$student_reg->level_id;
+}
+  return view('undergraduate.diploma.resit.index')->withL($l);
+}
+
+public function post_register_resit_course(Request $request)
+{
+
+  $session =$request->session;
+  $level =$request->level;
+  $id = Auth::user()->id;
+ $failed_courses ="";
+ $course_id=array();
+
+$check =$this->course_with_no_result($session,$level,$id);
+
+if($check != 0)
+{  Session::flash('warning',"you can not register for resit courses untill all result are entered.so contact your examination officer");
+  return back();
+}
+$check_student_reg =StudentReg::where([['user_id',$id,],['level_id',$level],['season','RESIT']])->first();
+if($check_student_reg == null)
+{
+ 
+  $student_reg =StudentReg::where([['user_id',$id,],['level_id',$level],['season','NORMAL']])->get()->count();
+
+  if($student_reg == 0)
+  {
+    Session::flash('warning',"you have not register for these session.");
+    return back();
+  }
+  // get failed courses
+  $failed_courses =array();
+ $failed_courses =$this->getCurrentFailedCourses($id,$level,$session);
+
+ if(!empty($failed_courses))
+ {
+  foreach ($failed_courses as $key => $value) {
+    $course_id []=$value->course_id;
+  }
+
+  $reg =RegisterCourse::whereIn('course_id',$course_id)->where([['fos_id',Auth::user()->fos_id],['session',$session],['level_id',$level],['reg_course_status','C']])->get();
+  
+   }
+
+ return view('undergraduate.diploma.resit.preview')->withRg($reg)->withL($level);
+
+}else
+{
+  Session::flash('warning',"you have register for resit course already.");
+  return back();
+}
+}
+// register resit courses.
+public function post_register_resit_course1(Request $request)
+{
+$d = $request->input('idd');
+$session =$request->session;
+$level =$request->level;
+//dd($session);
+$reg =RegisterCourse::whereIn('id',$d)->get();
+//dd($reg);
+ 
+ $check_student_reg=$this->CheckRegisterStudent(Auth::user()->id,$session,$level,'RESIT');
+    if($check_student_reg == 0)
+    {
+$student_reg = new StudentReg;
+$student_reg->user_id =Auth::user()->id;
+$student_reg->session = $session;
+$student_reg->semester =1;
+$student_reg->programme_id =Auth::user()->programme_id;
+$student_reg->faculty_id =Auth::user()->faculty_id;
+$student_reg->department_id =Auth::user()->department_id;
+$student_reg->level_id =$level;
+$student_reg->season ="RESIT";
+$student_reg->save();
+
+$student_reg2 = new StudentReg;
+$student_reg2->user_id =Auth::user()->id;
+$student_reg2->session = $session;
+$student_reg2->semester =2;
+$student_reg2->programme_id =Auth::user()->programme_id;
+$student_reg2->faculty_id =Auth::user()->faculty_id;
+$student_reg2->department_id =Auth::user()->department_id;
+$student_reg2->level_id =$level;
+$student_reg2->season ="RESIT";
+$student_reg2->save();
+       
+if($student_reg->id){
+  // register failed courses
+  if(count($reg) > 0)
+  {
+
+foreach ($reg as $key => $vf) {
+  if($vf->semester_id == 1){
+         $data[] =['studentreg_id'=>$student_reg->id,'registercourse_id'=>$vf->id,'user_id'=>Auth::user()->id,'level_id'=>$vf->level_id,'semester_id'=>$vf->semester_id,'course_id'=>$vf->course_id,'course_title'=>$vf->reg_course_title,'course_code'=>$vf->reg_course_code,'course_unit'=>$vf->reg_course_unit,'course_status'=>"R",'session'=>$vf->session,'period'=>"RESIT"];
+       }
+if($vf->semester_id == 2){
+         $data2[] =['studentreg_id'=>$student_reg2->id,'registercourse_id'=>$vf->id,'user_id'=>Auth::user()->id,'level_id'=>$vf->level_id,'semester_id'=>$vf->semester_id,'course_id'=>$vf->course_id,'course_title'=>$vf->reg_course_title,'course_code'=>$vf->reg_course_code,'course_unit'=>$vf->reg_course_unit,'course_status'=>"R",'session'=>$vf->session,'period'=>"RESIT"];
+       }
+
+        }
+        if(!empty($data)){ DB::connection('mysql2')->table('course_regs')->insert($data); }
+       
+       if(!empty($data2)){ DB::connection('mysql2')->table('course_regs')->insert($data2); }
+        Session::flash('success',"SUCCESSFULL");
+      }
+    }
+  }else{
+    Session::flash('warning',"you have register for a resit courses already");
+    return back();
+  }
+  return redirect()->action('UndergraduateController@index');
+}
 }
 

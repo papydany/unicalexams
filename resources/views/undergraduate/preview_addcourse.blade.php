@@ -6,7 +6,7 @@
                 <header class="page-heading clearfix">
                     <h1 class="heading-title pull-left">Welcome <strong class="text-danger">{{ Auth::user()->surname.
          
-                    "&nbsp;". Auth::user()->firstname."&nbsp;".Auth::user()->othername }}</strong></h1>
+                    "&nbsp;". Auth::user()->firstname."&nbsp;".Auth::user()->othername }}</strong><strong class="text-success">({{Auth::user()->matric_number}})</strong></h1>
                     <div class="breadcrumbs pull-right">
                         <ul class="breadcrumbs-list">
                             <li class="breadcrumbs-label">You are here:</li>

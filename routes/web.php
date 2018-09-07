@@ -73,7 +73,11 @@ Route::get('std_login','Auth\LoginController@s_login');
 Route::get('std_logout','Auth\LoginController@std_logout');
 Route::get('oldresult','OldstudentController@index'); 
 Route::get('check_result/{sessional}','OldstudentController@check_result');
-Route::get('/enter_pin', 'Auth\LoginController@enter_pin');
+// stop reg
+Route::get('/enter_pin1', 'Auth\LoginController@enter_pin1');
+Route::post('/enter_pin1', 'Auth\LoginController@post_enter_pin1');
+
+Route::get('/reg333', 'Auth\LoginController@enter_pin');
 Route::post('/enter_pin', 'Auth\LoginController@post_enter_pin');
 //==============================predegreee student===================================================
 Route::get('pdg_register',['uses' =>'Auth\RegisterController@pdg_register','middleware' => 'checkreg']);
@@ -86,6 +90,10 @@ Route::get('/pds_view_result', 'PdsController@pds_view_result');
 Route::get('/pds_enter_pin', 'Auth\LoginController@pds_enter_pin');
 Route::post('/pds_enter_pin', 'Auth\LoginController@pds_post_enter_pin');
 
+//=============================== diploma students ===========================
+Route::get('register_resit_course','UndergraduateController@register_resit_course');
+Route::post('register_resit_course','UndergraduateController@post_register_resit_course');
+Route::post('register_resit_course1','UndergraduateController@post_register_resit_course1');
 Auth::routes();
 
 

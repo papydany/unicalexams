@@ -174,7 +174,16 @@ var p_id = document.getElementById("programme").value;
     });
 
 
-});       
+}); 
+
+  $("#all_ids").change(function(){  //"select all" change 
+    var status = this.checked; // "select all" checked status
+    $('.ids').each(function(){ //iterate all listed checkbox items
+        this.checked = status; //change ".checkbox" checked status
+    });
+});
+
+
 
 });
     </script>
