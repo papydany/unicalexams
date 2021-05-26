@@ -49,7 +49,7 @@ class RegisterController extends Controller
     Const PDS =1;
     public function __construct()
     {
-        $this->middleware('guest');
+    $this->middleware('guest');
     $this->middleware('checkudg', ['only' => ['showRegistrationForm']]);
     }
 
@@ -138,9 +138,17 @@ public function showRegistrationForm()
 
         if($request->hasFile('image_url')) {
             $image = $request->file('image_url');
+            
             $filename = time() . '.' . $image->getClientOriginalExtension();
            $destinationPath = public_path('img/student');
             $img = Image::make($image->getRealPath());
+            $size =$img->filesize();
+           
+           /* if($size > 20508){
+                Session::flash('danger','Image Size is bigger than 20kb'); 
+                return back(); 
+            }*/
+
             $img->resize(150, 100, function ($constraint) {
                 $constraint->aspectRatio();
             })->save($destinationPath . '/' . $filename);
@@ -273,7 +281,7 @@ return back();
 private function get_faculty()
 {
   
-$sql =Faculty::get();
+$sql =Faculty::orderBy('faculty_name','ASC')->get();
 return $sql;
 }
 //----------------------------------------------------------------------------------------------------------

@@ -22,29 +22,43 @@
 <th>Grade</th>
 <th>Grade Point</th>
 </tr>
+@if(isset($course_first))
     @if($course_first != null )
    
    @foreach($course_first as $vc)
-    <?php $result =$R->getOldResult($vc->thecourse_id,$vc->std_id,$vc->cyearsession);
-    if($result != null){
-    
-      $grade_point =$R->get_cp_2($result->std_grade,$vc->c_unit);
-    }else
-    {
-      $grade_point = '';
-    }
 
-    ?>
+    <?php $grade_point =$R->get_cp_2($vc->std_grade,$vc->c_unit);?>
 <tr>
     <td>{{$vc->stdcourse_custom2}}</td>
       <td>{{$vc->stdcourse_custom3}}</td>
  <td>{{$vc->c_unit}}</td>
-  <td>{{isset($result->std_grade) ? $result->std_grade: ''}}</td>
+  <td>{{isset($vc->std_grade) ? $vc->std_grade: ''}}</td>
 
   <td>{{isset($grade_point) ? $grade_point: ''}}</td>
   </tr>
    @endforeach
    @endif
+   @endif
+
+   @if(isset($course_1))
+    @if($course_1 != null )
+   
+   @foreach($course_1 as $vc)
+
+   
+<tr>
+    <td>{{$vc->stdcourse_custom2}}</td>
+      <td>{{$vc->stdcourse_custom3}}</td>
+ <td>{{$vc->c_unit}}</td>
+  <td></td>
+
+  <td></td>
+  </tr>
+   @endforeach
+   @endif
+   @endif
+
+
    </table>
   
        </div>
@@ -63,28 +77,37 @@
 
 <th>Grade Point</th>
 </tr>
-
+@if(isset($course_second))
    @if(count($course_second) > 0)
    @foreach($course_second as $vc)
-   <?php $result = $R->getOldResult($vc->thecourse_id,$vc->std_id,$vc->cyearsession);
-   if($result != null)
-   {
-    $grade_point =$R->get_cp_2($result->std_grade,$vc->c_unit);
-   }else
-   {
-    $grade_point = '';
-   }
-
-   ?>
+   <?php $grade_point =$R->get_cp_2($vc->std_grade,$vc->c_unit);?>
 <tr>
     <td>{{$vc->stdcourse_custom2}}</td>
       <td>{{$vc->stdcourse_custom3}}</td>
  <td>{{$vc->c_unit}}</td>
-  <td>{{isset($result->std_grade) ? $result->std_grade: ''}}</td>
+  <td>{{isset($vc->std_grade) ? $vc->std_grade: ''}}</td>
 
   <td>{{isset($grade_point) ? $grade_point: ''}}</td>
   </tr>
    @endforeach
+   @endif
+   @endif
+   @if(isset($course_1))
+    @if($course_2 != null )
+   
+   @foreach($course_2 as $vc)
+
+   
+<tr>
+    <td>{{$vc->stdcourse_custom2}}</td>
+      <td>{{$vc->stdcourse_custom3}}</td>
+ <td>{{$vc->c_unit}}</td>
+  <td></td>
+
+  <td></td>
+  </tr>
+   @endforeach
+   @endif
    @endif
    </table>
   

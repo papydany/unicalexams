@@ -4,6 +4,9 @@
 <div class="container content">
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
+                <h3 class="text-center alert alert-danger" role="alert" >
+
+                        Student That Entered Schools in 2015/2016 and below  <a href="{{url('std_login')}}" class="btn btn-md">Click Here </a> to check Your Result</h3>
             <div class="panel panel-default">
                 <div class="panel-heading">Login</div>
                 <div class="panel-body">
@@ -12,10 +15,10 @@
         {{ session('status') }}
     </div>
 @endif
- <p class="text-center alert alert-danger" role="alert" >
-Entry Year 2015/2016 and below    <a href="{{url('std_login')}}">Check Your Result Here</a></p>
+ <h5 class="text-center alert alert-success" role="alert" >
+     Student That Entered Schools in 2016/2017 and Above </h5>
 <br/>
-<p class="text-danger text-center"><b>NB ::</b> PDS  and First Year students are categorise as <b>new students</b></p>
+<h4 class="text-success text-center"><b>NB ::</b>First Year students are categorise as <b>new students</b></h4>
                     <form class="form-horizontal" role="form" method="POST" action="{{ route('login') }}">
                         {{ csrf_field() }}
 
@@ -23,7 +26,7 @@ Entry Year 2015/2016 and below    <a href="{{url('std_login')}}">Check Your Resu
                             <label  class="col-md-4 control-label">Matric Number</label>
 
                             <div class="col-md-6">
-                                <input  type="text" class="form-control" name="matric_number" value="{{ old('matric_number') }}" required autofocus>
+                                <input  type="text" class="form-control" name="matric_number" value="{{ old('matric_number') }}" required autofocus autocomplete="off">
 
                                 @if ($errors->has('matric_number'))
                                     <span class="help-block">
@@ -37,7 +40,7 @@ Entry Year 2015/2016 and below    <a href="{{url('std_login')}}">Check Your Resu
                             <label for="password" class="col-md-4 control-label">Pin</label>
 
                             <div class="col-md-6">
-                                <input id="pin" type="text" class="form-control" name="pin" required>
+                                <input id="pin" type="text" class="form-control" name="pin" autocomplete="off" required>
 
                                 @if ($errors->has('pin'))
                                     <span class="help-block">
@@ -50,7 +53,7 @@ Entry Year 2015/2016 and below    <a href="{{url('std_login')}}">Check Your Resu
                             <label  class="col-md-4 control-label">Serial Number</label>
 
                             <div class="col-md-6">
-                                <input  type="text" class="form-control" name="serial_number" required>
+                                <input  type="text" class="form-control" name="serial_number" autocomplete="off" required>
 
                                 @if ($errors->has('serial_number'))
                                     <span class="help-block">
@@ -68,6 +71,7 @@ Entry Year 2015/2016 and below    <a href="{{url('std_login')}}">Check Your Resu
                               <option value="1~0">PDS</option>
                               <option value="2~1">Undergraduate (Direct Entry)</option>
                               <option value="2~2">Undergraduate (Other)</option>
+                              <option value="2~3">Affiliate Institutions Students</option>
                           </select>
 
                                
@@ -84,13 +88,16 @@ Entry Year 2015/2016 and below    <a href="{{url('std_login')}}">Check Your Resu
                   
 
                         <div class="form-group">
-                            <div class="col-md-8 col-md-offset-4">
+                            <div class="col-xs-4 col-md-offset-4">
                                 <button type="submit" class="btn btn-primary btn-lg">
                                     Login
                                 </button>
-
-                                
                             </div>
+                            <div class="col-xs-4">
+                                  <!--  <a href="{{url('recovery_pin')}}" class="btn btn-success btn-lg">
+                                        Recovery Pin
+                                    </a>-->
+                                </div>
                         </div>
                     </form>
                 </div>

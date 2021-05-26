@@ -18,9 +18,13 @@
 <h3>Sessions </h3>
 @foreach($getsession as $v)
 {{!$v_next = $v->std_mark_custom2 + 1}}
-<p><a  class="btn btn-success btn-lg btn-block" target="_blank" href="{{url('check_result',$v->std_mark_custom2)}}"> 
- 
- {{$v->std_mark_custom2.' / '.$v_next}}</a></p>
+<p><a  class="btn btn-success btn-lg btn-block" target="_blank" href="{{url('check_result',[$v->std_mark_custom2,$v->period])}}"> 
+ @if($v->period == 'VACATION')
+ {{$v->std_mark_custom2.' / '.$v_next.'&nbsp;&nbsp;'. $v->period}}
+ @else
+ {{$v->std_mark_custom2.' / '.$v_next}}
+ @endif
+ </a></p>
 
 @endforeach
     </div>

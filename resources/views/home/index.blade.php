@@ -1,10 +1,26 @@
 @extends('layouts.main')
 @section('title','Home')
 @section('content')
-  
+
  <div class="content container">
+
+
+<!--Start of Tawk.to Script-->
+<script type="text/javascript">
+var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+(function(){
+var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+s1.async=true;
+s1.src='https://embed.tawk.to/5c2e59dd7a79fc1bddf32c5b/default';
+s1.charset='UTF-8';
+s1.setAttribute('crossorigin','*');
+s0.parentNode.insertBefore(s1,s0);
+})();
+</script>
+<!--End of Tawk.to Script-->
  <ul id="webTicker">
     <li><a data-toggle="modal" data-target="#myModal">How Does a Direct Entry (D/E) Student Register for Courses?</a></li>
+     <li class="text-danger">You can now chat with us live, by clicking the chat button at the buttom site of your home page. Thank you</li>
    
 </ul>
             <div id="promo-slider" class="slider flexslider">

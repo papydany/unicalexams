@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateStudentResultsTable extends Migration
+class CreateStudentresultBackupsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,12 @@ class CreateStudentResultsTable extends Migration
      */
     public function up()
     {
-        Schema::create('student_results', function (Blueprint $table) {
+        Schema::create('studentresult_backups', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id');
             $table->string('matric_number');
             $table->integer('coursereg_id');
             $table->integer('course_id');
-             $table->string('ca');
-            $table->string('exam');
-            $table->string('total');
             $table->string('grade');
             $table->string('cu');
             $table->string('cp');
@@ -30,11 +27,6 @@ class CreateStudentResultsTable extends Migration
             $table->integer('level_id');
             $table->integer('status');
             $table->string('season');
-            $table->string('flag');
-            $table->integer('examofficer');
-            $table->dateTime('post_date');
-            $table->integer('approved');
-            $table->dateTime('approved_date')->nullable();
             $table->timestamps();
         });
     }
@@ -46,6 +38,6 @@ class CreateStudentResultsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('student_results');
+        Schema::dropIfExists('studentresult_backups');
     }
 }

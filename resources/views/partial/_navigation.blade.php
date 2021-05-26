@@ -1,5 +1,7 @@
 
-
+<?php use Illuminate\Support\Facades\Auth; 
+Const Agric = 18;
+?>
         <!-- ******HEADER****** --> 
         <header class="header">  
           
@@ -36,9 +38,13 @@
   
                           @if (!Auth::guest())
                           @inject('r','App\RRR')
-
+                        
   <?php 
-    $result= $r->getstudenttype(Auth::user()->matric_number); 
+    $result= $r->getstudenttype2(Auth::user()->id,Auth::user()->matric_number); 
+    $duration =$r->getDuration(Auth::user()->fos_id);
+    $s=  session()->get('session_year');
+    $studentReg =$r->getRegisteredStudent(Auth::user()->id,$s,'NORMAL');
+    
 
   ?>
 
@@ -54,6 +60,8 @@
                                 <li><a href="{{url('register_resit_course')}}">Register Resit Courses</a></li>
 
                                 @endif
+                               
+
                                 <li><a href="{{url('/print_course')}}">Print Registered Courses</a></li>
                                 <li><a href="{{url('/addCourses')}}">Add Courses</a></li>
                                 <li><a href="{{url('/deleteCourses')}}">Delete Courses</a></li>        
@@ -66,33 +74,37 @@
                             <li class="nav-item dropdown">
                             <a class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="0" data-close-others="false" href="#">Register Courses (Returning Students) <i class="fa fa-angle-down"></i></a>
                             <ul class="dropdown-menu">
-                               <li><a href="{{url('returning_register_course')}}">Register Courses</a></li>
-                                <!--<li><a href="#">Register Courses</a></li>-->
+                               <!--<li><a href="{{url('returning_register_course')}}">Register Courses</a></li>-->
+                                <li><a href="#">Register Courses</a></li>
+                                 @if(Auth::user()->programme_id == 2)
+                                <li><a href="{{url('register_resit_course')}}">Register Resit Courses</a></li>
+
+                                @endif
+                                 <!-- faculty of agric menu-->
+                                 @if(Auth::user()->faculty_id == 18)
+                                <li><a href="{{url('register_summer_course')}}">Register Summer Courses</a></li>
+                                <li><a href="{{url('register_delayed_course')}}">Register Delayed Courses</a></li>
+                                @endif
+                                  @if($studentReg !=null)
+                                @if($studentReg->level_id >= $duration->duration)
+                                <li><a href="{{url('register_long_vacation',[$studentReg->level_id,$duration->duration])}}">Register Long Vacation</a></li>
+                               @endif
+                               @endif
                                 <li><a href="{{url('print_course')}}">Print Registered Courses</a></li>
                                 <li><a href="{{url('addCourses')}}">Add Courses</a></li>
                                 <li><a href="{{url('deleteCourses')}}">Delete Courses</a></li>        
                             </ul>
                         </li>
                         @endif
-
-                          <li class="nav-item dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="0" data-close-others="false" href="#">Result <i class="fa fa-angle-down"></i></a>
-                            <ul class="dropdown-menu">
-                                <li><a href="{{url('view_result')}}">View Result</a></li>
-                                
-                                      
-                            </ul>
-                        </li>
-
-                    
-                     
+                        <li class="nav-item"><a href="{{url('view_result')}}">View Result</a></li>
                         @elseif($result == 1)
                            <li class="active nav-item"><a href="{{url('/home')}}">Home</a></li>
  <li class="nav-item"><a href="{{url('/pds')}}">Profile</a></li>
                      
 
                             <li class="nav-item"><a href="{{url('pds_view_result')}}" target="_blank">View Result</a></li>
-
+                    @elseif($result == 0)
+                    <h2>Some thing went wrong !!! contact system admin </h2>
 
                         @endif
                             <li class="nav-item">
@@ -111,6 +123,7 @@
                        <li class="nav-item"><a href="{{url('contact')}}">Contact</a></li>
                              
      <li class="nav-item"><a href="{{url('/login')}}">Login</a></li>
+    <!-- <li class="nav-item"><a href="{{url('recovery_pin')}}">Recovery Pin</a></li>-->
      @endif
                                   
                     </ul><!--//nav-->

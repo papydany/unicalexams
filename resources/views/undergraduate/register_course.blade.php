@@ -49,7 +49,7 @@
                         {{ csrf_field() }}                     
                                     <table class="table table-boxed">
                                         <thead>
-                                            <tr>i
+                                            <tr>
                                                 <th>#</th>
                                                 <th>All <input type="checkbox" id="all_ids" ></th>
                                                 <th>Title</th>

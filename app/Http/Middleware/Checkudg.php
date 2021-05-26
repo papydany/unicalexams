@@ -17,7 +17,7 @@ class Checkudg
     {
         if (!$request->session()->has('u_login_user')) {
            
-            return redirect('/enter_pin');
+            return redirect('jesus');
         }
 
         return $next($request);

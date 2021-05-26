@@ -1,5 +1,5 @@
 @extends('layouts.main')
-@section('title','Preview Course ')
+@section('title','Preview Course')
 @section('content')
 <div class="content container">
             <div class="page-wrapper">
@@ -29,7 +29,7 @@
            <div class="col-sm-3">
             <p><b>Session :</b>{{session()->get('session_year').'/'.$next }}</p>
                  <p><b>Level :</b>{{$l}}00 </p>
-                  <p><b>Semester :</b>{{$sn->semester_name}}</p>
+                  <p><b>Semester :</b>First & Second</p>
           </div>
             <div class="col-sm-3">
               <p class="text-danger"><b>Course Status</b></p>
@@ -40,22 +40,17 @@
           </div>
           <div class="clearfix"></div>
             
-@if($tu > $cu->max)
+@if($tu > $tcu)
  <div class=" col-sm-10 col-sm-offset-1 alert alert-danger" role="alert">
-     Total number of course unit  select is above {{$cu->max}} units . maximum course unit for these semester.
+     Total number of course unit  select is above {{$tcu}} units . maximum course unit for these semester.
      Contact your <strong> examination Officer </strong> if you need more clerification.
      <br/> <br/>
      <a href="{{url()->previous()}}" class="btn"><i class="fa fa-btn fa-arrow-circle-left"></i> Go Back </a>
  </div> 
-@elseif($tu < $cu->min)
-    <div class=" col-sm-10 col-sm-offset-1 alert alert-danger" role="alert">
-     Minimum course unit allowed is {{$cu->min}} units.
-     Contact your <strong> examination Officer </strong> if you need more clerification.
-     <br/> <br/>
-     <a href="{{url()->previous()}}" class="btn"><i class="fa fa-btn fa-arrow-circle-left"></i> Go Back </a>
-  </div> 
+
+   
 @else
-    <form class="form-horizontal" role="form" method="POST" action="{{ url('returning_post_register_course') }}" data-parsley-validate>
+    <form class="form-horizontal" role="form" method="POST" action="{{ url('postVacationCourse') }}" data-parsley-validate>
     {{ csrf_field() }}
     <table class="table table-boxed">
         <thead>
@@ -70,43 +65,20 @@
     <tbody>
  {{!!$c = 0}}
 <input type="hidden" name="level" value="{{$l}}">
-<input type="hidden" name="semester" value="{{$sn->semester_id}}">
-@if(!empty($pref))
-    @foreach($pref as $vf)
-        {{!++$c}}
-        @if(($c % 2)== 0)
-            <tr>
-        @else
-          <tr class='danger'>
-        @endif
-        <td>{{$c}}</td>
-        <input type="hidden" name="idf[]" value="{{$vf['id']}}">
-        <td>{{strtoupper($vf->reg_course_title)}}</td>
-        <td>{{strtoupper($vf->reg_course_code)}}</td>
-        <td>{{$vf->reg_course_unit}}</td>
-        <td>R</td>
-        </tr>
-    @endforeach 
-@endif 
-@if(!empty($pred))
-    @foreach($pred as $vd)
-        {{!++$c}}
-        @if(($c % 2)== 0)
-            <tr>
-        @else
-          <tr class='danger'>
-        @endif
-        <td>{{$c}}</td>
-        <input type="hidden" name="idd[]" value="{{$vd['id']}}">
-        <td>{{strtoupper($vd->reg_course_title)}}</td>
-        <td>{{strtoupper($vd->reg_course_code)}}</td>
-        <td>{{$vd->reg_course_unit}}</td>
-        <td>D</td>
-        </tr>
-    @endforeach 
-@endif                                           
+
+                                          
 @if(!empty($pre))
-    @foreach($pre as $v)
+<?php $collection =$pre->groupBy('semester_id'); ?>
+@foreach($collection as $k => $items)
+<tr>
+           
+           <th colspan="6" class='text-center'>@if($k == 1)First
+          
+           @elseif($k== 2)
+           
+           Second 
+           @endif Semester</th></tr>
+    @foreach($items as $v)
         {{!++$c}}
         @if(($c % 2)== 0)
             <tr>
@@ -121,13 +93,12 @@
         <td>{{$v->reg_course_status}}</td>
         </tr>
     @endforeach 
+    @endforeach 
 @endif
-
 <tr>  
   <td colspan="3">Total Unit</td>
  <td colspan="2">{{$tu}} Unit</td>
 </tr> 
-
 </tbody>
 </table><!--//table-->
 <div class="col-xs-6 col-sm-3 col-sm-offset-1">

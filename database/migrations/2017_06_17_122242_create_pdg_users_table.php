@@ -19,6 +19,8 @@ class CreatePdgUsersTable extends Migration
             $table->string('firstname');
             $table->string('othername');
             $table->string('matric_number');
+            $table->string('jamb_reg');
+            $table->integer('student_type');
             $table->integer('programme_id');
             $table->integer('state_id');
             $table->integer('lga_id');

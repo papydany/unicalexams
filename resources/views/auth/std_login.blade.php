@@ -8,7 +8,8 @@
                 <div class="panel-heading">Login</div>
 
                 <div class="panel-body">
-                    <h3 class="text-center text-danger"> Entry Year 2015/2016 and below Check Your Result Here</h3>
+                    <h3 class="text-center text-danger">
+                     Entry Year 2015/2016 and below Check Your Result Here</h3>
                     <br/>
                  @include('partial._message')  
                     <form class="form-horizontal" role="form" method="POST" action="{{ url('/std_login') }}" data-parsley-validate>
@@ -19,7 +20,7 @@
                             <label for="matric_no" class="col-md-4 control-label">Matric Number</label>
 
                             <div class="col-md-6">
-                                <input id="matric_no" type="text" class="form-control" name="matric_no" value="{{ old('matric_no') }}" data-parsley-required>
+                                <input id="matric_no" type="text" class="form-control" name="matric_no" value="{{ old('matric_no') }}" data-parsley-required autocomplete="off">
 
                                 @if ($errors->has('matric_no'))
                                     <span class="help-block">
@@ -33,7 +34,7 @@
                             <label for="pin" class="col-md-4 control-label">Pin</label>
 
                             <div class="col-md-6">
-                                <input id="pin" type="text" class="form-control" name="pin" data-parsley-required>
+                                <input id="pin" type="text" class="form-control" name="pin" autocomplete="off" data-parsley-required>
 
                                 @if ($errors->has('pin'))
                                     <span class="help-block">
@@ -47,7 +48,7 @@
                             <label for="serial_no" class="col-md-4 control-label">Serial number</label>
 
                             <div class="col-md-6">
-                                <input id="serial_no" type="text" class="form-control" name="serial_no" data-parsley-required>
+                                <input id="serial_no" type="text" class="form-control" name="serial_no" autocomplete="off" data-parsley-required>
 
                                 @if ($errors->has('serial_no'))
                                     <span class="help-block">
@@ -67,11 +68,17 @@
                    
 
                         <div class="form-group">
-                            <div class="col-md-6 col-md-offset-4">
+                            <div class="col-md-4 col-md-offset-4">
                                 <button type="submit" class="btn btn-primary">
                                     <i class="fa fa-btn fa-sign-in"></i> Login
                                 </button>
                             </div>
+                            <div class="col-md-4">
+                              <!--  <a href="{{url('recovery_pin')}}" class="btn btn-primary">
+                                    <i class="fa fa-btn fa-sign-in"></i> Recovery Pin
+                                </a>-->
+                            </div>
+                        
                         </div>
                     </form>
                 </div>

@@ -1,17 +1,24 @@
 <?php
 
 namespace App;
-use DB;
+use Illuminate\Support\Facades\DB;
 use App\PdsResult;
 use App\Pin;
-use Auth;
+
 
 class RRR
 {
-public function getstudenttype($id){
-        $user =Pin::where('matric_number',$id)->first();
+public function getstudenttype2($id,$mat){
+        $user =Pin::where([['student_id',$id],['matric_number',$mat]])->first();
         return $user->student_type;
    }
+
+
+public function getstudenttype($id){
+        $user =Pin::where('student_id',$id)->first();
+        return $user->student_type;
+   }
+
    public function pds_result($id,$c_id,$mat_no,$s,$sm)
    {
    	$result = PdsResult::where([['session', $s],['pdg_user',$id],['matric_number',$mat_no],['course',$c_id],['semester',$sm]])->first();
@@ -82,9 +89,6 @@ return $avg;
 
   public function get_cp($total,$cu)
  {
-$entry_year =Auth::user()->entry_year;
-if($entry_year <= 2016)
-{
 switch($total) {
       case $total =='No Score':
                
@@ -101,9 +105,8 @@ switch($total) {
                   return $return;
                 break;
             case $total >= 50:
-                 
-                 $return = 3*$cu;
-     return $return;
+            $return = 3*$cu;
+            return $return;
                 break;
             case $total >= 45:
                 
@@ -120,45 +123,7 @@ switch($total) {
                 $return = 0*$cu;
                  return $return;
                 break;
-            
-        }
-}else
-{
-  switch($total) {
-      case $total =='No Score':
-               
-               $return = '';
-                 return $return;
-                 break;
-            case $total >= 70:
-              $return = 4*$cu;
-               return $return;
-                break;
-            case $total >= 60:
-               
-                 $return = 3*$cu;
-                  return $return;
-                break;
-            case $total >= 50:
-                 
-                 $return = 2*$cu;
-     return $return;
-                break;
-            case $total >= 45:
-                
-                 $return = 1*$cu;
-                  return $return;
-                break;
-            
-            case $total < 44:
-                 
-                $return = 0*$cu;
-                 return $return;
-                break;
-            
-        }
-}
-  
+            }
     
  }
  
@@ -208,6 +173,19 @@ switch($total) {
  $result =DB::connection('mysql1')->table('students_results')
  ->where([['stdcourse_id',$stdcourse_id],['std_mark_custom2',$session],['std_id',$std_id]])->first();
  return $result;
+ }
+
+ public function getDuration($fos)
+ {
+ $result =DB::table('fos')->find($fos);
+ return $result;
+ }
+
+ public function getRegisteredStudent($id,$s,$season)
+ {
+  $student_reg =StudentReg::where([['user_id',$id],['session',$s],['season',$season]])->first();
+  return $student_reg;
+
  }
 
 }

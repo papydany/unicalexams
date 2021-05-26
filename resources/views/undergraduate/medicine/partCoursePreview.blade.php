@@ -40,22 +40,16 @@
           </div>
           <div class="clearfix"></div>
             
-@if($tu > $cu->max)
- <div class=" col-sm-10 col-sm-offset-1 alert alert-danger" role="alert">
-     Total number of course unit  select is above {{$cu->max}} units . maximum course unit for these semester.
-     Contact your <strong> examination Officer </strong> if you need more clerification.
-     <br/> <br/>
-     <a href="{{url()->previous()}}" class="btn"><i class="fa fa-btn fa-arrow-circle-left"></i> Go Back </a>
- </div> 
-@elseif($tu < $cu->min)
+
+@if($tu == 0)
     <div class=" col-sm-10 col-sm-offset-1 alert alert-danger" role="alert">
-     Minimum course unit allowed is {{$cu->min}} units.
+     Minimum course unit allowed is 2 units.
      Contact your <strong> examination Officer </strong> if you need more clerification.
      <br/> <br/>
      <a href="{{url()->previous()}}" class="btn"><i class="fa fa-btn fa-arrow-circle-left"></i> Go Back </a>
   </div> 
 @else
-    <form class="form-horizontal" role="form" method="POST" action="{{ url('returning_post_register_course') }}" data-parsley-validate>
+    <form class="form-horizontal" role="form" method="POST" action="{{ url('returning_post_medicine_register_course') }}" data-parsley-validate>
     {{ csrf_field() }}
     <table class="table table-boxed">
         <thead>
@@ -70,6 +64,7 @@
     <tbody>
  {{!!$c = 0}}
 <input type="hidden" name="level" value="{{$l}}">
+<input type="hidden" name="period" value="{{$p}}">
 <input type="hidden" name="semester" value="{{$sn->semester_id}}">
 @if(!empty($pref))
     @foreach($pref as $vf)

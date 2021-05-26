@@ -15,10 +15,12 @@ class CreateCourseRegsTable extends Migration
     {
         Schema::create('course_regs', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('studentreg_id');
             $table->integer('registercourse_id');
-            $table->integer('user_id');
+             $table->integer('user_id');
             $table->integer('level_id');
             $table->integer('semester_id');
+            $table->integer('course_id');
             $table->string('course_title');
             $table->string('course_code');
             $table->string('course_unit');

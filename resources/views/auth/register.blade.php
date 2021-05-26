@@ -7,7 +7,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading text-center">UNDERGRADUATE BIO DATA</div>
                 <div class="panel-body">
-                    <form class="form-horizontal" role="form" method="POST" action="{{route('register')}}""  enctype="multipart/form-data" data-parsley-validate">
+            <form class="form-horizontal" role="form" method="POST" action="{{route('register')}}"  enctype="multipart/form-data" data-parsley-validate">
                         {{ csrf_field() }}
 
                         <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
@@ -170,7 +170,7 @@
                             </div>
 
                                <div class="col-sm-4">
-                              <label for="entry_month" class=" control-label">Passport ( <span class="text-danger">Max size 200 * 200)</label>
+                              <label for="entry_month" class=" control-label">Passport ( <span class="text-danger">Max size 20KB)</label>
                             <input type="file" name="image_url" class="form-control" required>
                              
                             </div>

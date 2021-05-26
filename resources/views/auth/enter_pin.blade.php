@@ -34,7 +34,7 @@
                                 <select class="form-control" name="session" data-parsley-required>
                               <option value=""> - - Select - -</option>
                                
-                                  @for ($year = (date('Y')); $year >= 2016; $year--)
+                                  @for ($year = (date('Y')); $year >= 2014; $year--)
                                   {{!$yearnext =$year+1}}
                                   <option value="{{$year.'/'.$yearnext.'~'.$year}}">{{$year.'/'.$yearnext}}</option>
                                   @endfor
@@ -50,8 +50,9 @@
                                  <select class="form-control" name="student_type" data-parsley-required>
                               <option value=""> - - Select - -</option>
                                
-                                  <option value="2">Direct Entry Student</option>
-                                  <option value="1">Other Student</option>
+                                  <option value="2">Direct Entry Students</option>
+                                  <option value="1">Other Students</option>
+                                  <option value="3">Affiliate Institutions Students</option>
                           
                                 
                               </select>

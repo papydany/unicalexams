@@ -19,6 +19,7 @@ class CreateUsersTable extends Migration
             $table->string('firstname');
             $table->string('othername');
             $table->string('matric_number');
+            $table->string('jamb_reg');
             $table->integer('programme_id');
             $table->integer('faculty_id');
             $table->integer('department_id');

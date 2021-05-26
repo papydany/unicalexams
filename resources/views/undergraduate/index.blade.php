@@ -5,7 +5,9 @@
             <div class="page-wrapper">
                 <header class="page-heading clearfix">
                     <h1 class="heading-title pull-left">Welcome <strong class="text-danger">{{ Auth::user()->surname.
-                    "&nbsp;". Auth::user()->firstname."&nbsp;".Auth::user()->othername }}  </strong><strong class="text-success">({{Auth::user()->matric_number}})</strong></h1>
+                    "&nbsp;". Auth::user()->firstname."&nbsp;".Auth::user()->othername }}  </strong>
+                    &nbsp;&nbsp;
+                    <strong class="text-success">({{Auth::user()->matric_number}})</strong></h1>
                     <div class="breadcrumbs pull-right">
                         <ul class="breadcrumbs-list">
                             <li class="breadcrumbs-label">You are here:</li>
@@ -16,7 +18,7 @@
                  
                 </header> 
                 {{!$next =$ss+1}}
-           <h3><strong class="text-success">PIN VALID FOR &nbsp; {{$ss." / ".$next}} &nbsp; SESSION</strong></h3>
+    <h3><strong class="text-success">PIN VALID FOR &nbsp; {{$ss." / ".$next}} &nbsp; SESSION</strong></h3>
                 <div class="page-content">                 
                     <div class="row page-row">                     
                         <div class="team-wrapper col-xs-12">        
@@ -67,14 +69,9 @@
                            <div class="col-sm-5">
                          
                                     <img class="img-responsive" src="{{asset('img/student/'.Auth::user()->image_url)}}" alt="" style="float: right;"/>
-                                  @if(isset($sreg))
-                          @if(count($sreg) == 0)
-                         <p> <a href="{{url('edit_fos')}}" class="btn">Edit Field Of Studies</a></p>
-                         <p> <a href="{{url('edit_fac')}}" class="btn">Edit Faculty / Depart</a></p>
-                         @endif
-                         @endif    
-                                <p> <a href="{{url('edit_matric_number')}}" class="btn">Edit Matric Number&nbsp;&nbsp;&nbsp;</a></p>
-                                 <p> <a href="{{url('edit_names')}}" class="btn">Edit Your Names &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></p>
+                           
+                              
+                                
                                 </div>                               
                             </div>
                             

@@ -34,11 +34,11 @@
           @if($r == "WITHDRAW")
         
           <h1 class="text-danger">Academic Standing : WITHDRAWN</h1>
-          <p class="text-danger">You can not continue with these registeration.you have been withdrawn from the university.</p>
-@elseif($r == "WITHDRAW OR CHANGE PROGRAMME")
+          <p class="text-danger">You can not continue with this registration.You are advice to withdrawn or change programme of study.</p>
+@elseif($r == "WITHDRAW OR CHANGE PROGRAMME" || $r == "CHANGE PROGRAMME")
           <h1 class=""></h1>
           <h1 class="text-danger">Academic Standing : WITHDRAWN OR CHANGE PROGRAMME</h1>
-          <p class="text-danger">You can not continue with these registeration.you are advice to withdrawn or change your programme of study.<br/><strong>Contact Your Examination Officer or HOD for more explanation.</strong></p>
+          <p class="text-danger">You can not continue with this registration.You are advice to withdrawn or change  programme of study.<br/><strong>Contact Your Examination Officer or HOD for more explanation.</strong></p>
 
           @elseif($r == "PROBATION")
           <h3 class="text-danger">Academic Standing : {{$r}}</h3>

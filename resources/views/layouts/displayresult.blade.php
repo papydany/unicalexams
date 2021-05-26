@@ -36,7 +36,9 @@ font-size: 12px;
     <b>Department&nbsp; : &nbsp;</b> {{$d->department_name}}<br/>
     <b>Course Of Study&nbsp;: &nbsp;</b>{{$fss->fos_name}}<br/>
 {{!$yplus = $y + 1}}
-  <b>Session :: </b>{{$y.' / '.$yplus}}</p>
+  <b>Session :: </b>{{$y.' / '.$yplus}}
+<br/>
+<b>Season :: </b>{{$season}}</p>
   </div>
   </div>
   
