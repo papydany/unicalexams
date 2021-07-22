@@ -4,16 +4,19 @@
    <div class="content container" style="min-height: 425px;">
         <div class="page-wrapper">
             <header class="page-heading clearfix">
-                <h1 class="heading-title pull-left">Welcome <strong class="text-danger">{{ Auth::user()->surname.
-         
-                    "&nbsp;". Auth::user()->firstname."&nbsp;".Auth::user()->othername }}</strong><strong class="text-success">({{Auth::user()->matric_number}})</strong></h1>
-                <div class="breadcrumbs pull-right">
-                    <ul class="breadcrumbs-list">
-                        <li class="breadcrumbs-label">You are here:</li>
-                        <li><a href="url('/')}}">Home</a><i class="fa fa-angle-right"></i></li>
-                        <li class="current">View Result </li>
-                    </ul>
-                </div><!--//breadcrumbs-->
+                <h4 class="text-center text-primary"><b><u>VIEW RESULT</u></b></h4>
+                
+                    <h4 class="heading-title pull-left"><strong class=''>{{ strtoupper(Auth::user()->surname.
+             
+                        " ". Auth::user()->firstname." ".Auth::user()->othername )}}</strong>
+                        <strong class="text-primary">{{Auth::user()->matric_number}}</strong></h4>
+                    <div class="breadcrumbs pull-right">
+                        <ul class="breadcrumbs-list">
+                            <li class="breadcrumbs-label">You are here:</li>
+                            <li><a href="{{url('/')}}">Home</a><i class="fa fa-angle-right"></i></li>
+                            <li class="current">View Result </li>
+                        </ul>
+                    </div><!--//breadcrumbs-->
             </header>
         </div>
         <div class="row" style="margin-bottom: 20px;">
@@ -22,7 +25,8 @@
                 <div class="form-group">
                     <div class="col-sm-3">
                         
-                        <select name="session"   class="form-control">
+                        <select name="session"   class="form-control" required>
+                            <option value="">-- Select Session --</option>
                             @if(isset($studentreg))
                             @foreach ($studentreg as $item)
                             {{!$next = $item->session + 1}}
@@ -36,27 +40,29 @@
                     <div class="col-sm-3">
                         <select name="level" class="form-control" required>
                             <option value="">-- Select Level --</option>
-                            @if(isset($l))
+                            @if(isset($studentreg))
                             {{$i = 1}}
-                                @foreach($l as $k => $v)
-                                @if(Auth::user()->faculty_id == 14 &&  $v->level_id < 7)
-                                @if($v->level_id < 3)
+                            @foreach ($studentreg as $v)
+                            
+                            @if(Auth::user()->faculty_id == 14 &&  $v->level_id < 7)
+                            @if($v->level_id < 3)
 
-                                <option value="{{$v->level_id}}">{{$v->level_name}}</option>
-                              
-                                @else
-                                <option value="{{$v->level_id}}">PART {{$i++}}</option>
-                              
-                                @endif
-                                 @if($v->level_id == 6)
-                                   @break;
-                                   @endif
-                                @else
-                                    <option value="{{$v->level_id}}">{{$v->level_name}}</option>
-                                @endif
-                                @endforeach
-
-                           @endif
+                            <option value="{{$v->level_id}}">{{$v->level_id}}00</option>
+                          
+                            @else
+                            <option value="{{$v->level_id}}">PART {{$i++}}</option>
+                          
+                            @endif
+                             @if($v->level_id == 6)
+                               @break;
+                               @endif
+                            @else
+                                <option value="{{$v->level_id}}">{{$v->level_id}}00</option>
+                            @endif
+                           
+                            @endforeach
+                            @endif
+                           
                         </select>
                     </div>
                     <div class="col-sm-2">

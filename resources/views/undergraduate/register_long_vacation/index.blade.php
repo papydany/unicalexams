@@ -4,17 +4,19 @@
 <div class="content container">
   <div class="page-wrapper">
    <header class="page-heading clearfix">
-     <h1 class="heading-title pull-left">Welcome <strong class="text-danger">{{ Auth::user()->surname.
-        "&nbsp;". Auth::user()->firstname."&nbsp;".Auth::user()->othername ."&nbsp;(".Auth::user()->matric_number.")"}}</strong>
-        <?php $next =session()->get('session_year') +1;?>
-     </h1>
-     <div class="breadcrumbs pull-right">
-       <ul class="breadcrumbs-list">
-         <li class="breadcrumbs-label">You are here:</li>
-         <li><a href="url('/')}}">Home</a><i class="fa fa-angle-right"></i></li>
-         <li class="current">Undergraduate</li>
-       </ul>
-     </div><!--//breadcrumbs-->
+    <h4 class="text-center text-primary"><b><u>LONG VACATION REGISTRATION</u></b></h4>
+                
+                <h4 class="heading-title pull-left"><strong class=''>{{ strtoupper(Auth::user()->surname.
+         
+                    " ". Auth::user()->firstname." ".Auth::user()->othername )}}</strong>
+                    <strong class="text-primary">{{Auth::user()->matric_number}}</strong></h4>
+                <div class="breadcrumbs pull-right">
+                    <ul class="breadcrumbs-list">
+                        <li class="breadcrumbs-label">You are here:</li>
+                        <li><a href="{{url('/')}}">Home</a><i class="fa fa-angle-right"></i></li>
+                        <li class="current">Long Vacation Registration </li>
+                    </ul>
+                </div><!--//breadcrumbs-->
    </header> 
     
    <div class="page-content">                 
@@ -22,13 +24,12 @@
         <div class="team-wrapper col-xs-12">        
          <div class="row page-row" >
           <div class="col-sm-6">
-            <h4><strong class="text-success">PIN VALID FOR &nbsp; {{session()->get('session_year').'/'.$next }} &nbsp; SESSION</strong></h4>
-             <p class=" text-center" style="background-color: #0ff; padding: 10px"><b> Direct Entry students,  100 level, is your first year of three or four years programme</b></p>
+              <p class=" text-center" style="background-color: rgb(255, 81, 0); padding: 5px;color:white"><b> Direct Entry students,  100 level, is your first year of three or four years programme</b></p>
           </div>
            <div class="col-sm-3">
-            <p><b>Session :</b>{{session()->get('session_year').'/'.$next }}</p>
-                 <p><b>Level :</b>{{$l}}00 </p>
-                  <p><b>Semester :</b>First & Second</p>
+            <h5><b>Session :</b>{{$ss.'/'.$next }}</h5>
+                 <h5><b>Level :</b>{{$l}}00 </h5>
+                  <h5><b>Semester :</b>First & Second</h5>
           </div>
             <div class="col-sm-3">
               <p class="text-danger"><b>Course Status</b></p>
@@ -39,12 +40,12 @@
           </div>
           <div class="clearfix"></div>
           <div class="col-sm-12">
-          <h2  class="text-center text-danger text-undeline">LONG VACATION REGISTRATION</h2></div>
+          <h2  class="text-center text-danger text-undeline"></h2></div>
           
             
             @if(isset($rc))
             @if(!empty($rc) > 0)
-              <p class="text-danger">Select the check box to choose the couress you want to register</p>     
+              <h4 class="text-danger text-center">Select the check box to choose the couress you want to register</h4>     
               <form class="form-horizontal" role="form" method="GET" action="{{ url('previewVacationCourse') }}" data-parsley-validate>
               {{ csrf_field() }}                     
             <table class="table table-boxed">
@@ -63,6 +64,7 @@
 
 
 <input type="hidden" name="level" value="{{$l}}">
+<input type="hidden" name="session" value="{{$ss}}">
 
 <?php $collection = $rc->groupBy('semester_id');?>
            @foreach($collection as $k => $item)
@@ -79,7 +81,7 @@
 @if(($c % 2)== 0)
   <tr>
   @else
-  <tr class='danger'>
+  <tr class='success'>
   @endif
   <td>{{$c}}</td>
  <td><input type="checkbox" class="ids" name="id[]" value="{{$v->id}}"></td> 

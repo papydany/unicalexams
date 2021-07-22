@@ -154,7 +154,7 @@ All categories of final year have <b>28 credit units</b> or <b>30 credit units</
                                     <div class="panel-heading">
                                         <h4 class="panel-title">
                                             <a data-toggle="collapse" data-parent="#accordion" class="collapsed" href="#collapse-11">
-                                      How Does a Direct Entry (D/E) Student Register for Courses? 
+                                      How Does  Direct Entry (D/E) Student Register for Courses? 
                                             </a>
                                         </h4>
                                     </div><!--//pane-heading-->

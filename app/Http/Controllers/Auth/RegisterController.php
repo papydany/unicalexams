@@ -132,7 +132,7 @@ public function showRegistrationForm()
     session()->put('student_type',2);
    session()->put('student_status',1);
           $input = $request->all();
-          //dd($input);
+          $entryYear =$request->entry_year;
         $validator = $this->validator($input);
  if ($validator->passes()) {
 
@@ -168,7 +168,7 @@ if($reg['id'] > 0)
  $pin->matric_number = $reg['matric_number'];
  $pin->student_type = self::Undergraduate;
  $pin->save();
-session()->put('session_year',$pin->session);
+session()->put('session_year',$entryYear);
 
 if (auth()->attempt(array('matric_number' => $pin->matric_number, 'password' =>$pin->matric_number)))
    return redirect()->intended('/profile'); 
@@ -302,25 +302,25 @@ return $sql;
 //------------------------------------------------------------------------------------------------------------
 public function get_state()
 {
-$sql =State::get();
+$sql =State::orderBy('state_name','ASC')->get();
 return $sql;
 }
 //---------------------------------------------------------------------------------------------------------
 public function getdepartment($id)
 {
-$sql =Department::where('faculty_id',$id)->get();
+$sql =Department::where('faculty_id',$id)->orderBy('department_name','ASC')->get();
 return $sql;
 }
 //-------------------------------------------------------------------------------------------------------
 public function getlga($id)
 {
-$sql =Lga::where('state_id',$id)->get();
+$sql =Lga::where('state_id',$id)->orderBy('lga_name','ASC')->get();
 return $sql;
 }
 //-------------------------------------------------------------------------------------------------------
 public function getfos($id,$p_id)
 {
-$sql =Fos::where([['department_id',$id],['programme_id',$p_id]])->get();
+$sql =Fos::where([['department_id',$id],['programme_id',$p_id]])->orderBy('fos_name','ASC')->get();
 return $sql;
 }
 }

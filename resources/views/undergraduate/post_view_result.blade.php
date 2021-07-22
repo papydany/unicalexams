@@ -140,7 +140,7 @@
        <!--  diploma students -->
        <tr>
        <td>A = 5.0</td> 
-       <td><b>TAKE : </b>Mean previously dropped courses,to be taken in the current level</td>
+       <td><b>TAKE : </b>Means previously dropped courses,to be taken in the current level</td>
        <td><b>CA : </b>Continuous Assessment Score</td>
        </tr>
         <tr>
@@ -152,7 +152,7 @@
        </tr>
         <tr>
        <td>C = 3.0</td> 
-       <td><b>NR : </b>Mean no result, the lecturer have not uploaded yet.</td>
+       <td><b>NR : </b>Means no result, the lecturer have not uploaded yet.</td>
        <td><b>T : </b>Total Scores</td>
        
        </tr>
@@ -175,7 +175,7 @@
        @else
         <tr>
        <td>A = 5.0</td> 
-       <td><b>TAKE : </b>Mean previously dropped courses,to be taken in the current level</td>
+       <td><b>TAKE : </b>Means previously dropped courses,to be taken in the current level</td>
        <td><b>CA : </b>Continuous Assessment Score</td>
        </tr>
         <tr>
@@ -185,13 +185,13 @@
        </tr>
         <tr>
        <td>C = 3.0</td> 
-       <td><b>NR : </b>Mean no result, the lecturer have not uploaded yet.</td>
+       <td><b>NR : </b>Means no result, the lecturer have not uploaded yet.</td>
        <td><b>T : </b>Total Scores</td>
        
        </tr>
         <tr>
        <td>D = 2.0</td> 
-       <td><b>Probation : </b>Mean repeat the same level and rewirte all your failed and dropped courses</td>
+       <td><b>Probation : </b>Means repeat the same level and rewirte all your failed and dropped courses</td>
        <td><b>Status :</b>E = Elective Course </td>
        </tr>
         <tr>

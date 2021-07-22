@@ -23,8 +23,8 @@ class OldstudentController extends Controller
     $matric_no =  session()->get('matric_no');
     $year =  session()->get('session_year');
     $yearplus = $year + 1;
-$get_session = DB::connection('mysql1')->table('students_results')->select('std_mark_custom2','period')->distinct()->where([['std_mark_custom2','!=',""],['std_mark_custom2','<=', $year],['std_id',$std_id],['matric_no',$matric_no]])->get();
-
+//$get_session = DB::connection('mysql1')->table('students_results')->select('std_mark_custom2','period')->distinct()->where([['std_mark_custom2','!=',""],['std_mark_custom2','<=', $year],['std_id',$std_id],['matric_no',$matric_no]])->get();
+$get_session = DB::connection('mysql1')->table('students_results')->select('std_mark_custom2','period')->distinct()->where([['std_mark_custom2','!=',""],['std_id',$std_id],['matric_no',$matric_no]])->get();
 return view('result.index')->withName($name)->withMatric_no($matric_no)->withYear($year)->withYearplus($yearplus)->withGetsession($get_session);
     }
 //====================================check result ==============================
@@ -440,6 +440,14 @@ $sql = DB::connection('mysql1')->table('dept_options')->where([['do_id',$id]])->
 
 return $sql->programme_option;
 	}
+
+	function get_course_study1()
+	{
+	$id =  session()->get('fos');
+$sql = DB::connection('mysql1')->table('dept_options')->where([['do_id',$id]])->first();
+
+return $sql;
+	}
 // ==========================get entry session ========================================
 function get_entry_sesssion($std)
 {
@@ -465,6 +473,12 @@ function new_Probtion($l,$s_id,$s,$cgpa)
 $return ='';
 $fail_cu=$this->get_fail_crunit($l,$s_id,$s);
 $entry_year =$this->get_entry_sesssion($s_id);
+$fos =$this->get_course_study1();
+
+if($entry_year->std_custome2 == '2015' && $fos->duration >= $l)
+{
+	return $return;
+}
 $prog = session()->get('programme_id');
 if($prog == 7)
 {

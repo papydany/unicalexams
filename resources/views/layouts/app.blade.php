@@ -39,8 +39,8 @@
                 </button>
 
                 <!-- Branding Image -->
-                <a class="navbar-brand" href="{{ url('/') }}">
-               <img id="logo" src="assets/images/logo.png" alt="Logo"></a>
+                <a class="navbar-brand" href="{{url('/')}}">
+               <img class="img-responsive" id="logo" src="assets/images/logo.png" alt="Logo"></a>
 
 
             </div>

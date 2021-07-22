@@ -30,8 +30,8 @@ Const Diploma = 2;
 Const FacultyofBiological = 4;
 Const MEDICINE = 14;
 Const DepartmentOfPlant = 12;
-Const FosHnd=125;
-Const FosHndDe =126;
+Const FosHnd=0;
+Const FosHndDe =0;
 const FacultOfAgric =18;
 const DepartmentFoodTech =13;
 
@@ -47,7 +47,7 @@ const DepartmentFoodTech =13;
     // get programme
 $p=Auth::user()->programme_id;
 
-
+$allStudentreg = $this->getAllStudentRegistered();
 $programme =Programme::find($p);
 
 // get faculty
@@ -62,9 +62,9 @@ $department =Department::find($d);
 $fs=Auth::user()->fos_id;
 $fss =Fos::find($fs);
 
-$student_reg =StudentReg::where('user_id',Auth::user()->id)->get();	
-$session=session()->get('session_year');
-return view('undergraduate.index')->withP($programme)->withF($faculty)->withD($department)->withFs($fss)->withSreg($student_reg)->withSs($session);
+//$student_reg =StudentReg::where('user_id',Auth::user()->id)->get();	
+//$session=session()->get('session_year');
+return view('undergraduate.index')->withP($programme)->withF($faculty)->withD($department)->withFs($fss)->withAllstudentreg($allStudentreg);
  }
 
 //===================  edit fos ================================
@@ -208,7 +208,10 @@ $update->save();
         $d_id =Auth::user()->department_id;
         $fos_id =Auth::user()->fos_id;
         $l= 1;
+        $log1=  session()->get('log1');
+        // entry year serve as session here
          $session=  session()->get('session_year');
+         
          $check_s =StudentReg::where([['user_id',$user_id],['level_id',$l],['session','<',$session]])->first();
          
          if($check_s != null)
@@ -220,6 +223,16 @@ $update->save();
         $check_student_reg =StudentReg::where([['user_id',$user_id],['semester',self::FIRST_SEMESTER],['session',$session]])->first();
         if($check_student_reg == null)
         {
+          // check if the pin can be used for first semetsr registration
+
+          
+          //$log1=  session()->get('log1');
+          if($log1 == 1)
+          {
+            Session::flash('warning',"The Pin used to login has been used for registration already");
+          return back();
+          }
+
           // register for year first semester 
          /* get courses for regiteration*/
          $register_course=RegisterCourse::where([['programme_id',$p_id],['faculty_id',$f_id],['department_id',$d_id],['fos_id',$fos_id],['semester_id',self::FIRST_SEMESTER],['session',$session],['level_id',$l]])->whereIn('reg_course_status',["C","E"])->orderBy('reg_course_status','ASC')->get();
@@ -231,6 +244,7 @@ $update->save();
            $check_student_reg_2 =StudentReg::where([['user_id',$user_id],['semester',self::SECOND_SEMESTER],['session',$session]])->first(); 
 if($check_student_reg_2 == null)
         {
+        
  // register for year first semester 
   $register_course=RegisterCourse::where([['programme_id',$p_id],['faculty_id',$f_id],['department_id',$d_id],['fos_id',$fos_id],['semester_id',self::SECOND_SEMESTER],['session',$session],['level_id',$l],])->whereIn('reg_course_status',["C","E"])->orderBy('reg_course_status','ASC')->get();
 
@@ -278,8 +292,7 @@ return view('undergraduate.register_course')->withReg($register_course)->withS($
         $session=session()->get('session_year');
        $l =$request->level;
        $s=$request->semester; 
-   
-       $insert_data =array();
+        $insert_data =array();
     $check_student_reg=StudentReg::where([['user_id',Auth::user()->id],['semester',$s],['session',$session],['level_id',$l]])->first();
     if($check_student_reg == null)
     {
@@ -303,6 +316,13 @@ if($student_reg->id){
         }  
 
         DB::connection('mysql2')->table('course_regs')->insert($insert_data);
+        $pinId=  session()->get('login_user');
+
+       // first semester log
+
+          $affected = DB::table('pins')
+          ->where('id', $pinId)
+          ->update(['log1' => 1,'log_session'=>$session]);
     }
          Session::flash('success',"SUCCESSFULL.");
     }else{
@@ -316,19 +336,20 @@ return redirect()->action('UndergraduateController@index');
 public function print_course()
 {
     $s =Semester::where('programme_id',Auth::user()->programme_id)->get();
-    $session=session()->get('session_year');
-    $reg =StudentReg::where([['session',$session],['user_id',Auth::user()->id]])->first();
+   // $session=session()->get('session_year');
+    $reg =StudentReg::where([['user_id',Auth::user()->id],['semester',1]])
+    ->select('session','level_id')->distinct('session')->get();
     if($reg == null)
     {
       Session::flash('warning',"you have not register courses for these session");
       return back();
     }
-    return view('undergraduate.print.index')->withS($s)->withReg($reg)->withSs($session);
+    return view('undergraduate.print.index')->withS($s)->withReg($reg);
 
 }
 public function view_register_course($l,$s)
 {
-    $session=session()->get('session_year');
+    $session=session()->get('session');
     $course =CourseReg::wherewhere([['user_id',Auth::user()->id],['semester',$s],['session',$session],['level_id',$l],['period',"NORMAL"]])->get();
     return view('undergraduate.view_register_course')->withC($course)->withS($s)->withL($l)->withSs($session);
 
@@ -339,20 +360,22 @@ public function addCourses()
 {
        $s =Semester::where('programme_id',Auth::user()->programme_id)->get();
    // $l = Level::where('programme_id',Auth::user()->programme_id)->get();
-    $session=session()->get('session_year');
-    $reg =StudentReg::where([['session',$session],['user_id',Auth::user()->id]])->first();
-      if($reg == null)
+    //$session=session()->get('session_year');
+    //$reg =StudentReg::where([['session',$session],['user_id',Auth::user()->id]])->first();
+    $studentreg =StudentReg::where([['user_id',Auth::user()->id]])
+ ->select('session','level_id')->distinct('session')->orderBy('level_id','desc')->first();
+      if($studentreg == null)
     {
       Session::flash('warning',"you have not register courses for these session");
       return back();
     }
-   return view('undergraduate.addCourses')->withS($s)->withReg($reg)->withSs($session);
+   return view('undergraduate.addCourses')->withS($s)->withStudentreg($studentreg);
  
 }
 
 public function post_addCourses(request $request)
 {
-      $session=session()->get('session_year');
+      $session=$request->session;
        $l =$request->level;
        $s=$request->semester;
        $id=Auth::user()->id;
@@ -400,7 +423,7 @@ will be need to check the course of unit u have before you can add more
 
    public function preview_addcourse(Request $request)
     {
-     $session=  session()->get('session_year');
+      $session=$request->session;
      $l =$request->level;
      $s=$request->semester;  
      $variable = $request->input('id');
@@ -429,7 +452,7 @@ will be need to check the course of unit u have before you can add more
     {
     // $db = DB::transaction(function () {   
         $id = $request->input('id');
-        $session=session()->get('session_year');
+        $session=$request->session;
        $l =$request->level;
        $s=$request->semester; 
 
@@ -466,7 +489,7 @@ $department =$this->getDepartment();
 // get fos
 $fss =$this->getFos();   
     
-    $session=session()->get('session_year');
+    $session=$request->session;
      $l =$request->level;
      $season=$request->season;
     $s=$request->semester;
@@ -482,24 +505,26 @@ $fss =$this->getFos();
 public function deleteCourses()
 {
       $s =Semester::where('programme_id',Auth::user()->programme_id)->get();
-    $l = Level::where('programme_id',Auth::user()->programme_id)->get();
-    $session=session()->get('session_year');
+    //$l = Level::where('programme_id',Auth::user()->programme_id)->get();
+    //$session=session()->get('session_year');
 
-    $reg =StudentReg::where([['session',$session],['user_id',Auth::user()->id]])->first();
+    //$reg =StudentReg::where([['session',$session],['user_id',Auth::user()->id]])->first();
+    $studentreg =StudentReg::where([['user_id',Auth::user()->id]])
+ ->select('session','level_id')->distinct('session')->orderBy('level_id','desc')->first();
 
-      if($reg == null)
+      if($studentreg == null)
     {
       Session::flash('warning',"you have not register courses for these session");
       return back();
     }
     
-   return view('undergraduate.deleteCourses.index')->withS($s)->withReg($reg)->withSs($session);
+   return view('undergraduate.deleteCourses.index')->withS($s)->withStudentreg($studentreg);
  
 }
 // ================== post delete courses===========
 public function post_deleteCourses(request $request)
 {
-$session=session()->get('session_year');
+$session=$request->session;
 $l =$request->level;
 $s=$request->semester;
 $id=Auth::user()->id;
@@ -516,7 +541,7 @@ return view('undergraduate.deleteCourses.view')->withS($s)->withL($l)->withSs($s
 // =============== preview delete courses ===========
  public function preview_deletecourse(Request $request)
 {
-  $session=  session()->get('session_year');
+  $session= $request->session;
   $l =$request->level;
   $s=$request->semester;  
   $variable = $request->input('id');
@@ -553,7 +578,7 @@ public function view_result()
 {
  $l = Level::where('programme_id',Auth::user()->programme_id)->get();
  $studentreg =StudentReg::where([['user_id',Auth::user()->id],['semester',1]])
- ->select('session')->distinct('session')->get();
+ ->select('session','level_id')->distinct('session')->get();
 
  $session=session()->get('session_year');
   return view('undergraduate.view_result')->withL($l)->withSs($session)->withStudentreg($studentreg);
@@ -730,9 +755,12 @@ $unpass_course_id=array_diff($course_id_array,$pass_course_id);
 $rowc = DB::connection('mysql2')->table('course_regs')->where([['user_id',$id],['course_id',$course_id_v],['level_id','<=',$l],['session','<=',$s]])
 ->whereIn('period',$takeType)->first();
     
-$code = substr($rowc->course_code,0,3).' '.substr($rowc->course_code,3,4);
-            
-$type = substr($rowc->course_code,0,3); // GSSS
+if($rowc != null){
+    
+  $code = substr($rowc->course_code,0,3).' '.substr($rowc->course_code,3,4);
+              
+  $type = substr($rowc->course_code,0,3);
+  }
    
 
    if ($n >= 3)
@@ -955,6 +983,12 @@ $p=Auth::user()->programme_id;
 $f=Auth::user()->faculty_id;
 $d=Auth::user()->department_id;
 
+$fos =$this->getFos();
+
+if( $l >= $fos->duration)
+{
+  return $return;
+}
 $s_on_probation =$this->getprobationStudents($id,$p,$d,$f,$l,$s);
 
 if($s_on_probation == 'true')
@@ -1041,13 +1075,13 @@ return $fss;
 //======================= get department by faculty ==================================================
  public function getdept($id)
 {
-$sql =Department::where('faculty_id',$id)->get();
+$sql =Department::where('faculty_id',$id)->orderBy('department_name','ASC')->get();
 return $sql;
 }
 // ============================== get fos by department and programme ===========================
 public function gfos($id,$p_id)
 {
-$sql =Fos::where([['department_id',$id],['programme_id',$p_id]])->get();
+$sql =Fos::where([['department_id',$id],['programme_id',$p_id]])->orderBy('fos_name','ASC')->get();
 return $sql;
 }
 //====================== get register students per semester ========================
@@ -1097,15 +1131,20 @@ public function NumberPreviousFailedCoursePerCourseId($id,$semester,$previous_se
 /*------------------ get compulsary register courses in the session --------*/
 public function GetRegisteredCompulsaryCourses($semester,$session,$level)
 {
-  $regcourse=RegisterCourse::where([['semester_id',$semester],['session',$session],['programme_id',Auth::user()->programme_id],['faculty_id',Auth::user()->faculty_id],['department_id',Auth::user()->department_id],['fos_id',Auth::user()->fos_id],['level_id',$level],['reg_course_status','C']])->get();
-
+  $specializationId =$this->getSpecializationIdWithLevel(Auth::user()->specialization_id,$level);
+  $regcourse=RegisterCourse::where([['semester_id',$semester],['session',$session],['programme_id',Auth::user()->programme_id],['faculty_id',Auth::user()->faculty_id],['department_id',Auth::user()->department_id],['fos_id',Auth::user()->fos_id],['level_id',$level],['reg_course_status','C']])
+  ->whereIn('specialization_id',[0,$specializationId])
+  ->get();
   return $regcourse;
 }
 
 /*------------------ get compulsary register courses in the session --------*/
 public function GetRegisteredCompulsaryCoursesSession($session,$level)
 {
-  $regcourse=RegisterCourse::where([['session',$session],['programme_id',Auth::user()->programme_id],['faculty_id',Auth::user()->faculty_id],['department_id',Auth::user()->department_id],['fos_id',Auth::user()->fos_id],['level_id',$level],['reg_course_status','C']])->get();
+  $specializationId =$this->getSpecializationIdWithLevel(Auth::user()->specialization_id,$level);
+  $regcourse=RegisterCourse::where([['session',$session],['programme_id',Auth::user()->programme_id],['faculty_id',Auth::user()->faculty_id],['department_id',Auth::user()->department_id],['fos_id',Auth::user()->fos_id],['level_id',$level],['reg_course_status','C']])
+  ->whereIn('specialization_id',[0,$specializationId])
+  ->get();
 
   return $regcourse;
 }
@@ -1167,22 +1206,55 @@ return $r;
 public function returning_register_course()
 {
 
- $id = Auth::user()->id;
- $s=  session()->get('session_year');
-$student_reg =StudentReg::where([['user_id',$id],['session','<',$s]])->orderBy('level_id','desc')->orderBy('session','desc')->first();
+  $allStudentreg = $this->getAllStudentRegistered();
+   $studentreg = $this->getStudentRegistered();
 
- $all_level ='';
- $MatricNumber = Auth::user()->matric_number;
+     if($studentreg == null)
+   {
+     Session::flash('warning',"you have not register for year one. login as new student to register");
+     return back();
+   }
+  
+    return view('undergraduate.rs_register_course.index')->withAllstudentreg($allStudentreg);
+  
+
+}
+
+public function returningRegisterCourse(Request $request)
+{
+ $id = Auth::user()->id;
+
+ if(session()->get('session') == null){
+  session()->put('session',$request->session);
+ }
+ //dd(session()->get('session_year'));
+ $s =session()->get('session');
+
+ $log1=  session()->get('log1');
+ $log2=  session()->get('log2');
+ if($log1 == 1 && $log2 ==1)
+ {
+   Session::flash('warning',"The Pin used to login has been used for registration already");
+ return back();
+ }
+
+ if(Auth::user()->faculty_id == self::MEDICINE)
+  {
+    return view('undergraduate.medicine.index')->withSs($s);
+  
+  }
+ 
+$student_reg =StudentReg::where([['user_id',$id],['session','<',$s]])
+->whereIn('semester',[1,2])->orderBy('level_id','desc')->orderBy('session','desc')->first();
+
+  $all_level ='';
+  $MatricNumber = Auth::user()->matric_number;
   $jamb_reg = Auth::user()->jamb_reg;
   $s_next =$s+1;
   $Session =$s.'/'.$s_next;
   //$Session ="2017/2018";
 
-  if(Auth::user()->faculty_id == self::MEDICINE)
-{
-  return view('undergraduate.medicine.index')->withSs($s);
-
-}
+ 
  
   $student_type= session()->get('student_type'); // eg direct entry and normal students
   $all_semester =Semester::where('programme_id',Auth::user()->programme_id)->get();
@@ -1322,7 +1394,7 @@ session()->put('paidschoolfess',$id);
       return back();
 }
 
-return view('undergraduate.rs_register_course.index')->withR($r)->withCwnr($course_id_with_no_result)->withSs($s)->withSemester($all_semester)->withL($all_level);
+return view('undergraduate.rs_register_course.index1')->withR($r)->withCwnr($course_id_with_no_result)->withS($s)->withSemester($all_semester)->withL($all_level)->withNext($s_next);
 
 
 }
@@ -1468,10 +1540,12 @@ if($id != null)
 
          Session::flash('success',"SUCCESSFULL.");
        }
-       return redirect()->action('UndergraduateController@returning_register_course');
+
+
+       return redirect()->action('UndergraduateController@returningRegisterCourse');
     }else{
  Session::flash('warning',"you have register for these semester already.");
- return redirect()->action('UndergraduateController@returning_register_course');
+ return redirect()->action('UndergraduateController@returningRegisterCourse');
     }
 } 
 /*========================= end medicine code ===================================*/
@@ -1507,9 +1581,9 @@ if($check_student_reg == null)
   $combine_course_id ='';
   $previous_session = $student_reg->session;
 
-
-
-
+  if(Auth::user()->programme_id != self::Diploma)
+    {
+      
   if(Auth::user()->department_id == self::DepartmentOfPlant && Auth::user()->entry_year == '2016' && $semester == 2 
   || Auth::user()->fos_id == self::FosHnd && $semester == 2 || Auth::user()->fos_id == self::FosHndDe && $semester == 2
   )
@@ -1538,7 +1612,7 @@ if($check_student_reg == null)
         }
         if($level == $ITlevel)
         {
-          if(Auth::user()->department_id == self::DepartmentFoodTech && $semester =1)
+          if(Auth::user()->department_id == self::DepartmentFoodTech && $semester == 1)
           {
           $failed_courses =$this->getPreviouFailedCourses($id,$semester,$previous_session,'NORMAL');
           }else{
@@ -1557,20 +1631,15 @@ $failed_courses =$this->getPreviouFailedCourses($id,$semester,$previous_session,
 if(count($failed_courses) > 0)
 {
   foreach ($failed_courses as $key => $value) {
-    if(Auth::user()->programme_id == self::Diploma)
-    {
-      $c =CourseReg::where([['user_id',Auth::user()->id],['course_id',$value->course_id],['period','RESIT']])->count();
-      
-      if($c == 0){
-      $failed_courses_course_id [] =$value->course_id;
-    }
-    }else{
+  
   $check_failed_courses =$this->NumberPreviousFailedCoursePerCourseId($id,$semester,$previous_session,$value->course_id);
- if($check_failed_courses < 3)
+  $type = substr($value->course_code,0,3);
+  // modified 08/07/2021
+  if(in_array($type ,[ 'GSS','GST']) || $check_failed_courses < 3)
    {
 $failed_courses_course_id [] =$value->course_id;
 }
-    }
+    
    }
   
   }
@@ -1584,6 +1653,7 @@ $failed_courses_course_id [] =$value->course_id;
        $session1 =$session -1;
        $sessionArray =[$previous_session,$session1];
      }
+    
 
 if(Auth::user()->department_id == self::DepartmentOfPlant && Auth::user()->entry_year == '2016' && $semester == 2 
 || Auth::user()->fos_id == self::FosHnd && $semester == 2  || Auth::user()->fos_id == self::FosHndDe && $semester == 2 )
@@ -1612,11 +1682,12 @@ if(Auth::user()->department_id == self::DepartmentOfPlant && Auth::user()->entry
       }
       if($level == $ITlevel)
       {
-        if(Auth::user()->department_id == self::DepartmentFoodTech && $semester =1)
+        if(Auth::user()->department_id == self::DepartmentFoodTech && $semester == 1)
         {
           $d_register_course =$this->GetRegisteredCompulsaryCourses($semester,$previous_session,$previous_level);
         }else{
           $d_register_course = array();
+         
         }
       }else{
         $d_register_course =$this->GetRegisteredCompulsaryCourses($semester,$previous_session,$previous_level);
@@ -1662,19 +1733,21 @@ $combine_course_id =$unregister_course_id;
 
   if(!empty($combine_course_id))
   {
+    $insert_data =array();
     foreach ($combine_course_id as $key => $value) {
       // get courses first
    $r_c =RegisterCourse::where([['course_id',$value],['semester_id',$semester],['fos_id',Auth::user()->fos_id],['session',$previous_session]])->first();
    if($r_c != null){
 
      // check if failed or unregister courses id exist in registercourses
-
+     
       $check_register_course =RegisterCourse::where([['course_id',$value],['semester_id',$semester],['fos_id',Auth::user()->fos_id],['session',$session],['level_id',$level],['reg_course_status',"G"]])->first();
       // failed or unregister courses id does not exist in registercourses
-      $insert_data =array();
+      
       if($check_register_course == null)
       {
-   $insert_data[] =['course_id'=>$value,'programme_id'=>Auth::user()->programme_id,'department_id'=>Auth::user()->department_id,'faculty_id'=>Auth::user()->faculty_id,'fos_id'=>Auth::user()->fos_id,'level_id'=>$level,'semester_id'=>$semester,'reg_course_title'=>$r_c->reg_course_title,'reg_course_code'=>$r_c->reg_course_code,'reg_course_unit'=>$r_c->reg_course_unit,'reg_course_status'=>"G",'session'=>$session];
+        $specializationId =$this->getSpecializationIdWithLevel(Auth::user()->specialization_id,$previous_level);
+   $insert_data[] =['course_id'=>$value,'programme_id'=>Auth::user()->programme_id,'department_id'=>Auth::user()->department_id,'faculty_id'=>Auth::user()->faculty_id,'fos_id'=>Auth::user()->fos_id,'specialization_id'=>$specializationId,'level_id'=>$level,'semester_id'=>$semester,'reg_course_title'=>$r_c->reg_course_title,'reg_course_code'=>$r_c->reg_course_code,'reg_course_unit'=>$r_c->reg_course_unit,'reg_course_status'=>"G",'session'=>$session];
       }
     }
     }
@@ -1700,7 +1773,13 @@ $combine_course_id =$unregister_course_id;
 }
 
 }
-  $register_course=RegisterCourse::where([['programme_id',Auth::user()->programme_id],['faculty_id',Auth::user()->faculty_id],['department_id',Auth::user()->department_id],['fos_id',Auth::user()->fos_id],['semester_id',$semester],['session',$session],['level_id',$level]])->whereIn('reg_course_status',["C","E"])->orderBy('reg_course_status','ASC')->get();
+    }
+
+  $presentSpecializationId =$this->getSpecializationIdWithLevel(Auth::user()->specialization_id,$level);
+  $register_course=RegisterCourse::where([['programme_id',Auth::user()->programme_id],['faculty_id',Auth::user()->faculty_id],['department_id',Auth::user()->department_id],['fos_id',Auth::user()->fos_id],['semester_id',$semester],['session',$session],['level_id',$level]])
+  ->whereIn('reg_course_status',["C","E"])
+  ->whereIn('specialization_id',[0,$presentSpecializationId])
+  ->orderBy('reg_course_status','ASC')->get();
 
   
       
@@ -1711,7 +1790,7 @@ $combine_course_id =$unregister_course_id;
  return back();
 }
 
-return view('undergraduate.rs_register_course.semester_courses')->withDrc($drop_register_course)->withFrc($failed_register_course)->withRc($register_course)->withSn($semester_name)->withL($level);
+return view('undergraduate.rs_register_course.semester_courses')->withDrc($drop_register_course)->withFrc($failed_register_course)->withRc($register_course)->withSn($semester_name)->withL($level)->withS($session);
 }
 
  Session::flash('danger',"you must been autheticated for school fees to continue with your registration.Click on returning students Link on the menu");
@@ -1721,7 +1800,7 @@ return view('undergraduate.rs_register_course.semester_courses')->withDrc($drop_
 
 public function returning_preview_course(Request $request)
     {
-     $session=  session()->get('session_year');
+     $session= $request->session;
      $level =$request->level;
      $semester=$request->semester;  
      $variable = $request->input('id');
@@ -1756,7 +1835,7 @@ public function returning_preview_course(Request $request)
      $total_unit =$data_sum + $failed_data_sum + $drop_data_sum;
     
 
-    return view('undergraduate.rs_register_course.preview_courses')->withPre($data)->withPref($failed_data)->withPred($drop_data)->withL($level)->withCu($course_unit)->withTu($total_unit)->withSn($semester_name);
+    return view('undergraduate.rs_register_course.preview_courses')->withPre($data)->withPref($failed_data)->withPred($drop_data)->withL($level)->withCu($course_unit)->withTu($total_unit)->withSn($semester_name)->withS($session);
     }
 
  //------------------------- register course that been preview method-----------------------
@@ -1767,7 +1846,7 @@ public function returning_preview_course(Request $request)
        $id = $request->input('id');
        $idf = $request->input('idf');
        $idd = $request->input('idd');
-       $session=session()->get('session_year');
+       $session= $request->session;
        $level =$request->level;
        $semester=$request->semester; 
 
@@ -1821,22 +1900,41 @@ if($id != null)
 
         DB::connection('mysql2')->table('course_regs')->insert($insert_data);
     }
+    $pinId=  session()->get('login_user');
 
+    // first semester log
+    if($semester == 1)
+    {
+     $this->updatePinLog1($pinId,$session);
+    
+    }else{
+      $this->updatePinLog2($pinId);
+ 
+      }
          Session::flash('success',"SUCCESSFULL.");
        }
-       return redirect()->action('UndergraduateController@returning_register_course');
+       return redirect()->action('UndergraduateController@returningRegisterCourse');
     }else{
  Session::flash('warning',"you have register for these semester already.");
- return redirect()->action('UndergraduateController@returning_register_course');
+ return redirect()->action('UndergraduateController@returningRegisterCourse');
     }
 } 
 
 //============================= summer registration for agric students================
+
+public function registerSummerCourse()
+{
+  $allStudentreg = $this->getAllStudentRegistered();
+  $studentreg = $this->getStudentRegistered();
+  /*$studentreg =StudentReg::where([['user_id',Auth::user()->id],['semester',1]])
+  ->select('session','level_id')->distinct('session')->get();*/
+ return view('undergraduate.register_summer_course.index1')->withStudentreg($studentreg)->withAllstudentreg($allStudentreg);
+}
 public function register_summer_course(Request $request)
 {
   $all_semester =Semester::where('programme_id',Auth::user()->programme_id)->get();
  $id = Auth::user()->id;
- $s=  session()->get('session_year');
+ $s=  $request->session;
  $fos = $this->getFos();
  if($fos->duration == 4){
   //direct entry
@@ -1878,7 +1976,7 @@ if($totalCourseUnit > 0 &&  $totalCourseUnit <=16)
   return view('undergraduate.register_summer_course.index')->withR($prob)->withSs($s)->withNext($next)->withL($level)->withRc($course);
 
 }else{
-  return view('undergraduate.rs_register_course.index')->withSs($s)->withSemester($all_semester)->withL($level);
+  return view('undergraduate.rs_register_course.index')->withSs($s)->withSemester($all_semester)->withL($level)->withNext($next);
 
 }
  
@@ -1897,7 +1995,7 @@ public function previewSummerCourse(Request $request)
     {
      
      $level =$request->level;
-    
+     $s =$request->session;
      $variable = $request->input('id');
    
     $data ='';   $course_unit ='';
@@ -1910,7 +2008,8 @@ public function previewSummerCourse(Request $request)
       
   $total_unit =$data_sum;
   $tcu =8;
-    return view('undergraduate.register_summer_course.preview')->withTcu($tcu)->withPre($data)->withL($level)->withCu($course_unit)->withTu($total_unit);
+  $next =$s+1;
+    return view('undergraduate.register_summer_course.preview')->withTcu($tcu)->withPre($data)->withL($level)->withS($s)->withNext($next)->withCu($course_unit)->withTu($total_unit);
     }
 
 //=========================post summer course ====================================
@@ -1918,7 +2017,7 @@ public function postSummerCourse(Request $request)
 {
 // $db = DB::transaction(function () {   
    $id = $request->input('id');
-   $session=session()->get('session_year');
+   $session = $request->session;;
    $level =$request->level;
 $check_student_reg=DB::connection('mysql2')->table('student_regs')->where([['user_id',Auth::user()->id],['session',$session],['level_id',$level],['season','VACATION']])->get();
  //dd($check_student_reg);
@@ -1955,10 +2054,10 @@ if($id != null)
 
      Session::flash('success',"SUCCESSFULL.");
    }
-   return redirect()->action('UndergraduateController@register_summer_course');
+   return redirect()->action('UndergraduateController@registerSummerCourse');
 }else{
 Session::flash('warning',"you have register for  summer these semester already.");
-return redirect()->action('UndergraduateController@register_summer_course');
+return redirect()->action('UndergraduateController@registerSummerCourse');
 }
 } 
 //=====================delay registration for agric students========================
@@ -1974,10 +2073,10 @@ public function register_long_vacation(Request $request)
 {
   $level =$request->level;
   $duration =$request->duration;
-  
+  $s =$request->session;
+
  $all_semester =Semester::where('programme_id',Auth::user()->programme_id)->get();
  $id = Auth::user()->id;
- $s=  session()->get('session_year');
  $student_reg =DB::connection('mysql2')->table('student_regs')
 ->where([['user_id',$id],['session',$s],['level_id',$level]])->first();
 $next =$s+1;
@@ -1987,21 +2086,23 @@ $course_id_with_no_result = $this->courseWithOutGrade('course_regs',$s,$level,$i
 
 if(count($course_id_with_no_result) == 0)
 {
- $dropUnit = $this->dropCourseUnit($id,$level,$s,'NORMAL');
+ //$dropUnit = $this->dropCourseUnit($id,$level,$s,'NORMAL');
  $failUnit =$this->failCourseUnit($level,$id,$s,'NORMAL');
- $totalCourseUnit = $dropUnit + $failUnit;
+ //$totalCourseUnit = $dropUnit + $failUnit;
+ $totalCourseUnit = $failUnit;
 
 if($totalCourseUnit > 0 &&  $totalCourseUnit <=6)
 {
   $failCourse =$this->failCourse($level,$id,$s,'NORMAL');
-  $dropCourse =$this->dropCourse($id,$level,$s,'NORMAL');
-  $course =$failCourse->merge($dropCourse);
+  //$dropCourse =$this->dropCourse($id,$level,$s,'NORMAL');
+  //$course =$failCourse->merge($dropCourse);
+  $course =$failCourse;
   
 
   return view('undergraduate.register_long_vacation.index')->withSs($s)->withNext($next)->withL($level)->withRc($course);
 
 }else{
-  Session::flash('danger',"Your failed and drop course is more than 10 unit.");
+  Session::flash('danger',"Your failed  course is more than 6 unit.");
       return back();
 
 }
@@ -2016,6 +2117,8 @@ if($totalCourseUnit > 0 &&  $totalCourseUnit <=6)
 public function previewVacationCourse(Request $request)
     {
      $level =$request->level;
+     $s =$request->session;
+     $next =$s+1;
     $variable = $request->input('id');
    $data ='';   $course_unit ='';
     $data_sum =0;  
@@ -2027,7 +2130,7 @@ public function previewVacationCourse(Request $request)
       
   $total_unit =$data_sum;
   $tcu =24;
-    return view('undergraduate.register_long_vacation.preview')->withTcu($tcu)->withPre($data)->withL($level)->withCu($course_unit)->withTu($total_unit);
+    return view('undergraduate.register_long_vacation.preview')->withSs($s)->withNext($next)->withTcu($tcu)->withPre($data)->withL($level)->withCu($course_unit)->withTu($total_unit);
     }
 
 //=========================post vacation course ====================================
@@ -2035,7 +2138,7 @@ public function postVacationCourse(Request $request)
 {
 // $db = DB::transaction(function () {   
    $id = $request->input('id');
-   $session=session()->get('session_year');
+   $session=$request->session;
    $level =$request->level;
 $check_student_reg=DB::connection('mysql2')->table('student_regs')->where([['user_id',Auth::user()->id],['session',$session],['level_id',$level],['season','VACATION']])->get();
  //dd($check_student_reg);
@@ -2055,12 +2158,12 @@ if($id != null)
      
     foreach ($data as $key => $value) {
       $student_reg=DB::connection('mysql2')->table('student_regs')->where([['user_id',Auth::user()->id],['session',$session],['level_id',$level],['season','VACATION'],['semester',$value->semester_id]])->first();
-if($value->reg_course_code =='G')
-{
+/*if($value->reg_course_code =='G')
+{*/
   $code ='R';
-}else{
+/*}else{
   $code =$value->reg_course_code;
-}
+}*/
      $insert_data[] =['studentreg_id'=>$student_reg->id,'registercourse_id'=>$value->id,'user_id'=>Auth::user()->id,'level_id'=>$value->level_id,'semester_id'=>$value->semester_id,'course_id'=>$value->course_id,'course_title'=>$value->reg_course_title,'course_code'=>$code,'course_unit'=>$value->reg_course_unit,'course_status'=>$value->reg_course_status,'session'=>$value->session,'period'=>"VACATION"];
     }  
 
@@ -2069,10 +2172,10 @@ if($value->reg_course_code =='G')
 
      Session::flash('success',"SUCCESSFULL.");
    }
-   return redirect()->action('UndergraduateController@profile');
+   return redirect()->action('UndergraduateController@index');
 }else{
 Session::flash('warning',"you have registered for long vacation in these session already.");
-return redirect()->action('UndergraduateController@register_long_vacation',[$level]);
+return redirect()->action('UndergraduateController@index');
 }
 } 
 /*--------------                      PROBATION  -----------------------------------*/
@@ -2153,12 +2256,12 @@ $combine_course_id =$unregister_course_id;
   {
     foreach ($combine_course_id as $key => $value) {
       // get courses first
-   $r_c =RegisterCourse::where([['course_id',$value],['fos_id',Auth::user()->fos_id],['session',$previous_session]])->first();
+   $r_c =DB::connection('mysql')->table('register_courses')->where([['course_id',$value],['fos_id',Auth::user()->fos_id],['session',$previous_session]])->first();
    if($r_c != null){
 
      // check if failed or unregister courses id exist in registercourses
 
-      $check_register_course =RegisterCourse::where([['course_id',$value],['fos_id',Auth::user()->fos_id],['session',$session],['level_id',$level],['reg_course_status',"G"]])->first();
+      $check_register_course =DB::connection('mysql')->table('register_courses')->where([['course_id',$value],['fos_id',Auth::user()->fos_id],['session',$session],['level_id',$level],['reg_course_status',"G"]])->first();
       // failed or unregister courses id does not exist in registercourses
 
       if($check_register_course == null)
@@ -2196,8 +2299,8 @@ $combine_course_id =$unregister_course_id;
  Session::flash('danger',"you have register for these semester. Thank you");
  return back();
 }
-
-return view('undergraduate.rs_register_course.probation')->withDrc($drop_register_course)->withFrc($failed_register_course)->withL($level);
+$next =$session + 1;
+return view('undergraduate.rs_register_course.probation')->withDrc($drop_register_course)->withFrc($failed_register_course)->withL($level)->withS($session)->withNext($next);
 }
 
  Session::flash('danger',"you must been autheticated for school fees to continue with your registration.Click on returning students Link on the menu");
@@ -2214,7 +2317,7 @@ return view('undergraduate.rs_register_course.probation')->withDrc($drop_registe
        
        $idf = $request->input('idf');
        $idd = $request->input('idd');
-       $session=session()->get('session_year');
+       $session=$request->session;
       $level =$request->level;
        $check_student_reg =$this->CheckRegisterStudent(Auth::user()->id,$session,$level,'NORMAL');
 
@@ -2267,7 +2370,12 @@ if($student_reg->id){
 
         DB::connection('mysql2')->table('course_regs')->insert($insert_data_d);
     }
-
+    // update pin
+    $pinId=  session()->get('login_user');
+     $this->updatePinLog1($pinId,$session);
+     $this->updatePinLog2($pinId);
+ 
+      
 
          Session::flash('success',"SUCCESSFULL.");
        }
@@ -2276,7 +2384,7 @@ if($student_reg->id){
     }
 
   
-return redirect()->action('UndergraduateController@returning_register_course');
+return redirect()->action('UndergraduateController@returningRegisterCourse');
 }   
 /*------------------------------- DIPLOMA ------------------------------------------*/
 //======================= diploma students =======================================
@@ -2284,14 +2392,11 @@ public function register_resit_course()
 {
   
  $id = Auth::user()->id;
- $s=  session()->get('session_year');
- $l ='';
-  $student_reg =StudentReg::where([['user_id',$id],['session','=',$s]])->orderBy('level_id','desc')->first();
-if($student_reg != null)
-{
-  $l =$student_reg->level_id;
-}
-  return view('undergraduate.diploma.resit.index')->withL($l);
+ $studentreg =StudentReg::where([['user_id',Auth::user()->id],['semester',1]])
+ ->select('session','level_id')->distinct('session')->get();
+ // $student_reg =StudentReg::where([['user_id',$id],['session','=',$s]])->orderBy('level_id','desc')->first();
+
+  return view('undergraduate.diploma.resit.index')->withStudentreg($studentreg);
 }
 
 public function post_register_resit_course(Request $request)
@@ -2333,8 +2438,8 @@ if($check_student_reg == null)
   $reg =RegisterCourse::whereIn('course_id',$course_id)->where([['fos_id',Auth::user()->fos_id],['session',$session],['level_id',$level],['reg_course_status','C']])->get();
   
    }
-
- return view('undergraduate.diploma.resit.preview')->withRg($reg)->withL($level);
+$next =$session + 1;
+ return view('undergraduate.diploma.resit.preview')->withRg($reg)->withL($level)->withS($session)->withNext($next);
 
 }else
 {

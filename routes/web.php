@@ -79,6 +79,8 @@ Route::post('/register_addcourse', 'UndergraduateController@post_register_addcou
 Route::get('returningStudentMedicine','UndergraduateController@returningStudentMedicine');
 
 Route::get('regMore','UndergraduateController@returning_register_course');
+Route::post('returningRegisterCourse','UndergraduateController@returningRegisterCourse');
+Route::get('returningRegisterCourse','UndergraduateController@returningRegisterCourse');
 Route::get('returning_register_semester_courses','UndergraduateController@returning_register_semester_courses');
 Route::get('returning_preview_course','UndergraduateController@returning_preview_course');
 Route::post('returning_post_register_course','UndergraduateController@returning_post_register_course');
@@ -89,12 +91,13 @@ Route::get('probation_semester_courses','UndergraduateController@probation_semes
 
 Route::post('probation_post_register_course', 'UndergraduateController@probation_post_register_course');
 //--------------- summer registration-------------------------
-Route::get('register_summer_course','UndergraduateController@register_summer_course');
+Route::get('register_summer_course','UndergraduateController@registerSummerCourse');
+Route::post('register_summer_course','UndergraduateController@register_summer_course');
 Route::get('previewSummerCourse','UndergraduateController@previewSummerCourse');
 Route::post('postSummerCourse','UndergraduateController@postSummerCourse');
 Route::get('register_delayed_course','UndergraduateController@register_delayed_course');
 //========================== register long vacation===================================
-Route::get('register_long_vacation/{level?}/{duration?}','UndergraduateController@register_long_vacation');
+Route::get('register_long_vacation/{level?}/{duration?}/{session?}','UndergraduateController@register_long_vacation');
 Route::get('previewVacationCourse','UndergraduateController@previewVacationCourse');
 Route::post('postVacationCourse','UndergraduateController@postVacationCourse');
 //============================ old student returning =======================================

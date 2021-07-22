@@ -4,8 +4,9 @@
 <div class="content container">
             <div class="page-wrapper">
                 <header class="page-heading clearfix">
-                    <h1 class="heading-title pull-left">Welcome <strong class="text-danger">{{ Auth::user()->surname.
-                    "&nbsp;". Auth::user()->firstname."&nbsp;".Auth::user()->othername }}</strong><strong class="text-success">({{Auth::user()->matric_number}})</strong></h1>
+                    <h4 class="heading-title pull-left"> <strong class="">{{strtoupper( Auth::user()->surname.
+                    " ". Auth::user()->firstname." ".Auth::user()->othername )}}</strong>
+                    <strong class="text-primary">{{Auth::user()->matric_number}}</strong></h4>
                     <div class="breadcrumbs pull-right">
                         <ul class="breadcrumbs-list">
                             <li class="breadcrumbs-label">You are here:</li>
@@ -20,13 +21,13 @@
 
                    
 
-          <div class="table-responsive col-sm-12 col-md-10 col-md-offset-1">
+          <div class="table-responsive col-sm-12">
            
-            <p class=" text-center" style="background-color: #0ff; padding: 10px"><b> Direct Entry students,  100 level, is your first year of three years programme</b></p>
+            <p class="text-center" style="background-color: rgb(255, 81, 0); padding: 5px;color:white"><b> Direct Entry students,  100 level, is your first year of three years programme</b></p>
             {{! $next_ss = $ss+1}}
-                <p><b>Session :</b>{{$ss." / ".$next_ss }} </p>
-                 <p><b>Level :</b>{{$l}}00 </p>
-                  <p><b>Semester :</b>
+                <h4><b>Session :</b>{{$ss." / ".$next_ss }} </h4>
+                 <h4><b>Level :</b>{{$l}}00 </h4>
+                  <h4><b>Semester :</b>
                  @if(Auth::user()->programme_id == 4)
                   @if($s == 1)
               Contact 1
@@ -40,11 +41,11 @@
                   Second
                   @endif
                   @endif
-                  </p>
+                  </h4>
 
                 @if(isset($reg))
                  @if(count($reg) > 0)
-          <p class="text-danger">Select the check box to choose the couress you want to register</p>     
+          <h3 class="text-danger">Select the check box to choose the couress you want to register</h3>     
           <form class="form-horizontal" role="form" method="POST" action="{{ url('/preview_course') }}" data-parsley-validate>
                         {{ csrf_field() }}                     
                                     <table class="table table-boxed">
@@ -65,7 +66,7 @@
                                             @if(($c % 2)== 0)
                                             <tr>
                                             @else
-                                            <tr class='danger'>
+                                            <tr class='success'>
                                             @endif
                                             <td>{{$c}}</td>
                                                 <td><input type="checkbox" class="ids" name="id[]" value="{{$v->id}}">
@@ -73,10 +74,10 @@
  <input type="hidden" name="semester" value="{{$s}}">
 
                                                 </td> 
-                                                <td>{{strtoupper($v->reg_course_title)}}</td>
-                                                <td>{{strtoupper($v->reg_course_code)}}</td>
-                                                  <td>{{$v->reg_course_unit}}</td>
-                                                <td>{{$v->reg_course_status}}</td>
+                                                <th>{{strtoupper($v->reg_course_title)}}</th>
+                                                <th>{{strtoupper($v->reg_course_code)}}</th>
+                                                  <th>{{$v->reg_course_unit}}</th>
+                                                <th>{{$v->reg_course_status}}</th>
                                             </tr>
                                          @endforeach   
                                            

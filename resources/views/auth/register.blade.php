@@ -133,7 +133,11 @@
                                    <div class="col-sm-4">
                               <label for="session" class=" control-label"> Entry Session</label>
                               <select class="form-control" name="entry_year" required>
-                              <option value="{{session()->get('session')}}">{{session()->get('session')}}</option>
+                                <option value="">Select Entry Year</option>
+                                @for ($year = (date('Y')); $year >= 2016; $year--)
+                                {{!$yearnext =$year+1}}
+                                <option value="{{$year}}">{{$year.'/'.$yearnext}}</option>
+                                @endfor
                               </select>
                              
                             </div>

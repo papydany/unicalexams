@@ -4,17 +4,19 @@
 <div class="content container">
   <div class="page-wrapper">
    <header class="page-heading clearfix">
-     <h1 class="heading-title pull-left">Welcome <strong class="text-danger">{{ Auth::user()->surname.
-        "&nbsp;". Auth::user()->firstname."&nbsp;".Auth::user()->othername ."&nbsp;&nbsp;(".Auth::user()->matric_number.")"}}</strong>
-        <?php $next =session()->get('session_year') +1;?>
-     </h1>
-     <div class="breadcrumbs pull-right">
-       <ul class="breadcrumbs-list">
-         <li class="breadcrumbs-label">You are here:</li>
-         <li><a href="url('/')}}">Home</a><i class="fa fa-angle-right"></i></li>
-         <li class="current">Undergraduate</li>
-       </ul>
-     </div><!--//breadcrumbs-->
+    <h4 class="text-center text-primary"><b><u>PROBATION  COURSES</u></b></h4>
+                
+    <h4 class="heading-title pull-left"><strong class=''>{{ strtoupper(Auth::user()->surname.
+
+        " ". Auth::user()->firstname." ".Auth::user()->othername )}}</strong>
+        <strong class="text-primary">{{Auth::user()->matric_number}}</strong></h4>
+    <div class="breadcrumbs pull-right">
+        <ul class="breadcrumbs-list">
+            <li class="breadcrumbs-label">You are here:</li>
+            <li><a href="{{url('/')}}">Home</a><i class="fa fa-angle-right"></i></li>
+            <li class="current">Probation Course </li>
+        </ul>
+    </div><!--//breadcrumbs-->
    </header> 
     
    <div class="page-content">                 
@@ -22,15 +24,15 @@
         <div class="team-wrapper col-xs-12">        
          <div class="row page-row" >
           <div class="col-sm-6">
-            <h4><strong class="text-success">PIN VALID FOR &nbsp; {{session()->get('session_year').'/'.$next }} &nbsp; SESSION  </strong></h4>
+         
              <p class=" text-center" style="background-color: #0ff; padding: 10px"><b> Direct Entry students,  100 level, is your first year of three or four years programme</b></p>
              
-             <h3 class="text-danger">Academic Standing : PROBATION</h3>
+             <h3 class="text-danger">Academic Standing : </h3>
           </div>
            <div class="col-sm-3">
-            <p><b>Session :</b>{{session()->get('session_year').'/'.$next }}</p>
-                 <p><b>Level :</b>{{$l}}00 </p>
-                  <p><b>Semester :</b> FIRST AND SECOND</p>
+            <h5><b>Session :</b>{{$s.'/'.$next }}</h5>
+                 <h5><b>Level :</b>{{$l}}00 </h5>
+                  <h5><b>Semester :</b> FIRST AND SECOND</h5>
           </div>
             <div class="col-sm-3">
               <p class="text-danger"><b>Course Status</b></p>
@@ -62,7 +64,7 @@
 
 
 <input type="hidden" name="level" value="{{$l}}">
-
+<input type="hidden" name="session" value="{{$s}}">
   
     @foreach($frc as $vf)
      {{!++$c}}

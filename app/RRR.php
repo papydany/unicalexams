@@ -188,4 +188,11 @@ switch($total) {
 
  }
 
+ public function getRegisteredStudent1($id,$season)
+ {
+  $student_reg =StudentReg::where([['user_id',$id],['season',$season]])->orderBy('session','desc')->first();
+  return $student_reg;
+
+ }
+
 }

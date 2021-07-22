@@ -6,16 +6,16 @@ Const Agric = 18;
         <header class="header">  
           
             <div class="header-main container">
-                <h1 class="logo col-md-2 col-sm-2">
-                    <a href="url('/')"><img id="logo" src="assets/images/logo.png" alt="Logo"></a>
+                <h1 class="logo col-md-2 col-sm-12">
+                    <a href="{{url('/')}}"><img class="img-responsive" id="logo" src="assets/images/logo.png" alt="Logo" width="50px;"></a>
                 </h1><!--//logo--> 
-                <div class="info col-md-8 col-sm-10 text-center text-info">
-                <h3>UNIVERSITY OF CALABAR RESULT PORTAL</h3>
+                <div class="info col-md-8 col-sm-12 text-center text-info">
+                <h3><b>UNIVERSITY OF CALABAR RESULT PORTAL</b></h3>
                 </div>          
                 <div class="info col-md-2 col-sm-12">
                    
-                    <div class="contact pull-right">
-                    contact@unicalexams.edu.ng
+                    <div class="contact pull-right"><b>contact@unicalexams.edu.ng</b>
+                    
                     </div><!--//contact-->
                 </div><!--//info-->
             </div><!--//header-main-->
@@ -42,8 +42,9 @@ Const Agric = 18;
   <?php 
     $result= $r->getstudenttype2(Auth::user()->id,Auth::user()->matric_number); 
     $duration =$r->getDuration(Auth::user()->fos_id);
-    $s=  session()->get('session_year');
-    $studentReg =$r->getRegisteredStudent(Auth::user()->id,$s,'NORMAL');
+    //$s=  session()->get('session_year');
+    
+    $studentReg =$r->getRegisteredStudent1(Auth::user()->id,'NORMAL');
     
 
   ?>
@@ -85,9 +86,11 @@ Const Agric = 18;
                                 <li><a href="{{url('register_summer_course')}}">Register Summer Courses</a></li>
                                 <li><a href="{{url('register_delayed_course')}}">Register Delayed Courses</a></li>
                                 @endif
+                               
                                   @if($studentReg !=null)
+                                  
                                 @if($studentReg->level_id >= $duration->duration)
-                                <li><a href="{{url('register_long_vacation',[$studentReg->level_id,$duration->duration])}}">Register Long Vacation</a></li>
+                                <li><a href="{{url('register_long_vacation',[$studentReg->level_id,$duration->duration,$studentReg->session])}}">Register Long Vacation</a></li>
                                @endif
                                @endif
                                 <li><a href="{{url('print_course')}}">Print Registered Courses</a></li>

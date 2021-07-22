@@ -133,7 +133,7 @@ Auth::logout();
         {   
 $user_id =auth()->user()->id;
 $user_matric_number=auth()->user()->matric_number;
-
+$entry_year =auth()->user()->entry_year;
 
         //====================== autheticate pin ========================
 
@@ -143,9 +143,12 @@ $user_matric_number=auth()->user()->matric_number;
   {
     session()->put('login_user',$pin->id);
      session()->put('login_pin',$pin->pin);
-    session()->put('session_year',$pin->session);
+    session()->put('session_year',$entry_year);
     session()->put('student_type',$type_2);
    session()->put('student_status',$status);
+   session()->put('log1',$pin->log1);
+   session()->put('log2',$pin->log2);
+   session()->put('log_session',$pin->log_session);
     if($pin->status == 0)
     {
      
@@ -430,6 +433,16 @@ session()->flush();
 
  public function logout(Request $request)
 {
+session()->forget('login_user');
+session()->forget('session');
+session()->forget('log1');
+session()->forget('log2');
+session()->forget('login_pin');
+session()->forget('session_year');
+session()->forget('student_type');
+session()->forget('student_status');
+session()->forget('log_session');
+session()->flush();
 Auth::logout();
 return redirect('/');
 }

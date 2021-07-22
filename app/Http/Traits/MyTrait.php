@@ -4,6 +4,7 @@ use App\Programme;
 use App\Faculty;
 use App\CourseReg;
 use App\StudentResult;
+use App\StudentReg;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 trait MyTrait {
@@ -133,6 +134,51 @@ $reg =DB::table('register_courses')->whereIn('course_id',$courseId)
 ->orderBy('semester_id','asc')->get();
 return $reg;
 }
+
+//------------------------- registered students------------------------
+public function getStudentRegistered()
+{
+ $s = StudentReg::where([['user_id',Auth::user()->id],['semester',1]])->orderBy('session','ASC')
+->select('session','level_id')->distinct('session')->get();
+return $s;
+}
+
+public function getAllStudentRegistered()
+{
+ $s = StudentReg::where('user_id',Auth::user()->id)
+->select('*')->orderBy('session','ASC')->orderBy('season','ASC')->orderBy('semester','ASC')->get();
+return $s;
+}
+
+public function updatePinLog1($pinId,$session)
+{
+  $affected = DB::table('pins')
+  ->where('id', $pinId)
+  ->update(['log1' => 1,'log_session'=>$session]);
+}
+public function updatePinLog2($pinId)
+{
+  $affected = DB::table('pins')
+  ->where('id', $pinId)
+  ->update(['log2' => 1]);
+ }
+
+ //================== get specialization id to use ===========================
+
+ public function getSpecializationIdWithLevel($specializationId,$level)
+ {
+   if($specializationId == 0)
+   {
+     return 0;
+   }else{
+     $s =Specialization::find($specializationId);
+     if($level < $s->level)
+     {
+       return 0;
+     }
+     return $specializationId;
+   }
+ }
 
 //================================medicine function code ==========================
 public function failMedicineCourse($l,$id,$s)

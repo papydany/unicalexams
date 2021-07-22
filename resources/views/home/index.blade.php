@@ -19,8 +19,8 @@ s0.parentNode.insertBefore(s1,s0);
 </script>
 <!--End of Tawk.to Script-->
  <ul id="webTicker">
-    <li><a data-toggle="modal" data-target="#myModal">How Does a Direct Entry (D/E) Student Register for Courses?</a></li>
-     <li class="text-danger">You can now chat with us live, by clicking the chat button at the buttom site of your home page. Thank you</li>
+    <li><a data-toggle="modal" data-target="#myModal"><h4>How Does  Direct Entry (D/E) Student Register for Courses?</h4></a></li>
+     <li class="text-danger"><h4>You can now chat with us live, by clicking the chat button at the buttom site of your home page. Thank you</h4></li>
    
 </ul>
             <div id="promo-slider" class="slider flexslider">
@@ -82,7 +82,7 @@ s0.parentNode.insertBefore(s1,s0);
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">How Does a Direct Entry (D/E) Student Register for Courses?</h4>
+        <h4 class="modal-title">How Does Direct Entry (D/E) Student Register for Courses?</h4>
       </div>
       <div class="modal-body">
         <p class="text-danger"> All direct entry students are expected to spend 3 years for a four years programme and 4 years for a 5 years programme in the University of Calabar. Hence, their registration does not start at 2/4. Rather, their course registration starts at 100 levels, 200 levels and 300 levels for the direct entry of 4 years programme, and 100 level, 200 levels, 300 levels and 400 levels for the direct entry of 5 years programme. The First year of the Direct Entry student for courses registration is not 200 levels, rather 100 levels. Meaning that all D/E students while registering should select 100 level under direct entry course registration and also while checking result, select 100 level under direct entry platform. Please Direct Entry students, take note.</p>

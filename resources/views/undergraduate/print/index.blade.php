@@ -1,17 +1,20 @@
 @extends('layouts.main')
-@section('title','Preview Course ')
+@section('title','Print Courses ')
 @section('content')
     <div class="content container">
         <div class="page-wrapper">
             <header class="page-heading clearfix">
-                <h1 class="heading-title pull-left">Welcome <strong class="text-danger">{{ Auth::user()->surname.
+                <h4 class="text-center text-primary"><b>PRINT COURSES</b></h4>
+                
+                <h4 class="heading-title pull-left"><strong class=''>{{ strtoupper(Auth::user()->surname.
          
-                    "&nbsp;". Auth::user()->firstname."&nbsp;".Auth::user()->othername }}</strong><strong class="text-success">({{Auth::user()->matric_number}})</strong></h1>
+                    " ". Auth::user()->firstname." ".Auth::user()->othername )}}</strong>
+                    <strong class="text-primary">{{Auth::user()->matric_number}}</strong></h4>
                 <div class="breadcrumbs pull-right">
                     <ul class="breadcrumbs-list">
                         <li class="breadcrumbs-label">You are here:</li>
-                        <li><a href="url('/')}}">Home</a><i class="fa fa-angle-right"></i></li>
-                        <li class="current">Preview Course </li>
+                        <li><a href="{{url('/')}}">Home</a><i class="fa fa-angle-right"></i></li>
+                        <li class="current">Print Courses </li>
                     </ul>
                 </div><!--//breadcrumbs-->
             </header>
@@ -21,15 +24,44 @@
             {{ csrf_field() }}
                 <div class="form-group">
                     <div class="col-sm-3">
-                        {{!$next =$ss+1}}
-                        <select name="session"  readonly class="form-control">
-                            <option value="{{$ss}}">{{$ss." / ".$next}} Session</option>
+                       
+                        <select name="session"  class="form-control" required>
+                            <option value="">-- Select Session --</option>
+                            @if(isset($reg))
+                            @foreach ($reg as $item)
+                            {{!$next = $item->session + 1}}
+                            <option value="{{$item->session}}">{{$item->session." / ".$next}} session</option>
+                           
+                            @endforeach
+                            @endif
                         </select>
                      
                     </div>
                     <div class="col-sm-2">
-                        <select name="level" class="form-control" readonly>
-                        <option value="{{$reg->level_id}}">{{$reg->level_id}}00 Level</option>
+                        <select name="level" class="form-control" required>
+                            <option value="">-- Select Level --</option>
+                            @if(isset($reg))
+                            {{$i = 1}}
+                            @foreach ($reg as $v)
+                            
+                            @if(Auth::user()->faculty_id == 14 &&  $v->level_id < 7)
+                            @if($v->level_id < 3)
+
+                            <option value="{{$v->level_id}}">{{$v->level_id}}00</option>
+                          
+                            @else
+                            <option value="{{$v->level_id}}">PART {{$i++}}</option>
+                          
+                            @endif
+                             @if($v->level_id == 6)
+                               @break;
+                               @endif
+                            @else
+                                <option value="{{$v->level_id}}">{{$v->level_id}}00</option>
+                            @endif
+                           
+                            @endforeach
+                            @endif
                     </select>
                     </div>
 

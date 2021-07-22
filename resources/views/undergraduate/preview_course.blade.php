@@ -4,9 +4,10 @@
 <div class="content container">
             <div class="page-wrapper">
                 <header class="page-heading clearfix">
-                    <h1 class="heading-title pull-left">Welcome <strong class="text-danger">{{ Auth::user()->surname.
+                    <h4 class="heading-title pull-left"><strong class="">{{ strtoupper(Auth::user()->surname.
          
-                    "&nbsp;". Auth::user()->firstname."&nbsp;".Auth::user()->othername }}</strong><strong class="text-success">({{Auth::user()->matric_number}})</strong></h1>
+                    " ". Auth::user()->firstname." ".Auth::user()->othername) }}</strong>
+                    <strong class="text-primary">{{Auth::user()->matric_number}}</strong></h4>
                     <div class="breadcrumbs pull-right">
                         <ul class="breadcrumbs-list">
                             <li class="breadcrumbs-label">You are here:</li>
@@ -17,11 +18,11 @@
                 </header> 
                 </div>
                 <div class="row" style="margin-bottom: 20px;">
-                <div class="table-responsive col-sm-12 col-md-10 col-md-offset-1">
+                <div class="table-responsive col-sm-12">
                  {{! $next_ss = $ss+1}}
-                <p><b>Session :</b>{{$ss." / ".$next_ss }} </p>
-                 <p><b>Level :</b>{{$l}}00 </p>
-                  <p><b>Semeter :</b>
+                <h4><b>Session :</b>{{$ss." / ".$next_ss }} </h4>
+                 <h4><b>Level :</b>{{$l}}00 </h4>
+                  <h4><b>Semeter :</b>
                  @if(Auth::user()->programme_id == 4)
                   @if($s == 1)
               Contact 1
@@ -35,18 +36,18 @@
                   Second
                   @endif
                   @endif
-                  </p>
+                  </h4>
                 @if(isset($pre))
                  @if(count($pre) > 0)
                  @if($pre->sum('reg_course_unit') > $cu->max)
-                      <div class=" col-sm-10 col-sm-offset-1 alert alert-danger" role="alert">
+                      <div class=" col-sm-12 alert alert-danger" role="alert">
      Total number of course unit  select is above {{$cu->max}} units . maximum course unit for these semester.
      Contact your <strong> examination Officer </strong> if you need more clerification.
      <br/> <br/>
      <a href="{{url('register_course')}}" class="btn"><i class="fa fa-btn fa-arrow-circle-left"></i> Go Back </a>
     </div> 
                  @elseif($pre->sum('reg_course_unit') < $cu->min)
-                      <div class=" col-sm-10 col-sm-offset-1 alert alert-danger" role="alert">
+                      <div class=" col-sm-12 alert alert-danger" role="alert">
      Minimum course unit allowed is {{$cu->min}} units.
      Contact your <strong> examination Officer </strong> if you need more clerification.
      <br/> <br/>
@@ -76,22 +77,22 @@
                                             @if(($c % 2)== 0)
                                             <tr>
                                             @else
-                                            <tr class='danger'>
+                                            <tr class='success'>
                                             @endif
                                                 <td>{{$c}}</td>
                                                 <input type="hidden" name="id[]" value="{{$v['id']}}">
                                                 <input type="hidden" name="level" value="{{$l}}">
                                                 <input type="hidden" name="semester" value="{{$s}}">
 
-                                                 <td>{{strtoupper($v->reg_course_title)}}</td>
-                                                <td>{{strtoupper($v->reg_course_code)}}</td>
-                                                  <td>{{$v->reg_course_unit}}</td>
-                                                <td>{{$v->reg_course_status}}</td>
+                                                 <th>{{strtoupper($v->reg_course_title)}}</th>
+                                                <th>{{strtoupper($v->reg_course_code)}}</th>
+                                                  <th>{{$v->reg_course_unit}}</th>
+                                                <th>{{$v->reg_course_status}}</th>
                                             </tr>
                                          @endforeach 
                                          <tr>  
-                                           <td colspan="3">Total Unit</td>
-                                                <td colspan="2">{{$pre->sum('reg_course_unit')}} Unit</td>
+                                           <th colspan="3">Total Unit</th>
+                                                <th colspan="2">{{$pre->sum('reg_course_unit')}} Unit</th>
                                             </tr> 
                                         </tbody>
                                     </table><!--//table-->

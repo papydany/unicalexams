@@ -4,31 +4,30 @@
 <div class="content container">
   <div class="page-wrapper">
    <header class="page-heading clearfix">
-     <h1 class="heading-title pull-left">Welcome <strong class="text-danger">{{ Auth::user()->surname.
-        "&nbsp;". Auth::user()->firstname."&nbsp;".Auth::user()->othername ."&nbsp;(".Auth::user()->matric_number.")"}}</strong>
-        <?php $next =session()->get('session_year') +1;?>
-     </h1>
-     <div class="breadcrumbs pull-right">
-       <ul class="breadcrumbs-list">
-         <li class="breadcrumbs-label">You are here:</li>
-         <li><a href="url('/')}}">Home</a><i class="fa fa-angle-right"></i></li>
-         <li class="current">Undergraduate</li>
-       </ul>
-     </div><!--//breadcrumbs-->
+    <h4 class="text-center text-primary"><b><u>PREVIEW RESIT COURSE REGISTRATION</u></b></h4>
+                
+    <h4 class="heading-title pull-left"><strong class=''>{{ strtoupper(Auth::user()->surname.
+
+        " ". Auth::user()->firstname." ".Auth::user()->othername )}}</strong>
+        <strong class="text-primary">{{Auth::user()->matric_number}}</strong></h4>
+    <div class="breadcrumbs pull-right">
+        <ul class="breadcrumbs-list">
+            <li class="breadcrumbs-label">You are here:</li>
+            <li><a href="{{url('/')}}">Home</a><i class="fa fa-angle-right"></i></li>
+            <li class="current">Preview Resit courses </li>
+        </ul>
+    </div><!--//breadcrumbs-->
    </header> 
     
    <div class="page-content">                 
      <div class="row page-row">
         <div class="team-wrapper col-xs-12">        
          <div class="row page-row" >
-          <div class="col-sm-6">
-            <h4><strong class="text-success">PIN VALID FOR &nbsp; {{session()->get('session_year').'/'.$next }} &nbsp; SESSION  </strong></h4>
-            <p class="text-danger" style="font-size: 1.3em;text-decoration: underline"> RESIT COURSE REGISTRATION</p>
-          </div>
+          
            <div class="col-sm-3">
-            <p><b>Session :</b>{{session()->get('session_year').'/'.$next }}</p>
-                 <p><b>Level :</b>{{$l}}00 </p>
-                  <p><b>Semester :</b>FIRST & SECOND</p>
+            <h5><b>Session :</b>{{$s.'/'.$next }}</h5>
+                 <h5><b>Level :</b>{{$l}}00 </h5>
+                  <h5><b>Semester :</b>FIRST & SECOND</h5>
           </div>
             <div class="col-sm-3">
               <p class="text-danger"><b>Course Status</b></p>
@@ -56,7 +55,7 @@
           <tbody>
         {{!!$c = 0}}
 
-<input type="hidden" name="session" value="{{session()->get('session_year')}}">
+<input type="hidden" name="session" value="{{$s}}">
 <input type="hidden" name="level" value="{{$l}}">
   
     @foreach($rg as $vf)
@@ -64,7 +63,7 @@
      @if(($c % 2)== 0)
      <tr>
      @else
-     <tr class='danger'>
+     <tr class='success'>
      @endif
      <td>{{$c}}</td>
      <td>
