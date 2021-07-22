@@ -9,7 +9,7 @@
         "guzzlehttp/guzzle": "^6.3",
         "intervention/image": "^2.3",
         "ixudra/curl": "^6.12",
-        "laravel/framework": "5.4.*",
+        "laravel/framework": "6.18.*",
         "laravel/tinker": "~1.0"
     },
     "require-dev": {
