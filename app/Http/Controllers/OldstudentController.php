@@ -25,7 +25,7 @@ class OldstudentController extends Controller
     $yearplus = $year + 1;
 //$get_session = DB::connection('mysql1')->table('students_results')->select('std_mark_custom2','period')->distinct()->where([['std_mark_custom2','!=',""],['std_mark_custom2','<=', $year],['std_id',$std_id],['matric_no',$matric_no]])->get();
 $get_session = DB::connection('mysql1')->table('students_results')->select('std_mark_custom2','period')->distinct()->where([['std_mark_custom2','!=',""],['std_id',$std_id],['matric_no',$matric_no]])->get();
-return view('result.index')->withName($name)->withMatric_no($matric_no)->withYear($year)->withYearplus($yearplus)->withGetsession($get_session);
+return view('result.index')->withName($name)->withMatricno($matric_no)->withYear($year)->withYearplus($yearplus)->withGetsession($get_session);
     }
 //====================================check result ==============================
    function check_result($sessional,$period)
@@ -46,8 +46,6 @@ return view('result.index')->withName($name)->withMatric_no($matric_no)->withYea
  {
 	$c_gpa =$this->get_cgpa_vacation($sessional, $std_id);
  }
- 
- 
  $level = $this->get_level($std_id,$sessional);
 
  if(empty($level))
@@ -73,10 +71,10 @@ $course_1 = $this->getcourse_without_grade($sessional,$std_id,'First Semester',$
 $course_2 = $this->getcourse_without_grade($sessional,$std_id,'Second Semester',$level,$rc_id,$period);
 
 
-return view('result.check_result')->withCourse_first($course_first)->withCourse_second($course_second)
-->withY($sessional)->withYplus($yearplus)->withName($name)->withMatric_no($matric_no)->withGpa($gpa)
+return view('result.check_result')->withCoursefirst($course_first)->withCoursesecond($course_second)
+->withY($sessional)->withYplus($yearplus)->withName($name)->withMatricno($matric_no)->withGpa($gpa)
 ->withCgpa($c_gpa)->withLevel($level)->withR($r)->withFac($fac)->withDep($dep)->withCsty($c_sty)
-->withCourse_1($course_1)->withCourse_2($course_2);
+->withCourse1($course_1)->withCourse2($course_2);
 
  }
    return back();
@@ -251,7 +249,7 @@ return '';
 //====================================result_remark==============================
 function result_remark($std_id,$s,$cgpa)
 {	
-$fail=''; $pass=''; $c=0; $carryf='';$rept='';
+$fail=''; $pass=''; $c=0; $carryf='';$rept='';$rowc_array=array();
 $course_array =array(); $course_id_array =array(); $pass_course_id=array();$unpass_course_id='';
 $l =$this->get_level($std_id,$s);
 //$cgpa =$this->get_cgpa($s, $std_id);
@@ -272,6 +270,7 @@ if($probation_condtion == true)
 }
 
 $new_prob=$this->new_Probtion($l,$std_id, $s,$cgpa);
+
 if($new_prob==true)
 {
 return $new_prob;
@@ -284,9 +283,8 @@ if (count($sql)!=0){ // found failed courses in the level
 	$course_id_array []=$value->stdcourse_id;
 		//$course_array []=['course_id'=>$key,'number'=>$value->count()];
 	}
-	
-
-$sql1 = DB::connection('mysql1')->table('students_results')->whereIn('stdcourse_id',$course_id_array)->where([['std_id',$std_id],['std_mark_custom2','<=',$s],['std_grade','!=',"F"],['level_id','<=',$l]])->get();
+//---- code modification 25/07/2021 	
+/*$sql1 = DB::connection('mysql1')->table('students_results')->whereIn('stdcourse_id',$course_id_array)->where([['std_id',$std_id],['std_mark_custom2','<=',$s],['std_grade','!=',"F"],['level_id','<=',$l]])->get();
 
  if(count($sql1) != 0  ){ //found that failed course passed in the level
 	foreach ($sql1 as $k => $v)
@@ -296,32 +294,45 @@ $sql1 = DB::connection('mysql1')->table('students_results')->whereIn('stdcourse_
 	}
 }
 // the remain course_id that is not yet passed
-$unpass_course_id=array_diff($course_id_array,$pass_course_id);
-
+$unpass_course_id=array_diff($course_id_array,$pass_course_id);*/
+//--------------------- end of the section modification--------------
+$unpass_course_id=$course_id_array;
 $sql3 = DB::connection('mysql1')->table('students_results')->where([['std_id',$std_id],['std_mark_custom2','<=',$s],['std_grade',"F"],['level_id','<=',$l]])
 ->whereIn('stdcourse_id',$unpass_course_id)->select('stdcourse_id')->get()->groupBy('stdcourse_id');
-	 
+//dd($sql3);
+$rowc_data = DB::connection('mysql1')->table('course_reg')->whereIn('thecourse_id',$unpass_course_id)->where([['std_id',$std_id],['clevel_id','=',$l],['cyearsession','=',$s]])->get();
+ if(count($rowc_data) != 0){
+foreach($rowc_data as $rowc)
+{
+	$rowc_array[$rowc->thecourse_id] =['type' =>substr($rowc->stdcourse_custom2,0,3),'type1'=>substr($rowc->stdcourse_custom2,3,4)];
 
-	 foreach($sql3 as $k => $v) {
+
+}
+ }
+ 
+ foreach($sql3 as $k => $v) {
 	$n = $v->count();
 	
   if (in_array($k, $unpass_course_id))
   {
-		$rowc = DB::connection('mysql1')->table('course_reg')->where([['thecourse_id',$k],['std_id',$std_id],['clevel_id','=',$l],['cyearsession','=',$s]])->first();
+	/*	$rowc = DB::connection('mysql1')->table('course_reg')->where([['thecourse_id',$k],['std_id',$std_id],['clevel_id','=',$l],['cyearsession','=',$s]])->first();
        if($rowc != null){
 		$code = substr($rowc->stdcourse_custom2,0,3).' '.substr($rowc->stdcourse_custom2,3,4);
 			
-		$type = substr($rowc->stdcourse_custom2,0,3); // GSSS
+		$type = substr($rowc->stdcourse_custom2,0,3);*/ // GSSS
+        $type =$rowc_array[$k]['type'];
+		$code =$type.' '.$rowc_array[$k]['type1'];
+		
 
 		if ($n >= 3)
 {
 	if ($type != 'GSS' )
 	{ 
 		
-if($this->ignore_carryF ($std_id, $k, $s ) == '')
-	{
+/*if($this->ignore_carryF ($std_id, $k, $s ) == '')
+	{*/
 		$carryf .= ', '.$code;
-	}
+	//}
 	} else {
 		     $rept .= ', '.$code;
 			}
@@ -329,7 +340,7 @@ if($this->ignore_carryF ($std_id, $k, $s ) == '')
 {
 	$rept .= ', '.$code;
 }
-	}
+//	}
 }
 }
 
@@ -387,6 +398,14 @@ function take_courses_sessional($stdid, $l, $s)
 	 ->whereNotIn('thecourse_id',$course_id)
 	->get();
 
+	/*$sql1 = DB::connection('mysql1')->table('all_courses')->where([['course_custom2',$fos],['level_id',$l],['course_custom5',$s],['course_status',"C"]])
+	 ->whereNotIn('thecourse_id', function($query) use ($stdid,$l,$s) {
+		$query->select('stdcourse_id')->from('students_results')
+		->where([['std_id',$stdid],['level_id',$l],['std_mark_custom2',$s]]);
+
+	})->get();*/
+	
+
 	foreach ($sql1 as $k => $v) {
 	 	$take.= ', '.substr($v->course_code,0,3).' '.substr($v->course_code,3,4);
 
@@ -406,6 +425,16 @@ foreach ($course_reg_elective  as $key => $value) {
 	  ->whereNotIn('thecourse_id',$course_id)
 	->get();
 
+
+	/*$sql2 = DB::connection('mysql1')->table('all_courses')->where([['course_custom2',$fos],['level_id',$l],['course_custom5',$s],['course_status',"E"]])
+	->whereIn('thecourse_id', function($query) use ($stdid,$l,$s) {
+		$query->select('thecourse_id')->from('course_reg')
+		->where([['std_id',$stdid],['clevel_id',$l],['cyearsession',$s],['stdcourse_custom3',"E"]]);
+})->whereNotIn('thecourse_id', function($query) use ($stdid,$l,$s) {
+		$query->select('stdcourse_id')->from('students_results')
+		->where([['std_id',$stdid],['level_id',$l],['std_mark_custom2',$s]]);
+
+	})->get();*/
 	foreach ($sql2 as $k => $v) {
 	 	$take.= ', '.substr($v->course_code,0,3).' '.substr($v->course_code,3,4);
 
@@ -475,7 +504,7 @@ $fail_cu=$this->get_fail_crunit($l,$s_id,$s);
 $entry_year =$this->get_entry_sesssion($s_id);
 $fos =$this->get_course_study1();
 
-if($entry_year->std_custome2 == '2015' && $fos->duration >= $l)
+if($entry_year->std_custome2 == '2015' &&  $l >= $fos->duration && $fos->do_id !=617)
 {
 	return $return;
 }

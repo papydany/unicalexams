@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use App\User;
 use App\Pin;
 use App\PdgUser;
-use DB;
+use Illuminate\Support\Facades\DB;
 use App\Http\Traits\MyTrait;
 class LoginController extends Controller
 {
@@ -54,131 +54,179 @@ class LoginController extends Controller
 
         $this->validate($request, [
             'matric_number' => 'required',
-             'pin' => 'required',
-            'serial_number' => 'required',
-            'type' => 'required',
+             'password' => 'required',
+           'type' => 'required',
           'status' => 'required',
             ]);
         $matric_number =$request->input('matric_number');
-        $pin =$request->input('pin');
-        $serial_number =$request->input('serial_number');
+        $password =strtoupper($request->input('password'));
         $status =$request->input('status');
         $s_type = explode('~',$request->input('type'));
 
         $type =$s_type[0]; // for students type eg pds, undergraduate
 
         $type_2 =$s_type[1]; // for student type for undergraduate details eg. direct entry and normal students.
-
-
-        if($type == 1)
+if($type == 2)
         {
-       
+          
       
-       if (auth::guard('pdg')->attempt(array('matric_number' => $request->input('matric_number'), 'password' => $request->input('matric_number'))))
+       if (auth()->attempt(array('matric_number' => $request->input('matric_number'), 'password' => $password)))
 
         {   
+          session()->put('student_type',$type_2);
+          session()->put('student_status',$status);
+          session()->put('log1',0);
+          session()->put('log2',0);
+          session()->put('currentSession',1);
+          session()->put('session_year',Auth::user()->entry_year);
+    return redirect()->intended('/profile'); 
+
+  
+}
+}
+Session::flash('warning',"please check your Matriculation  and Jamb reg Number.");
+ return back();
+}
+
+//===================== login for registration  2019 downward and affiliate institution =========================
+
+public function oldlogin()
+{
+  return view('auth/oldlogin');
+}
+
+public function post_oldlogin(Request $request)
+
+{
+
+    $this->validate($request, [
+        'matric_number' => 'required',
+         'pin' => 'required',
+        'serial_number' => 'required',
+        'type' => 'required',
+      'status' => 'required',
+        ]);
+    $matric_number =$request->input('matric_number');
+    $pin =$request->input('pin');
+    $serial_number =$request->input('serial_number');
+    $status =$request->input('status');
+    $s_type = explode('~',$request->input('type'));
+
+    $type =$s_type[0]; // for students type eg pds, undergraduate
+
+    $type_2 =$s_type[1]; // for student type for undergraduate details eg. direct entry and normal students.
+
+
+    if($type == 1)
+    {
+   
+  
+   if (auth::guard('pdg')->attempt(array('matric_number' => $request->input('matric_number'), 'password' => $request->input('matric_number'))))
+
+    {   
 $user_id =auth::guard('pdg')->user()->id;
 
 $user_matric_number=auth::guard('pdg')->user()->matric_number;
 
 //====================== autheticate pin ========================
 
-  $pin =Pin::where([['pin',$pin],['id',$serial_number]])->first();
- 
-  if(count($pin) >0)
-  {
-    session()->put('login_user',$pin->id);
-    session()->put('login_pin',$pin->pin);
-    session()->put('session_year',$pin->session);
+$pin =Pin::where([['pin',$pin],['id',$serial_number]])->first();
 
-    if($pin->status == 0)
-    {
-       
-        $pin->student_id =$user_id;
-        $pin->matric_number =$user_matric_number;
-        $pin->status =1;
-        $pin->student_type=$type;
-        $pin->save();
-       
-    return redirect()->intended('/pds'); 
+if(count($pin) >0)
+{
+session()->put('login_user',$pin->id);
+session()->put('login_pin',$pin->pin);
+session()->put('session_year',$pin->session);
 
-    }elseif($pin->status == 1)
-    {
-      if($pin->matric_number == $matric_number && $pin->student_id == $user_id)
-      {
-      
-     
-       return redirect()->intended('/pds'); 
-      }else{
-        
+if($pin->status == 0)
+{
    
-         Auth::logout();
-         return redirect('login')->with('status', 'pin Already used by another matric number.');
-      } 
-    }
-  }else{
+    $pin->student_id =$user_id;
+    $pin->matric_number =$user_matric_number;
+    $pin->status =1;
+    $pin->student_type=$type;
+    $pin->save();
+   
+return redirect()->intended('/pds'); 
+
+}elseif($pin->status == 1)
+{
+  if($pin->matric_number == $matric_number && $pin->student_id == $user_id)
+  {
+  
  
+   return redirect()->intended('/pds'); 
+  }else{
+    
+
+     Auth::logout();
+     return redirect('login')->with('status', 'pin Already used by another matric number.');
+  } 
+}
+}else{
+
 
 Auth::logout();
-      return redirect('login')->with('status', 'Incorrect Pin or Serial Number.');
-  }
-}
-
-        }elseif($type == 2)
-        {
-          
-      
-       if (auth()->attempt(array('matric_number' => $request->input('matric_number'), 'password' => $request->input('matric_number'))))
-
-        {   
-$user_id =auth()->user()->id;
-$user_matric_number=auth()->user()->matric_number;
-$entry_year =auth()->user()->entry_year;
-
-        //====================== autheticate pin ========================
-
-  $pin =Pin::where([['pin',$pin],['id',$serial_number]])->first();
- 
-  if($pin != null)
-  {
-    session()->put('login_user',$pin->id);
-     session()->put('login_pin',$pin->pin);
-    session()->put('session_year',$entry_year);
-    session()->put('student_type',$type_2);
-   session()->put('student_status',$status);
-   session()->put('log1',$pin->log1);
-   session()->put('log2',$pin->log2);
-   session()->put('log_session',$pin->log_session);
-    if($pin->status == 0)
-    {
-     
-        $pin->student_id =$user_id;
-        $pin->matric_number =$user_matric_number;
-        $pin->student_type=$type;
-        $pin->status =1;
-        $pin->save();
-      
-       
-    return redirect()->intended('/profile'); 
-
-    }elseif($pin->status == 1)
-    {
-      if($pin->matric_number == $matric_number && $pin->student_id == $user_id)
-      {
-      return redirect()->intended('/profile'); 
-      }else{
-        Auth::logout();
-        return redirect('login')->with('status', 'pin Already used by another matric number.');
-      } 
-    }
-  }else{
- Auth::logout();
   return redirect('login')->with('status', 'Incorrect Pin or Serial Number.');
-  }
 }
 }
-Session::flash('warning',"please check your Matric Number.");
- return back();
+
+    }elseif($type == 2)
+    {
+      
+  
+  //if (auth()->attempt(array('matric_number' => $request->input('matric_number'), 'matric_number' => $request->input('matric_number'))))
+   if ($user =User::where('matric_number', $request->input('matric_number'))->first())
+    {  
+/*$user_id =auth()->user()->id;
+$user_matric_number=auth()->user()->matric_number;
+$entry_year =auth()->user()->entry_year;*/
+
+    //====================== autheticate pin ========================
+
+$pin =Pin::where([['pin',$pin],['id',$serial_number]])->first();
+
+if($pin != null)
+{
+session()->put('login_user',$pin->id);
+ session()->put('login_pin',$pin->pin);
+session()->put('session_year',$user->entry_year);
+session()->put('student_type',$type_2);
+session()->put('student_status',$status);
+session()->put('log1',$pin->log1);
+session()->put('log2',$pin->log2);
+session()->put('log_session',$pin->log_session);
+if($pin->status == 0)
+{
+ 
+    $pin->student_id =$user->id;
+    $pin->matric_number =$request->input('matric_number');
+    $pin->student_type=$type;
+    $pin->status =1;
+    $pin->save();
+  
+ Auth::login($user); 
+return redirect()->intended('/profile'); 
+
+}elseif($pin->status == 1)
+{
+  if($pin->matric_number == $request->input('matric_number') && $pin->student_id == $user->id)
+  {
+    Auth::login($user);
+  return redirect()->intended('/profile'); 
+  }else{
+    Auth::logout();
+    return redirect('oldlogin')->with('status', 'pin Already used by another matric number.');
+  } 
+}
+}else{
+Auth::logout();
+return redirect('oldlogin')->with('status', 'Incorrect Pin or Serial Number.');
+}
+}
+}
+Session::flash('warning',"please check your Matriculation Number.");
+return back();
 }
 // ==============================login form======================
     public function enter_pin1()
@@ -193,13 +241,14 @@ Session::flash('warning',"please check your Matric Number.");
 // ==============================login form======================
      public function post_enter_pin1(Request $request)
     {
-      Session::flash('danger',"whoops!!! Some thing went wrong.Contant your Exams Officer");
+      Session::flash('danger',"whoops!!! Some thing went wrong.Contact your Exams Officer");
       return back();
     }
 
     public function post_enter_pin(Request $request)
     {
-  
+      Session::flash('danger',"Registration is closed");
+      return back();
 
 $this->validate($request, ['pin' => 'required','serial_no' => 'required',]);
 $pin =$request->input('pin');
@@ -234,7 +283,7 @@ if($response =="OK Proceed")
    $check =User::where([['jamb_reg',$MatricNumber],['entry_year',$entry_year]])->first();
    if($check != null)
    {
-    Session::flash('danger',"your jamb reg number / Matric Number is registered Already.");
+    Session::flash('danger',"your jamb reg number / Matriculation Number is registered Already.");
  
      return back();
    } 
@@ -243,10 +292,10 @@ if($response =="OK Proceed")
   {
     if($pin->status == 0)
     {
-      session()->forget('u_login_user');
+      session()->forget('login_user');
       session()->forget('jreg');
       session()->forget('session');
-       session()->put('u_login_user',$pin->id);
+       session()->put('login_user',$pin->id);
        session()->put('jreg',$MatricNumber);
        session()->put('session',$pin->session);
       
@@ -268,11 +317,80 @@ Session::flash('danger',"Incorrect Pin or Serial Number.");
 Session::flash('danger',"you have not pay school fees.");
    }
    else{
-    Session::flash('danger',"School fess authetication failed. contact your system admin.");
+    Session::flash('danger',"School fess authentication failed. contact your system admin.");
     }
      return back();
    
     }
+//===============================================newlreglogin==========================
+
+public function newRegLogin()
+{
+return view('auth.newRegLogin');
+}
+
+public function post_newRegLogin(Request $request)
+{
+ // Session::flash('danger',"Registration is closed");
+ // return back();
+
+$MatricNumber =$request->input('matricno');
+$session_year =$request->input('session');
+$student_type =$request->input('student_type');
+$next = $session_year + 1;
+$Session =$session_year.'/'.$next;
+
+   if( $student_type == 1)
+   {
+$Level=100;
+   }elseif($student_type == 2)
+   {
+$Level=200;
+   }
+  
+//$response =$this->get_school_status($MatricNumber,$Session,$Level);
+$response ="OK Proceed";
+session()->forget('currentSession');
+if($response =="OK Proceed")
+    {
+$check =User::where('jamb_reg',$MatricNumber)->first();
+if($check != null)
+{
+  //session()->put('currentSession',1);
+  Session::flash('danger',"profile exist already.");
+  return back();
+ // return redirect()->intended('udgregister/'.$check->id); 
+} 
+// session set
+session()->forget('jreg');
+session()->forget('login_user');
+ 
+session()->put('jreg',$MatricNumber);
+session()->put('currentSession',1);
+session()->put('login_user',2);
+
+return redirect()->intended('udgNewregister'); 
+
+}elseif($response =="Not Paid")
+{
+Session::flash('danger',"you have not pay school fees.");
+}
+
+ return back();
+
+}
+
+
+//=====================================================================================
+
+
+
+
+
+
+
+
+
 // ==============================login form======================
     public function pds_enter_pin()
     {
@@ -442,6 +560,7 @@ session()->forget('session_year');
 session()->forget('student_type');
 session()->forget('student_status');
 session()->forget('log_session');
+session()->forget('currentSession');
 session()->flush();
 Auth::logout();
 return redirect('/');

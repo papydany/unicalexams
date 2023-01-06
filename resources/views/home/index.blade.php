@@ -18,53 +18,61 @@ s0.parentNode.insertBefore(s1,s0);
 })();
 </script>
 <!--End of Tawk.to Script-->
+<div class="row" style="padding: 20px;margin-bottom: 20px;">
+  <div class="col-sm-12" style="height: 50px !important;">
  <ul id="webTicker">
-    <li><a data-toggle="modal" data-target="#myModal"><h4>How Does  Direct Entry (D/E) Student Register for Courses?</h4></a></li>
-     <li class="text-danger"><h4>You can now chat with us live, by clicking the chat button at the buttom site of your home page. Thank you</h4></li>
+    <li><a data-toggle="modal" data-target="#myModal"><h3>How Does  Direct Entry (D/E) Student Register for Courses?</h3></a></li>
+     <li class="text-danger"><h3>You can now chat with us live, by clicking the chat button at the buttom site of your home page. Thank you</h3></li>
    
 </ul>
-            <div id="promo-slider" class="slider flexslider">
-                <ul class="slides">
-                    <li>
-                        <img src="assets/images/slides/cal3.jpg"  alt="" />
-                        
-                    </li>
-                    <li>
-                        <img src="assets/images/slides/cal2.jpg"  alt="" />
-                        
-                    </li>
-                    <li>
-                        <img src="assets/images/slides/cal4.jpg"  alt="" />
-                        
-                    </li>
-                    
-                </ul>
-            </div>
+  </div>
+</div>
+    
 
-        <div class="row" style="margin-left: 0px;margin-right: 0px; margin-bottom: 50px;">
+        <div class="row" style=" margin-bottom: 50px;">
   
-        <div class="col-sm-4 col-md-3 thumbnail">
-        <h4>New Student</h4>
-        <p class="text-danger"> UME /CES / DE / DIPLOMA</p>
+        <div class="col-sm-4 col-md-4 thumbnail">
+        <h2 class='text-primary text-center'><u>New Student</u></h2>
+        <h3 class="text-danger text-center"> UME / CES / DE / DIPLOMA</h3>
+      
         <p>
-        <a href="{{url('/enter_pin1')}}" class="btn btn-info btn-block">Registration</a>
+        <a href="{{url('newRegLogin')}}" class="btn btn-info btn-block">Create Profile  for 2020/2021 && 2021/2022  </a>
         </p>
+        <p>
+        <a href="{{url('/login')}}" class="btn btn-info btn-block">Register Courses</a>
+        </p>
+        <p>
+        <a href="{{url('/login')}}" class="btn btn-info btn-block">Check Result</a>
+        </p>
+
         </div>
 
 
-         <div class="col-sm-4 col-md-3 col-md-offset-1 thumbnail">
-<h4>Entry Year 2016/2017 and Above </h4>
-<h5 class="text-danger"> Check Your Result Here</h5>
-        <p>
-     <a href="{{url('/login')}}" class="btn btn-info btn-block">Check Result (2016/2017 & Above)</a>     
-        <!--<a href="{{url('/pdg_register')}}" class="btn btn-info btn-block">Registration</a>-->
+         <div class="col-sm-4 col-md-4  thumbnail">
+         <h2 class='text-primary text-center'><u>Returning Students </u></h2>
+         <h3 class="text-danger text-center"> UME / CES / DE / DIPLOMA</h3>
+         <p>
+        <a href="{{url('/enter_pin1')}}" class="btn btn-info btn-block">Create Profile(if you have not)</a>
         </p>
+
+        <p>
+     <a href="{{url('/oldlogin')}}" class="btn btn-info btn-block">Check Result</a>     
+       </p>
+       <p>
+     <a href="{{url('oldlogin')}}" class="btn btn-info btn-block">Register Courses</a>     
+       </p>
         </div>
- <div class="col-sm-4 col-md-3 col-md-offset-1 thumbnail">
-<h4>Entry Year 2015/2016 and below</h4>
-<h5 class="text-danger">Check Your Result Here </h5>
+ <div class="col-sm-4 col-md-4  thumbnail">
+ <h2 class='text-primary text-center'><u>Entry Year 2015/2016 & below</u></h2>
+<h3 class="text-danger text-center"> UME / CES / DE / DIPLOMA</h3>
 <p>
-<a href="{{url('/oldreturnstudent')}}" class="btn btn-info btn-block">Check Result (2015/2016 & Below</a>
+<a href="{{url('/oldreturnstudent')}}" class="btn btn-info btn-block">Check Result (2015/2016 & Below)</a>
+</p>
+<p>
+<a href="#" class="btn btn-info btn-block"></a>
+</p>
+<p>
+<a href="#" class="btn btn-info btn-block"></a>
 </p>
         </div>
 

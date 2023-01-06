@@ -23,24 +23,29 @@
             <form class="form-horizontal" role="form" method="POST" action="{{ url('returningRegisterCourse') }}" data-parsley-validate>
             {{ csrf_field() }}
                 <div class="form-group">
-                    <div class="col-sm-8">
+                    <div class="col-sm-8 m10px">
                        
                         <select name="session"   class="form-control" required>
                             <option value="">-- Select Session --</option>
-                           
-                               
-                            @for ($year = (date('Y')); $year >= 2016; $year--)
+                           @if(Auth::user()->faculty_id == 14 || Auth::user()->faculty_id == 10 )
+                           @for ($year = 2021; $year >= 2009; $year--)
                             {{!$yearnext =$year+1}}
                             <option value="{{$year}}">{{$year.'/'.$yearnext}}</option>
                             @endfor
-                          
+                           @else
+                            @for ($year = 2021; $year >= 2020; $year--)
+                            {{!$yearnext =$year+1}}
+                            <option value="{{$year}}">{{$year.'/'.$yearnext}}</option>
+                            @endfor
+                           @endif
+                        
                         </select>
                      
                     </div>
                    
 
                 
-                   <div class="col-sm-3">
+                   <div class="col-sm-3 m10px">
                    <input type="submit" class="btn" value="Continue">
                    </div>
 

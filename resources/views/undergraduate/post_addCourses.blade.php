@@ -102,8 +102,8 @@
 
                                 @else
                          <div class=" col-sm-10 col-sm-offset-1 alert alert-warning" role="alert">
-     No course is avalable for registeration in these semester. Contact your examination Officer or send a message  throuh mail.<br/>
-     <strong>Thank you.... Unical exam portal Admin</strong>
+     No course is available to Add in these semester. Contact your examination Officer or send a message  using our email.<br/>
+     <strong>Thank you.... university of Calabar Exams portal Admin</strong>
     </div>       
                                 @endif
                                  @endif

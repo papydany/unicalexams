@@ -44,7 +44,8 @@
           <div class="clearfix"></div>
             
             @if(isset($frc))
-            @if(!empty($frc) > 0)
+            {{!!$c = 0}}
+            
                   
               <form class="form-horizontal" role="form" method="POST" action="{{ url('probation_post_register_course') }}" data-parsley-validate>
               {{ csrf_field() }}                     
@@ -60,12 +61,12 @@
               </tr>
             </thead>
           <tbody>
-        {{!!$c = 0}}
+        
 
 
 <input type="hidden" name="level" value="{{$l}}">
 <input type="hidden" name="session" value="{{$s}}">
-  
+@if(!empty($frc) > 0) 
     @foreach($frc as $vf)
      {{!++$c}}
      @if(($c % 2)== 0)
@@ -84,6 +85,8 @@
      <td>R</td>
      </tr>
     @endforeach 
+    @endif
+    
 
 
   @if(!empty($drc) > 0)
@@ -120,7 +123,7 @@ You cant continue with courses registration, because there is no registered cour
 
 
 
-          @endif
+         
         
 
 

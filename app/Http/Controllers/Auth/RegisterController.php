@@ -49,8 +49,9 @@ class RegisterController extends Controller
     Const PDS =1;
     public function __construct()
     {
-    $this->middleware('guest');
+   // $this->middleware('guest');
     $this->middleware('checkudg', ['only' => ['showRegistrationForm']]);
+   // $this->middleware('checkNewRegLogin', ['only' => ['showRegistrationForm']]);
     }
 
     /**
@@ -89,6 +90,8 @@ class RegisterController extends Controller
      */
     protected function create(array $data,$img)
     {
+       
+        $password = strtoupper($data['jamb_reg']);
         return User::create([
             'firstname' => $data['firstname'],
             'surname' => $data['surname'],
@@ -102,12 +105,12 @@ class RegisterController extends Controller
             'fos_id' => $data['fos_id'],
             'entry_year' => $data['entry_year'],
             'entry_month' => $data['entry_month'],
-             'state_id' => $data['state_id'],
+            'state_id' => $data['state_id'],
             'lga_id' => $data['lga_id'],
             'gender' => $data['gender'],
             'marital_status' => $data['marital_status'],
             'email' => $data['email'],
-            'password' => bcrypt($data['matric_number']),
+            'password' => bcrypt($password),
             'nationality' => $data['nationality'],
             'address' => $data['address'],
             'image_url' => $img,
@@ -115,19 +118,15 @@ class RegisterController extends Controller
     }
 public function showRegistrationForm()
 {
-   
-    $f = $this->get_faculty();
+   $f = $this->get_faculty();
     $p = $this->get_programme();
     $s = $this->get_state();
-    
-     
     return view('auth.register')->withF($f)->withP($p)->withS($s);
-
 }
     public function register(Request $request)
 
     { 
-        $login_user= session()->get('u_login_user');
+    
           
     session()->put('student_type',2);
    session()->put('student_status',1);
@@ -144,16 +143,23 @@ public function showRegistrationForm()
             $img = Image::make($image->getRealPath());
             $size =$img->filesize();
            
-           /* if($size > 20508){
-                Session::flash('danger','Image Size is bigger than 20kb'); 
+            if($size > 30720){
+                Session::flash('danger','Image Size is bigger than 30kb'); 
                 return back(); 
-            }*/
+            }
 
             $img->resize(150, 100, function ($constraint) {
                 $constraint->aspectRatio();
             })->save($destinationPath . '/' . $filename);
          $request->image_url = $filename;
           }
+ if(session()->get('currentSession') != null)
+ {
+$reg = $this->create($input, $request->image_url)->toArray();
+$password = strtoupper($input['jamb_reg']);  
+ }else{
+
+$login_user= session()->get('login_user');         
 $pin = Pin::find($login_user);
 
  if($pin->status == 0)
@@ -162,29 +168,24 @@ $pin = Pin::find($login_user);
 $reg = $this->create($input, $request->image_url)->toArray();
 if($reg['id'] > 0)
 {
- 
+ $password = strtoupper($reg['matric_number']);
  $pin->status = 1;
  $pin->student_id = $reg['id'];
  $pin->matric_number = $reg['matric_number'];
  $pin->student_type = self::Undergraduate;
  $pin->save();
-session()->put('session_year',$entryYear);
 
-if (auth()->attempt(array('matric_number' => $pin->matric_number, 'password' =>$pin->matric_number)))
-   return redirect()->intended('/profile'); 
-   }   
-
-        }
-    else
-    {
-         Session::flash('danger','Pin Allready Used');  
+}   
+ }else{
+    Session::flash('danger','Pin Already Used');  
     }
 }
+session()->put('session_year',$entryYear);
+if (auth()->attempt(array('matric_number' => $reg['matric_number'], 'password' =>$password)))
+   return redirect()->intended('/profile'); 
+}
 
-
-
-
-        return back()->with('errors',$validator->errors());
+ return back()->with('errors',$validator->errors());
     }
 
 
@@ -225,7 +226,7 @@ if (auth()->attempt(array('matric_number' => $pin->matric_number, 'password' =>$
             $img->resize(150, 100, function ($constraint) {
                 $constraint->aspectRatio();
             })->save($destinationPath . '/' . $filename);
-         $request->image_url = $filename;
+       //  $request->image_url = $filename;
           }
 $login_user= session()->get('pds_login_user');          
 $pin = Pin::find($login_user);
@@ -249,7 +250,7 @@ $pin = Pin::find($login_user);
        $pdg->gender = $request->input('gender');
        $pdg->marital_status = $request->input('marital_status');
        $pdg->email =  $request->input('email');
-       $pdg->password = bcrypt($request->input('matric_number'));
+       $pdg->password = bcrypt(strtoupper($request->input('jamb_reg')));
        $pdg->nationality = $request->input('nationality');
        $pdg->address =  $request->input('address');
        $pdg->image_url = $request->image_url;
@@ -265,10 +266,10 @@ if($pdg->id > 0)
 
  $pin->save();
 
-   Session::flash('success','successfull'); 
+   Session::flash('success','successful'); 
    session()->forget('pds_login_user');
     session()->flush();
-    Session::flash('status','Registration successfull. Login and Registered  Your Courses'); 
+    Session::flash('status','Registration successful. Login and Registered  Your Courses'); 
     return redirect('login');
    }   
 

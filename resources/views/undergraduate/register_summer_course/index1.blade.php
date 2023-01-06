@@ -23,7 +23,7 @@
             <form class="form-horizontal" role="form" method="POST" target="_blank" action="{{ url('register_summer_course') }}" data-parsley-validate>
             {{ csrf_field() }}
                 <div class="form-group">
-                    <div class="col-md-6">
+                    <div class="col-md-6 m10px">
                         
                         <select name="session"   class="form-control" required>
                             <option value="">-- Select Session --</option>
@@ -40,7 +40,7 @@
                     
 
                     
-                   <div class="col-md-3">
+                   <div class="col-md-3 m10px">
                    <input type="submit" class="btn" value="Continue">
                    </div>
 

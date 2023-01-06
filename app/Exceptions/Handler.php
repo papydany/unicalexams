@@ -1,84 +1,49 @@
 <?php
-
 namespace App\Exceptions;
 
-use Exception;
-use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use \Illuminate\Session\TokenMismatchException;
-use Illuminate\Support\Facades\Session;
+use Throwable;
+
 class Handler extends ExceptionHandler
 {
     /**
-     * A list of the exception types that should not be reported.
+     * A list of exception types with their corresponding custom log levels.
      *
-     * @var array
+     * @var array<class-string<\Throwable>, \Psr\Log\LogLevel::*>
      */
-    protected $dontReport = [
-        \Illuminate\Auth\AuthenticationException::class,
-        \Illuminate\Auth\Access\AuthorizationException::class,
-        \Symfony\Component\HttpKernel\Exception\HttpException::class,
-        \Illuminate\Database\Eloquent\ModelNotFoundException::class,
-        \Illuminate\Session\TokenMismatchException::class,
-        \Illuminate\Validation\ValidationException::class,
+    protected $levels = [
+        //
     ];
 
     /**
-     * Report or log an exception.
+     * A list of the exception types that are not reported.
      *
-     * This is a great spot to send exceptions to Sentry, Bugsnag, etc.
+     * @var array<int, class-string<\Throwable>>
+     */
+    protected $dontReport = [
+        //
+    ];
+
+    /**
+     * A list of the inputs that are never flashed to the session on validation exceptions.
      *
-     * @param  \Exception  $exception
+     * @var array<int, string>
+     */
+    protected $dontFlash = [
+        'current_password',
+        'password',
+        'password_confirmation',
+    ];
+
+    /**
+     * Register the exception handling callbacks for the application.
+     *
      * @return void
      */
-    public function report(Exception $exception)
+    public function register()
     {
-        parent::report($exception);
-    }
-
-
-   
-
-
-    /**
-     * Render an exception into an HTTP response.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Exception  $exception
-     * @return \Illuminate\Http\Response
-     */
-    public function render($request, Exception $exception)
-    {
-    if ($exception instanceof TokenMismatchException){
-            //Redirect to login form if session expires
-             Session::flash('status',"session time out.");
-            return redirect(route('login'));
-           
-        }  
-      if($exception instanceof NotFoundHttpException)
-    {
-        return response()->view('404', [], 404);
-    }  
-      if ($exception instanceof CustomException) {
-        return response()->view('500', [], 500);
-    }
- //return response()->view('500', [], 500);
-        return parent::render($request, $exception);
-    }
-
-    /**
-     * Convert an authentication exception into an unauthenticated response.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Illuminate\Auth\AuthenticationException  $exception
-     * @return \Illuminate\Http\Response
-     */
-    protected function unauthenticated($request, AuthenticationException $exception)
-    {
-        if ($request->expectsJson()) {
-            return response()->json(['error' => 'Unauthenticated.'], 401);
-        }
-
-        return redirect()->guest(route('login'));
+        $this->reportable(function (Throwable $e) {
+            //
+        });
     }
 }

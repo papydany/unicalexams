@@ -6,7 +6,7 @@
     <div class="col-xs-12">
     <div class="col-sm-5">
     <p  class="text-success"> {{$name}}</p>
-    <p  class="text-danger"><strong>Matric Number: </strong>{{$matric_no}}</p>
+    <p  class="text-danger"><strong>Matric Number: </strong>{{$matricno}}</p>
  
     <p  class="text-info"><strong>Session :</Strong>{{$year.' / '.$yearplus}}</p>
 

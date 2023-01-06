@@ -10,7 +10,7 @@
     </div>
 
  <div class="col-sm-6 table-responsive w22">
- @if(count($first_result) > 0)
+ @if(count($firstresult) > 0)
  <table class="table table-bordered table-striped">
  <tr>
  <th colspan="8" class="text-danger text-center">First Semester
@@ -26,7 +26,7 @@
 <th>Grade</th>
 <th>Grade Point</th>
 </tr>
-    @foreach($first_result as $v)
+    @foreach($firstresult as $v)
 <?php $cp =$R->get_cp($v->total,$v->cu); ?>
     <tr>
     <td>{{$v->course_code}}</td>
@@ -42,8 +42,8 @@
    @endforeach
 
 
-    @if(count($course_first) > 0)
-   @foreach($course_first as $vc)
+    @if(count($coursefirst) > 0)
+   @foreach($coursefirst as $vc)
 <tr>
     <td>{{$vc->course_code}}</td>
       <td>{{$vc->course_status}}</td>
@@ -62,7 +62,7 @@
 
 
 <div class="col-sm-6 table-responsive w2">
- @if(count($second_result) > 0)
+ @if(count($secondresult) > 0)
 <table class="table table-bordered table-striped">
  <th colspan="8" class="text-danger text-center">Second Semester
  </th>
@@ -76,7 +76,7 @@
 <th>Grade</th>
 <th>Grade Point</th>
 </tr>
-@foreach($second_result as $v)
+@foreach($secondresult as $v)
 <?php $cp =$R->get_cp($v->total,$v->cu); ?>
     <tr>
     <td>{{$v->course_code}}</td>
@@ -91,8 +91,8 @@
   </tr>
 
    @endforeach
-   @if(count($course_second) > 0)
-   @foreach($course_second as $vc)
+   @if(count($coursesecond) > 0)
+   @foreach($coursesecond as $vc)
 <tr>
     <td>{{$vc->course_code}}</td>
       <td>{{$vc->course_status}}</td>

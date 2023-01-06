@@ -15,12 +15,12 @@
                 </header> 
                 <div class="page-content">
                     <div class="col-sm-12" style="padding: 0;">
-                        <form class="form-horizontal" role="form" method="POST" action="{{url('edit_imagerrrrrrr98888880')}}""  enctype="multipart/form-data" data-parsley-validate">
+                        <form class="form-horizontal" role="form" method="POST" action="{{url('edit_imagerrrrrrr98888880')}}"  enctype="multipart/form-data" data-parsley-validate">
                         {{ csrf_field() }}
                         <input type="hidden" name="id" value="{{$u->id}}">
 
                              <div class="col-sm-4">
-                              <label for="entry_month" class=" control-label">Passport ( <span class="text-danger">Max size 200 * 200)</span></label>
+                              <label for="entry_month" class=" control-label">Passport ( <span class="text-danger">Max size 20kb)</span></label>
                             <input type="file" name="image_url" class="form-control">
                              
                             </div>

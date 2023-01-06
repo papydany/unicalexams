@@ -21,14 +21,13 @@
     
                 <div class="page-content">                 
                     <div class="row page-row">                     
-                        <div class="team-wrapper col-xs-12">        
+                        <div class="team-wrapper col-xs-12" style="padding: 0px;">        
                             <div class="row page-row" >
-                              
-                             
-                              
-                               
-                         <div class="col-md-6 table-responsive">
-                          <table class="table table-bordered table-striped">
+                            <div class="col-sm-6">    
+                             <div class="col-sm-12 table-responsive">
+                              <a href="{{url('moppedUpExamsCourseRegistration')}}" class="btn btn-danger btn-block" style="background-color:red !important;font-weight:bolder">Click To  Register For Mopped Up Examination</a>
+                         <br/><br/>
+                              <table class="table table-bordered table-striped">
                             <tr>
                               <th class="text-primary">Matric Number </th>
                               <th>{{Auth::user()->matric_number}}</th>
@@ -49,6 +48,13 @@
                               <th class="text-primary">Field of Study</th>
                               <th>{{$fs->fos_name}}</th>
                             </tr>
+                            @if(Auth::user()->specialization_id != 0 || Auth::user()->specialization_id != null)
+                            <tr>
+                              <th class="text-primary">Specialization</th>
+                              <th>{{$spec->name}}</th>
+                            </tr>
+
+                            @endif
                             <tr>
                               <th class="text-primary">Phone Number</th>
                               <th>{{Auth::user()->phone}}</th>
@@ -63,17 +69,107 @@
                             </tr>
 
                           </table>
+                         </div>
+                        
+                
+                        <!--  <div class=" col-sm-12 thumbnail">
+                          <h3 class="text-primary"><b><u> Update Password</u></b></h3>
+                          <form class="form-horizontal " role="form" method="POST" action="{{ url('/updatePassword') }}" data-parsley-validate> 
+                               {{ csrf_field() }}  	
+                           
+                               
+                              	     <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
+                          
 
-                   
+                         
+
+                               <div class="col-sm-6">
+                            <label for="matric_number">Enter Password</label>
+                                <input  type="text" class="form-control" name="password" value="" required>
+
+                                @if ($errors->has('password'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('password') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                            <div class="col-sm-6">
+                            <br/>
+                            	<input type="submit" name="" value="Update Password" class="btn">
+                            </div>
+                            </div>
+                            
+                        </form>
+                          </div>-->
+                        
+                          <div class="col-sm-12 col-xm-12 thumbnail">
+                          <h3 class="text-primary"><b><u> Update Email Address</u></b></h3>
+                        <form class="form-horizontal" role="form" method="POST" action="{{ url('edit_email') }}" data-parsley-validate> 
+                               {{ csrf_field() }}  	
+                            	
+                                
+                              	     <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
+                          
+
+                         
+
+                               <div class="col-sm-6">
+                            <label for="matric_number">Enter Email Address</label>
+                                <input  type="email" class="form-control" name="email" value="" required>
+
+                                @if ($errors->has('email'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('email') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                            <div class="col-sm-6">
+                            <br/>
+                            	<input type="submit" name="" value="Update Email Address" class="btn">
+                            </div>
+                            </div>
+                           
+                        </form>
+                          </div>
+                          <div class="col-sm-12 thumbnail">
+                          <h3 class="text-primary"><b><u> Update Phone Number</u></b></h3>
+                        <form class="form-horizontal" role="form" method="POST" action="{{ url('edit_phone_number') }}" data-parsley-validate> 
+                               {{ csrf_field() }}  	
+                            
+                                
+                              	     <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
+                          
+
+                         
+
+                               <div class="col-sm-6">
+                            <label for="matric_number">Enter Phone</label>
+                                <input  type="number" class="form-control" name="phone" value="" required>
+
+                                @if ($errors->has('phone'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('phone') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                            <div class="col-sm-6">
+                            <br/>
+                            	<input type="submit" name="" value="Update phone number" class="btn">
+                            </div>
+                            </div>
+                            
+                        </form>
+                          </div>
                         </div>
+                        
                            <div class="col-md-6">
                              <div class="col-sm-12">
                               <img class="img-responsive" src="{{asset('img/student/'.Auth::user()->image_url)}}" alt="your image is suppose to display here" style="float: right;"/>
-                              
+                              <a href="{{url('edit_image')}}" class="btn">Edit Image</a>
                              </div>
  
                                 <div class="col-sm-12">
-                                  <h5 class="text-center text-primary"><b><u> STUDENTS  COURSE REGISTRATION HISTORY</u></b></h5>
+                                  <h5 class="text-center text-primary" style="font-size: 1.2em;"><b><u>  COURSE REGISTRATION HISTORY</u></b></h5>
                                   <table class="table table-boxed table-responsive">
                                       <thead>
                                         <tr>

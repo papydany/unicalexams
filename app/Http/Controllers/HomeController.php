@@ -31,8 +31,13 @@ class HomeController extends Controller
      */
     public function index()
     {
-    	
         return view('home.index');
+    }
+
+    public function homepage()
+    {
+    	
+        return view('home.homepage');
     }
 
  public function faq()
@@ -87,6 +92,12 @@ return view('home.contact');
             $filename = time() . '.' . $image->getClientOriginalExtension();
            $destinationPath = public_path('img/student');
             $img = Image::make($image->getRealPath());
+            $size =$img->filesize();
+           
+            if($size > 30720){
+                Session::flash('danger','Image Size is bigger than 30kb'); 
+                return back(); 
+            }
             $img->resize(150, 100, function ($constraint) {
                 $constraint->aspectRatio();
             })->save($destinationPath . '/' . $filename);
@@ -126,33 +137,28 @@ return $sql->departments_name;
 
     public function post_recovery_pin(Request $request)
     {
-        $session =$request->session;
         $matric_number =$request->matric_number;
-        $email =$request->email;
-        $sql = DB::connection('mysql')->table('pins')->where('matric_number',$matric_number)->count();
-        if($sql == 0)
+       // $email =$request->email;
+        $sql = DB::table('users')->where('matric_number',$matric_number)->first();
+        if($sql == null)
         {
-    Session::flash('warning',"Please check your matric number.");
+    Session::flash('warning',"Please check your matric number if you  are registered.");
       return back();
         }else{
-    $sql1 = DB::connection('mysql')->table('pins')->where([['matric_number',$matric_number],['session',$session]])->first();
-    if($sql1 == null)
-    {
-        Session::flash('warning',"You dont have pin on the session you selected.Please Select the right session.");
-        return back(); 
-    }      
-$data = array('email' => $email,'pin' => $sql1->pin,'id' => $sql1->id,'matric_number'=>$sql1->matric_number);
+       
+$data = array('email' => $sql->email,'matric_number'=>$sql->matric_number);
 
   Mail::send(array('html'=>'emails.recovery_pin'), $data, function($message) use ($data)  {
                 
-                $message->to($data['email'],$data['pin'],$data['id'],$data['matric_number']);
-                $message->subject("Unical database : Recovery Of Pin");
+                $message->to($data['email'],$data['matric_number']);
+                $message->subject("Unical database : Reset Of Password");
 
             });
         }
-        Session::flash('success',"Pin sent to the email provided. check your sparm mail if not found in the inbox.");
+        Session::flash('success',"Email sent. check your sparm mail if not found in the inbox.");
         return back();
 //return $sql->departments_name;	
 
     }
+    
 }

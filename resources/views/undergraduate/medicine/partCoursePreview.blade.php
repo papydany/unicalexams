@@ -7,7 +7,7 @@
                     <h1 class="heading-title pull-left">Welcome <strong class="text-danger">{{ Auth::user()->surname.
          
                     "&nbsp;". Auth::user()->firstname."&nbsp;".Auth::user()->othername ."&nbsp;(".Auth::user()->matric_number.")"}}</strong>
-                    <?php $next =session()->get('session_year') +1;?>
+                    <?php $next =$s +1;?>
 
                 </h1>
                     <div class="breadcrumbs pull-right">
@@ -22,22 +22,15 @@
                 <div class="row" style="margin-bottom: 20px;">
                 <div class="table-responsive col-sm-12">
                 
-                   <div class="col-sm-6">
-            <h4><strong class="text-success">PIN VALID FOR &nbsp; {{session()->get('session_year').'/'.$next }} &nbsp; SESSION</strong></h4>
-             <p class=" text-center" style="background-color: #0ff; padding: 10px"><b> Direct Entry students,  100 level, is your first year of three or four years programme</b></p>
-          </div>
-           <div class="col-sm-3">
-            <p><b>Session :</b>{{session()->get('session_year').'/'.$next }}</p>
+          
+           <div class="col-sm-6">
+            <p><b>Session :</b>{{$s.'/'.$next }}</p>
+                    </div>
+                    <div class="col-sm-6">
                  <p><b>Level :</b>{{$l}}00 </p>
-                  <p><b>Semester :</b>{{$sn->semester_name}}</p>
+                  
           </div>
-            <div class="col-sm-3">
-              <p class="text-danger"><b>Course Status</b></p>
-            <p><b>C : </b>Compulsary<br/>
-                 <b>E : </b>Elective</br/>
-                  <b>R : </b>Failed course In Last Session<br/>
-                    <b>D : </b>Drop course In Last Session</p>
-          </div>
+         
           <div class="clearfix"></div>
             
 
@@ -57,8 +50,7 @@
              <th>#</th>
              <th>Title</th>
              <th>Code</th>
-             <th>Unit</th>
-             <th>Status</th>
+           
          </tr>
      </thead>
     <tbody>
@@ -66,6 +58,7 @@
 <input type="hidden" name="level" value="{{$l}}">
 <input type="hidden" name="period" value="{{$p}}">
 <input type="hidden" name="semester" value="{{$sn->semester_id}}">
+<input type="hidden" name="session" value="{{$s}}">
 @if(!empty($pref))
     @foreach($pref as $vf)
         {{!++$c}}
@@ -78,8 +71,7 @@
         <input type="hidden" name="idf[]" value="{{$vf['id']}}">
         <td>{{strtoupper($vf->reg_course_title)}}</td>
         <td>{{strtoupper($vf->reg_course_code)}}</td>
-        <td>{{$vf->reg_course_unit}}</td>
-        <td>R</td>
+       
         </tr>
     @endforeach 
 @endif 
@@ -95,8 +87,7 @@
         <input type="hidden" name="idd[]" value="{{$vd['id']}}">
         <td>{{strtoupper($vd->reg_course_title)}}</td>
         <td>{{strtoupper($vd->reg_course_code)}}</td>
-        <td>{{$vd->reg_course_unit}}</td>
-        <td>D</td>
+       
         </tr>
     @endforeach 
 @endif                                           
@@ -112,16 +103,10 @@
         <input type="hidden" name="id[]" value="{{$v['id']}}">
         <td>{{strtoupper($v->reg_course_title)}}</td>
         <td>{{strtoupper($v->reg_course_code)}}</td>
-        <td>{{$v->reg_course_unit}}</td>
-        <td>{{$v->reg_course_status}}</td>
+       
         </tr>
     @endforeach 
 @endif
-
-<tr>  
-  <td colspan="3">Total Unit</td>
- <td colspan="2">{{$tu}} Unit</td>
-</tr> 
 
 </tbody>
 </table><!--//table-->

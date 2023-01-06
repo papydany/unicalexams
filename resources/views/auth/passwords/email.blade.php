@@ -7,24 +7,29 @@
             <div class="panel panel-default">
                 <div class="panel-heading">Reset Password</div>
                 <div class="panel-body">
-                    @if (session('status'))
-                        <div class="alert alert-success">
-                            {{ session('status') }}
-                        </div>
-                    @endif
+                @if(Session::has('warning'))
+<div class=" col-sm-12 alert alert-warning" role="alert" >
+      {{Session::get('warning')}}
+  </div>
+      @endif
+                              @if(Session::has('success'))
+<div class=" col-sm-12 alert alert-success" role="alert" >
+      {{Session::get('success')}}
+  </div>
+      @endif
 
-                    <form class="form-horizontal" role="form" method="POST" action="{{ route('password.email') }}">
+                    <form class="form-horizontal" role="form" method="POST" action="{{ url('password_reset') }}">
                         {{ csrf_field() }}
 
                         <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-                            <label for="email" class="col-md-4 control-label">E-Mail Address</label>
+                            <label for="email" class="col-md-4 control-label">Matric Number</label>
 
                             <div class="col-md-6">
-                                <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" required>
+                                <input  type="text" class="form-control" name="matric_number" value="{{ old('matric_number') }}" placeholder="Enter Your Matric Number" required>
 
                                 @if ($errors->has('email'))
                                     <span class="help-block">
-                                        <strong>{{ $errors->first('email') }}</strong>
+                                        <strong>{{ $errors->first('matric_number') }}</strong>
                                     </span>
                                 @endif
                             </div>

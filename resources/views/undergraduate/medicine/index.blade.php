@@ -19,11 +19,7 @@
 
    </header> 
       
-           <h3><strong class="text-success">PIN VALID FOR &nbsp;
-            <?php $s = session()->get('session_year');
-            $next =session()->get('session_year') +1;?>
-           <span class="text-danger">{{$s.'/'.$next }} </span> &nbsp; SESSION
-          </strong></h3>
+          
         
    <div class="page-content">                 
      <div class="row page-row">
@@ -36,16 +32,17 @@
             {{ csrf_field() }}
                 <div class="form-group">
                 <input type="hidden" name="session" value="{{$s}}"/>
-                    <div class="col-sm-3">
+                    <div class="col-sm-3 m10px">
                   
                         <select name="session"   class="form-control" readonly>
                             <option value="{{$s}}">{{$s." / ".$next}} session</option>
                         </select>
                      
                     </div>
-                    <div class="col-sm-3">
+                    <div class="col-sm-3 m10px">
                         <select name="level" class="form-control" required >
                         <option value="">Select</option>
+                        <option value="2">200 Level</option>
                             <option value="3">Part I</option>
                             <option value="4">Part II</option>
                             <option value="5">Part III</option>
@@ -53,7 +50,7 @@
                         </select>
                     </div>
 
-                    <div class="col-sm-3">
+                    <div class="col-sm-3 m10px">
                         <select name="period" class="form-control" required>
                             <option value="">-- Select  --</option>
                            
@@ -62,7 +59,7 @@
                            
                         </select>
                     </div>
-                   <div class="col-sm-3">
+                   <div class="col-sm-3 m10px">
                    <input type="submit" class="btn" value="Continue">
                    </div>
 

@@ -59,5 +59,6 @@ class Kernel extends HttpKernel
         'usersession' => \App\Http\Middleware\Checkstudent::class,
         'checkreg' => \App\Http\Middleware\Checkreg::class,
         'checkudg' => \App\Http\Middleware\Checkudg::class,
+        'checkNewRegLogin' => \App\Http\Middleware\CheckNewRegLogin::class,
     ];
 }

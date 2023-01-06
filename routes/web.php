@@ -26,13 +26,23 @@ Route::get('/faq', 'HomeController@faq');
 Route::get('/contact', 'HomeController@contact');
 Route::post('/contact', 'HomeController@postcontact');
 Route::post('/success', 'HomeController@success');
+Route::get('homepage', 'HomeController@homepage');
+
+//Route::get('password_reset', 'Auth\ForgotPasswordController@password_reset');
+Route::post('password_reset', 'Auth\ForgotPasswordController@post_password_reset');
+Route::get('password_reset/{token}', 'Auth\ForgotPasswordController@password_reset_token');
+Route::post('password_reset_token', 'Auth\ForgotPasswordController@post_password_reset_token');
+
 //=========================================================
 // edit images from admin
 Route::get('edit_imagerrrrrrr98888880/{id}','HomeController@edit_image');
 Route::post('edit_imagerrrrrrr98888880','HomeController@post_edit_image');
 //=========================recovery pin=================
-//Route::get('recovery_pin','HomeController@recovery_pin');
-//Route::post('recovery_pin','HomeController@post_recovery_pin');
+Route::get('recovery_password','HomeController@recovery_pin');
+Route::post('recovery_password','HomeController@post_recovery_pin');
+
+Route::get('edit_image','UndergraduateController@edit_image');
+Route::post('edit_image','UndergraduateController@post_edit_image');
 //==========================================================
 Route::get('/profile', 'UndergraduateController@index');
 Route::get('/register_course', 'UndergraduateController@register_course');
@@ -63,21 +73,23 @@ Route::get('/preview_deletecourse', 'UndergraduateController@preview_deletecours
 Route::post('/preview_deletecourse', 'UndergraduateController@preview_deletecourse');
 Route::post('/removecourse', 'UndergraduateController@removecourse');
 Route::post('/register_addcourse', 'UndergraduateController@post_register_addcourse');
+Route::post('updatePassword', 'UndergraduateController@updatePassword');
 //Route::get('/edit_matric_number', 'UndergraduateController@edit_matric_number');
 //Route::post('/edit_matric_number', 'UndergraduateController@post_edit_matric_number');
 //Route::get('/edit_names', 'UndergraduateController@edit_names');
 //Route::post('/edit_names', 'UndergraduateController@post_edit_names');
 
 //Route::get('/edit_email', 'UndergraduateController@edit_email');
-//Route::post('/edit_email', 'UndergraduateController@post_edit_email');
+Route::post('/edit_email', 'UndergraduateController@post_edit_email');
 //Route::get('/edit_phone_number', 'UndergraduateController@edit_phone_number');
-//Route::post('/edit_phone_number', 'UndergraduateController@post_edit_phone_number');
+Route::post('/edit_phone_number', 'UndergraduateController@post_edit_phone_number');
+
 
 // ==================== returning students ===============================================
 //Route::get('returning_register_course','UndergraduateController@returning_register_course');
 //-------------------------- medicine --------------------------------
 Route::get('returningStudentMedicine','UndergraduateController@returningStudentMedicine');
-
+Route::get('returning_register_course','UndergraduateController@returning_register_course');
 Route::get('regMore','UndergraduateController@returning_register_course');
 Route::post('returningRegisterCourse','UndergraduateController@returningRegisterCourse');
 Route::get('returningRegisterCourse','UndergraduateController@returningRegisterCourse');
@@ -95,7 +107,11 @@ Route::get('register_summer_course','UndergraduateController@registerSummerCours
 Route::post('register_summer_course','UndergraduateController@register_summer_course');
 Route::get('previewSummerCourse','UndergraduateController@previewSummerCourse');
 Route::post('postSummerCourse','UndergraduateController@postSummerCourse');
+//------------------------delay registration----------------------------
 Route::get('register_delayed_course','UndergraduateController@register_delayed_course');
+Route::post('register_delayed_course','UndergraduateController@post_register_delayed_course');
+Route::get('previewDelayedCourse','UndergraduateController@previewDelayedCourse');
+Route::post('postDelayedCourse','UndergraduateController@postDelayedCourse');
 //========================== register long vacation===================================
 Route::get('register_long_vacation/{level?}/{duration?}/{session?}','UndergraduateController@register_long_vacation');
 Route::get('previewVacationCourse','UndergraduateController@previewVacationCourse');
@@ -108,18 +124,26 @@ Route::get('std_login','Auth\LoginController@s_login');
 Route::get('std_logout','Auth\LoginController@std_logout');
 Route::get('oldresult','OldstudentController@index'); 
 Route::get('check_result/{sessional}/{period}','OldstudentController@check_result');
-
+//===================== login for 2019 down ===========
+Route::get('oldlogin','Auth\LoginController@oldlogin');
+Route::post('oldlogin','Auth\LoginController@post_oldlogin');
 
 // stop registration
-Route::get('/enter_pin1', 'Auth\LoginController@enter_pin1');
+//Route::get('/enter_pin1', 'Auth\LoginController@enter_pin1');
 Route::post('/enter_pin1', 'Auth\LoginController@post_enter_pin1');
 // active registration link
-Route::get('/jesusChrist', 'Auth\LoginController@enter_pin');
+Route::get('/enter_pin1', 'Auth\LoginController@enter_pin');
+//Route::get('/jesusChrist', 'Auth\LoginController@enter_pin');
 Route::post('/enter_pin', 'Auth\LoginController@post_enter_pin');
+Route::get('newRegLogin', 'Auth\LoginController@newRegLogin');
+Route::post('newRegLogin', 'Auth\LoginController@post_newRegLogin');
 //==============================predegreee student===================================================
 Route::get('pdg_register',['uses' =>'Auth\RegisterController@pdg_register','middleware' => 'checkreg']);
 Route::get('udg_register',['uses' =>'Auth\RegisterController@showRegistrationForm','middleware' => 'checkudg']);
-Route::post('udg_register',['uses' =>'Auth\RegisterController@register','middleware' => 'checkudg']);
+Route::post('udg_register',['uses' =>'Auth\RegisterController@register']);
+Route::get('udgNewregister',['uses' =>'Auth\RegisterController@showRegistrationForm','middleware' => 'checkudg']);
+Route::get('udgregister/{id}',['uses' =>'Auth\NewRegisterController@showRegistrationForm','middleware' => 'checkNewRegLogin']);
+
 Route::post('pdg_register','Auth\RegisterController@post_pdg_register');
 Route::get('pds','PdsController@index');
 Route::get('home', ['uses' =>'HomeController@index','middleware' => 'auth:pdg']);
@@ -133,5 +157,11 @@ Route::post('register_resit_course','UndergraduateController@post_register_resit
 Route::post('register_resit_course1','UndergraduateController@post_register_resit_course1');
 Auth::routes();
 Route::get('logout','Auth\LoginController@logout');
+//=================================mopped registration =========================
+Route::get('moppedUpExamsCourseRegistration','MoppedUpController@index');
+Route::get('moppedUp_semester_courses','MoppedUpController@moppedUp_semester_courses');
+Route::post('moppedUp_semester_courses','MoppedUpController@post_moppedUp_semester_courses');
 
+//=============================getbiodata from julius side======================
+Route::get('julius','MoppedUpController@julius');
 

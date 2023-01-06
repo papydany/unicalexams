@@ -1,6 +1,7 @@
 @extends('layouts.main')
 @section('title','Home')
 @section('content')
+
 <div class="content container">
   <div class="page-wrapper">
    <header class="page-heading clearfix">
@@ -28,6 +29,7 @@
        <div class="team-wrapper col-xs-12">        
          <div class="row page-row" >
           @if(isset($r))
+         
           @if($r == "WITHDRAW")
         
           <h1 class="text-danger">Academic Standing : WITHDRAWN</h1>
@@ -79,12 +81,13 @@
                             <option value="{{$l}}">{{$l}}00</option>
                         </select>
                     </div>
-
+                 
                     <div class="col-sm-3">
                         <select name="semester" class="form-control" required>
                             <option value="">-- Select Semester --</option>
                             @if(isset($semester))
                                 @foreach($semester as $v)
+                                
                                     <option value="{{$v->semester_id}}">{{$v->semester_name}}</option>
 
                                 @endforeach

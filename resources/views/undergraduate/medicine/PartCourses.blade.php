@@ -6,7 +6,7 @@
    <header class="page-heading clearfix">
      <h1 class="heading-title pull-left">Welcome <strong class="text-danger">{{ Auth::user()->surname.
         "&nbsp;". Auth::user()->firstname."&nbsp;".Auth::user()->othername ."&nbsp;(".Auth::user()->matric_number.")"}}</strong>
-        <?php $next =session()->get('session_year') +1;?>
+        <?php $next =$s +1;?>
      </h1>
      <div class="breadcrumbs pull-right">
        <ul class="breadcrumbs-list">
@@ -21,22 +21,15 @@
      <div class="row page-row">
         <div class="team-wrapper col-xs-12">        
          <div class="row page-row" >
-          <div class="col-sm-6">
-            <h4><strong class="text-success">PIN VALID FOR &nbsp; {{session()->get('session_year').'/'.$next }} &nbsp; SESSION</strong></h4>
-             <p class=" text-center" style="background-color: #0ff; padding: 10px"><b> Direct Entry students,  100 level, is your first year of three or four years programme</b></p>
-          </div>
-           <div class="col-sm-3">
-            <p><b>Session :</b>{{session()->get('session_year').'/'.$next }}</p>
+         
+           <div class="col-sm-6">
+            <p><b>Session :</b>{{$s.'/'.$next }}</p>
+           </div>
+           <div class="col-sm-6">
                  <p><b>Level :</b>{{$l}}00 </p>
                  
           </div>
-            <div class="col-sm-3">
-              <p class="text-danger"><b>Course Status</b></p>
-            <p><b>C : </b>Compulsary</p>
-                
-                 
-                    
-          </div>
+            
           <div class="clearfix"></div>
             
             @if(isset($rc))
@@ -50,7 +43,7 @@
                  <th>#e</th>
                  <th>Select <input type="checkbox" id="all_ids" ></th></th>
                  <th>Title</th>
-               <th>Status</th>
+               
               </tr>
             </thead>
           <tbody>
@@ -59,6 +52,7 @@
 <input type="hidden" name="period" value="{{$p}}">
 <input type="hidden" name="level" value="{{$l}}">
 <input type="hidden" name="semester" value="1">
+<input type="hidden" name="session" value="{{$s}}">
 
            @foreach($rc as $v)
             {{!++$c}}
@@ -71,7 +65,7 @@
  <td><input type="checkbox" class="ids" name="id[]" value="{{$v->id}}"></td> 
  <td>{{strtoupper($v->reg_course_title)}}</td>
  
- <td>{{$v->reg_course_status}}</td>
+
   </tr>
 @endforeach 
 </tbody>
@@ -102,7 +96,7 @@ You cant continue with courses registration, because there is no registered cour
                  <th>#v</th>
                  <th>Select <input type="checkbox" id="all_ids" ></th></th>
                  <th>Title</th>
-               <th>Status</th>
+               
               </tr>
             </thead>
           <tbody>
@@ -111,6 +105,7 @@ You cant continue with courses registration, because there is no registered cour
 <input type="hidden" name="period" value="{{$p}}">
 <input type="hidden" name="level" value="{{$l}}">
 <input type="hidden" name="semester" value="1">
+<input type="hidden" name="session" value="{{$s}}">
 
            @foreach($fc as $v)
             {{!++$c}}
@@ -124,7 +119,7 @@ You cant continue with courses registration, because there is no registered cour
    <input type="hidden" name="idf[]" value="{{$v->id}}"></td> 
  <td>{{strtoupper($v->reg_course_title)}}</td>
  
- <td>{{$v->reg_course_status}}</td>
+ 
   </tr>
 @endforeach 
 </tbody>

@@ -4,7 +4,7 @@
 @inject('R','App\RRR')
     <div class="col-xs-12">
     <div class="col-xs-12">
-    <p class="text-center">{{$name. " - ".$matric_no.'&nbsp;('.$level.'00 level)'}}</p>
+    <p class="text-center">{{$name. " - ".$matricno.'&nbsp;('.$level.'00 level)'}}</p>
     </div>
 
  <div class="col-sm-6 table-responsive w2">
@@ -22,10 +22,10 @@
 <th>Grade</th>
 <th>Grade Point</th>
 </tr>
-@if(isset($course_first))
-    @if($course_first != null )
-   
-   @foreach($course_first as $vc)
+
+    @if($coursefirst != null )
+   @if(isset($coursefirst))
+   @foreach($coursefirst as $vc)
 
     <?php $grade_point =$R->get_cp_2($vc->std_grade,$vc->c_unit);?>
 <tr>
@@ -40,10 +40,10 @@
    @endif
    @endif
 
-   @if(isset($course_1))
-    @if($course_1 != null )
+   @if(isset($course1))
+    @if($course1 != null )
    
-   @foreach($course_1 as $vc)
+   @foreach($course1 as $vc)
 
    
 <tr>
@@ -77,9 +77,9 @@
 
 <th>Grade Point</th>
 </tr>
-@if(isset($course_second))
-   @if(count($course_second) > 0)
-   @foreach($course_second as $vc)
+@if(isset($coursesecond))
+   @if(count($coursesecond) > 0)
+   @foreach($coursesecond as $vc)
    <?php $grade_point =$R->get_cp_2($vc->std_grade,$vc->c_unit);?>
 <tr>
     <td>{{$vc->stdcourse_custom2}}</td>
@@ -92,10 +92,10 @@
    @endforeach
    @endif
    @endif
-   @if(isset($course_1))
-    @if($course_2 != null )
+   @if(isset($course1))
+    @if($course2 != null )
    
-   @foreach($course_2 as $vc)
+   @foreach($course2 as $vc)
 
    
 <tr>

@@ -15,11 +15,15 @@ class Checkudg
      */
     public function handle($request, Closure $next)
     {
-        if (!$request->session()->has('u_login_user')) {
+        if ($request->session()->has('login_user')) {
            
-            return redirect('jesusChrist');
+            return $next($request);
         }
+      /*  if (!$request->session()->has('login_user')) 
+           
+            return redirect('enter_pin1');
+        }*/
 
-        return $next($request);
+        return redirect('/');
     }
 }

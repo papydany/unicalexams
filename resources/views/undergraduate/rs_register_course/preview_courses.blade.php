@@ -1,6 +1,7 @@
 @extends('layouts.main')
 @section('title','Preview Course ')
 @section('content')
+@inject('r','App\RRR')
 <div class="content container">
             <div class="page-wrapper">
                 <header class="page-heading clearfix">
@@ -39,17 +40,30 @@
                     <b>D : </b>Drop course In Last Session</p>
           </div>
           <div class="clearfix"></div>
-            
-@if($tu > $cu->max)
+ <?php $fos =$r->getFos(Auth::user()->fos_id);
+ 
+ if(Auth::user()->faculty_id == 6 && $l >=$fos->duration )
+ {
+$cu_min = 2;
+ }else{
+    $cu_min = $cu->min;
+ }
+ 
+ 
+ ?> 
+ 
+ 
+
+@if($tu > $cu->max && $l <= $fos->duration )
  <div class=" col-sm-10 col-sm-offset-1 alert alert-danger" role="alert">
      Total number of course unit  select is above {{$cu->max}} units . maximum course unit for these semester.
      Contact your <strong> examination Officer </strong> if you need more clerification.
      <br/> <br/>
      <a href="{{url()->previous()}}" class="btn"><i class="fa fa-btn fa-arrow-circle-left"></i> Go Back </a>
  </div> 
-@elseif($tu < $cu->min)
+@elseif($tu < $cu_min  && $l <= $fos->duration)
     <div class=" col-sm-10 col-sm-offset-1 alert alert-danger" role="alert">
-     Minimum course unit allowed is {{$cu->min}} units.
+     Minimum course unit allowed is {{$cu_min}} units.
      Contact your <strong> examination Officer </strong> if you need more clerification.
      <br/> <br/>
      <a href="{{url()->previous()}}" class="btn"><i class="fa fa-btn fa-arrow-circle-left"></i> Go Back </a>

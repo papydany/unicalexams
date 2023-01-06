@@ -4,7 +4,7 @@ namespace App;
 use Illuminate\Support\Facades\DB;
 use App\PdsResult;
 use App\Pin;
-
+use App\Fos;
 
 class RRR
 {
@@ -16,6 +16,9 @@ public function getstudenttype2($id,$mat){
 
 public function getstudenttype($id){
         $user =Pin::where('student_id',$id)->first();
+        if($user == null){
+          return null;
+        }
         return $user->student_type;
    }
 
@@ -25,6 +28,14 @@ public function getstudenttype($id){
 
 return $result;
    }
+
+   public function getFos($id){
+    $fos =Fos::find($id);
+    if($fos == null){
+      return null;
+    }
+    return $fos;
+}
 
    //======================================================================================================
  public   function get_course_avg($s_id,$course_id,$session){

@@ -32,7 +32,7 @@
            <form class="form-horizontal" role="form" method="POST" action="{{ url('register_resit_course')}}" data-parsley-validate>
             {{ csrf_field() }}
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-sm-3 m10px">
                       <select name="session"   class="form-control" required>
                       <option value="">-- Select Session --</option>
                       @if(isset($studentreg))
@@ -44,7 +44,7 @@
                       @endif
                       </select>
                     </div>
-                    <div class="col-sm-3">
+                    <div class="col-sm-3 m10px">
                       <select name="level" class="form-control" required>
                         <option value="">-- Select Level --</option>
                         @if(isset($studentreg))
@@ -74,7 +74,7 @@
                     </div>
 
                   
-                   <div class="col-sm-3">
+                   <div class="col-sm-3 m10px">
                    <input type="submit" class="btn" value="Continue">
                    </div>
 

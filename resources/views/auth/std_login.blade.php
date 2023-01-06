@@ -5,12 +5,12 @@
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
-                <div class="panel-heading">Login</div>
+                <div class="panel-heading"><h4 class="text-center text-danger">
+                    2015/2016 and below  Students Login</h4>
+                </div>
 
                 <div class="panel-body">
-                    <h3 class="text-center text-danger">
-                     Entry Year 2015/2016 and below Check Your Result Here</h3>
-                    <br/>
+                  
                  @include('partial._message')  
                     <form class="form-horizontal" role="form" method="POST" action="{{ url('/std_login') }}" data-parsley-validate>
                         {{ csrf_field() }}

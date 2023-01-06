@@ -8,22 +8,27 @@
                 <div class="panel-heading">Reset Password</div>
 
                 <div class="panel-body">
-                    @if (session('status'))
-                        <div class="alert alert-success">
-                            {{ session('status') }}
-                        </div>
-                    @endif
+                @if(Session::has('warning'))
+<div class=" col-sm-12 alert alert-warning" role="alert" >
+      {{Session::get('warning')}}
+  </div>
+      @endif
+                              @if(Session::has('success'))
+<div class=" col-sm-12 alert alert-success" role="alert" >
+      {{Session::get('success')}}
+  </div>
+      @endif
 
-                    <form class="form-horizontal" role="form" method="POST" action="{{ route('password.request') }}">
+                    <form class="form-horizontal" role="form" method="POST" action="{{url('password_reset_token') }}">
                         {{ csrf_field() }}
 
-                        <input type="hidden" name="token" value="{{ $token }}">
-
+                        <input type="hidden" name="token" value="{{ $u->token }}">
+                        <input type="hidden" name="matric_number" value="{{ $u->email }}">
                         <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-                            <label for="email" class="col-md-4 control-label">E-Mail Address</label>
+                            <label for="email" class="col-md-4 control-label">Matric Number</label>
 
                             <div class="col-md-6">
-                                <input id="email" type="email" class="form-control" name="email" value="{{ $email or old('email') }}" required autofocus>
+                                <input id="email" type="text" class="form-control" name="" value="{{ $u->email }}" required autofocus>
 
                                 @if ($errors->has('email'))
                                     <span class="help-block">

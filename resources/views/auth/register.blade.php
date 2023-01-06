@@ -107,7 +107,19 @@
                                     <option value="">Select</option>
                                     @if(isset($f))
                                     @foreach($f as $v)
+                                   
+
+                                    <?php if(session()->get('currentSession') != null) { ?>
+                                    @if($v->id != 6)
+                                     <option value="{{$v->id}}">{{$v->faculty_name}}</option>
+                                     @endif
+                                    <?php }else{ ?>
+                                        {{--     @if($v->id == 14  || $v->id== 10 || $v->id == 17 || $v->id == 16 || $v->id == 15 || $v->id == 23 )--}}
+                                          
                                     <option value="{{$v->id}}">{{$v->faculty_name}}</option>
+                                 {{--  @endif--}}
+                                    <?php } ?>
+                                    
 
                                     @endforeach
 
@@ -130,17 +142,34 @@
                                   <select class="form-control" name="fos_id" id="fos" required>
                              </select>
                                 </div>
+                                <?php if(session()->get('currentSession') != null) { ?>
+
+                                    <div class="col-sm-4">
+                              <label for="session" class=" control-label"> Entry Session</label>
+                              <select class="form-control" name="entry_year" required>
+                                <option value="">Select Entry Year</option>
+                             
+                                <option value="2020">2020 / 2021</option>
+                                <option value="2021">2021 / 2022</option>
+                              </select>
+                             
+                            </div>
+
+
+
+                            <?php    }else{ ?>
                                    <div class="col-sm-4">
                               <label for="session" class=" control-label"> Entry Session</label>
                               <select class="form-control" name="entry_year" required>
                                 <option value="">Select Entry Year</option>
-                                @for ($year = (date('Y')); $year >= 2016; $year--)
+                                @for ($year = 2019; $year >= 2009; $year--)
                                 {{!$yearnext =$year+1}}
                                 <option value="{{$year}}">{{$year.'/'.$yearnext}}</option>
                                 @endfor
                               </select>
                              
                             </div>
+                            <?php } ?>
 
                                <div class="col-sm-4">
                               <label for="entry_month" class=" control-label">Entry Month</label>
@@ -165,10 +194,10 @@
                                    <div class="col-sm-4">
                               <label for="marital_status" class=" control-label"> Marital Status</label>
                               <select class="form-control" name="marital_status" required>
-                              <option value=""> - - Select - -</option>
-                              <option value="Single">Single</option>
+                                  <option value="">-- Select --</option>
+                                  <option value="Single">Single</option>
                                   <option value="Married">Married</option>
-                                  <option value="Devioced">Devioced</option>
+                                  <option value="Divorced">Divorced</option>
                                 </select>
                              
                             </div>
@@ -216,16 +245,18 @@
                         <div class="form-group">
                           
 
-                            <div class="col-sm-6">
+                            <div class="col-sm-4">
                               <label for="address" class="control-label">Address</label>
                               <textarea class="form-control" name="address" cols="5"></textarea>
                                
                             </div>
-                             <div class="col-sm-4 col-sm-offset-2">
+                       
+
+                             <div class="col-sm-4">
                              <br/>
-                             <br/>
+                             
                                 <button type="submit" class="btn btn-primary btn-lg">
-                                    Register
+                                    Submit
                                 </button>
                             </div>
                         </div>
